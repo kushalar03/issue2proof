@@ -1,0 +1,25 @@
+{
+  "id": "eb09451e-7260-4f67-8c4d-c1c98679afe6",
+  "run_id": "d2b5b710-77a1-4bf1-8c0f-62dacd6e26f8",
+  "state": "completed",
+  "stage": "finished",
+  "options": {
+    "independent_test_paths": [
+      "tests/test_independent.py"
+    ],
+    "prepare_dependencies": true,
+    "max_repairs": 3,
+    "max_model_calls": 5,
+    "max_sandbox_calls": 16,
+    "budget_usd": 2.0
+  },
+  "created": 1791997103.9461293,
+  "updated": 1791997133.118716,
+  "lease": 1791997243.9550984,
+  "cancel_requested": 0,
+  "operation_id": null,
+  "model_calls": 2,
+  "sandbox_calls": 7,
+  "reserved_usd": 0.9899999999999998,
+  "error": null
+}

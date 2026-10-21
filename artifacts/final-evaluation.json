@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "scope": "Reviewed integration cases; not a held-out benchmark or general accuracy estimate",
+  "live_cases": [
+    {
+      "report": "real-bug-werkzeug.json",
+      "verdict": "checks_passed"
+    },
+    {
+      "report": "real-bug-requests.json",
+      "verdict": "checks_passed"
+    },
+    {
+      "report": "live-dependency-investigation.json",
+      "verdict": "checks_passed"
+    },
+    {
+      "report": "final-browser-investigation.json",
+      "verdict": "checks_passed"
+    }
+  ],
+  "operational_evidence": [
+    "background-cancellation.json",
+    "recovery-validation.json",
+    "container-validation.json",
+    "standalone-demo-validation.json"
+  ],
+  "public_deployment": "Pending operator-supplied hosting target and domain"
+}

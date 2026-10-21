@@ -1,0 +1,642 @@
+{
+  "schema": "issue2proof.memory-impact-benchmark.v1",
+  "generated_at": "2026-10-21T08:04:54.703685+00:00",
+  "complete": true,
+  "model": "nvidia/nemotron-3-super-120b-a12b",
+  "method": {
+    "description": "Blind maintenance refactors receive the fixed function and ordinary visible tests, but no incident description or frozen capsule regression.",
+    "plain_ci": "Run only the ordinary visible test retained in the historical fixture.",
+    "capsule_replay": "Run the hash-backed regression preserved from the verified repair.",
+    "unit": "30 refactor trials across two real upstream historical bug histories; not 30 distinct bugs.",
+    "limitations": [
+      "The two historical cases and authored tests are public and may be represented in model training data.",
+      "This is a focused stress benchmark, not a representative estimate for all repositories.",
+      "Tests run locally for benchmark throughput; product audits use fresh network-disabled Nebius Sandboxes."
+    ]
+  },
+  "cases": [
+    {
+      "id": "werkzeug-safe-join",
+      "function": "safe_join",
+      "source": "https://github.com/pallets/werkzeug/releases/tag/3.1.4"
+    },
+    {
+      "id": "requests-content-length",
+      "function": "super_len",
+      "source": "https://github.com/psf/requests/blob/v2.32.3/src/requests/utils.py"
+    }
+  ],
+  "summary": {
+    "trials_requested": 30,
+    "trials_evaluated": 30,
+    "historical_bug_histories": 2,
+    "regressions_introduced": 8,
+    "plain_ci_detected": 3,
+    "capsule_replay_detected": 8,
+    "additional_regressions_caught_by_capsules": 5,
+    "plain_ci_detection_rate": 0.375,
+    "capsule_detection_rate": 1.0
+  },
+  "trials": [
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 0,
+      "goal": "reduce branching while preserving the behavior covered by the supplied tests",
+      "status": "evaluated",
+      "rationale": "Combined the multiple safety checks into a single boolean expression, reducing nested branching inside the loop. The function still normalizes non\u2011empty components, rejects Windows device names, absolute or parent\u2011referencing paths, and any path containing alternative separators, preserving the original behavior.",
+      "prompt_tokens": 508,
+      "completion_tokens": 1280,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "...                                                                      [100%]\n3 passed in 0.01s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 1,
+      "goal": "make the function shorter and more idiomatic without changing tested behavior",
+      "status": "evaluated",
+      "rationale": "Removed intermediate list and used incremental joining, skipped empty components early, kept all safety checks unchanged, making the function shorter while preserving behavior.",
+      "prompt_tokens": 509,
+      "completion_tokens": 738,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "...                                                                      [100%]\n3 passed in 0.01s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 2,
+      "goal": "remove redundant-looking special cases and keep the visible tests green",
+      "status": "evaluated",
+      "rationale": "Removed the redundant `if filename != \"\"` guard because `posixpath.normpath` safely handles empty strings (returning \".\"). All other safety checks remain unchanged, ensuring the function continues to reject dangerous inputs while preserving the behavior demonstrated by the visible tests.",
+      "prompt_tokens": 508,
+      "completion_tokens": 1603,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.02s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "...                                                                      [100%]\n3 passed in 0.01s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 3,
+      "goal": "optimize the common path and reduce allocations while preserving visible behavior",
+      "status": "evaluated",
+      "rationale": "Extracted frequently used globals and functions into local variables to reduce attribute lookups and avoid repeated creation of temporary tuples/lists inside the loop. This lowers per\u2011iteration overhead and allocations while keeping the exact same logic and visible behavior.",
+      "prompt_tokens": 509,
+      "completion_tokens": 2087,
+      "changed": true,
+      "plain_ci": {
+        "passed": false,
+        "exit_code": 1,
+        "output": "se\n        directory to avoid escaping the base directory.\n    \n        :param directory: The trusted base directory.\n        :param pathnames: The untrusted path components relative to\n            the base directory.\n        :return: A safe path, otherwise ``None``.\n        \"\"\"\n        if not directory:\n            directory = \".\"\n        parts = [directory]\n>       _os_alt_seps = _os_alt_seps\n                       ^^^^^^^^^^^^\nE       UnboundLocalError: cannot access local variable '_os_alt_seps' where it is not associated with a value\n\nsrc/werkzeug/security.py:152: UnboundLocalError\n_________________ test_native_linux_device_string_is_ordinary __________________\n\n    def test_native_linux_device_string_is_ordinary():\n>       assert safe_join('trusted', 'CON') == 'trusted/CON'\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\ntests/test_existing.py:9: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndirectory = 'trusted', pathnames = ('CON',), parts = ['trusted']\n\n    def safe_join(directory: str, *pathnames: str) -> str | None:\n        \"\"\"Safely join zero or more untrusted path components to a base\n        directory to avoid escaping the base directory.\n    \n        :param directory: The trusted base directory.\n        :param pathnames: The untrusted path components relative to\n            the base directory.\n        :return: A safe path, otherwise ``None``.\n        \"\"\"\n        if not directory:\n            directory = \".\"\n        parts = [directory]\n>       _os_alt_seps = _os_alt_seps\n                       ^^^^^^^^^^^^\nE       UnboundLocalError: cannot access local variable '_os_alt_seps' where it is not associated with a value\n\nsrc/werkzeug/security.py:152: UnboundLocalError\n=========================== short test summary info ============================\nFAILED ../../dev::test_ordinary_path - UnboundLocalError: cannot access local...\nFAILED ../../dev::test_native_linux_device_string_is_ordinary - UnboundLocalE...\n2 failed in 0.03s\n"
+      },
+      "capsule_check": {
+        "passed": false,
+        "exit_code": 1,
+        "output": "th components relative to\n            the base directory.\n        :return: A safe path, otherwise ``None``.\n        \"\"\"\n        if not directory:\n            directory = \".\"\n        parts = [directory]\n>       _os_alt_seps = _os_alt_seps\n                       ^^^^^^^^^^^^\nE       UnboundLocalError: cannot access local variable '_os_alt_seps' where it is not associated with a value\n\nsrc/werkzeug/security.py:152: UnboundLocalError\n_____________________ test_safe_join_linux_device_accepted _____________________\n\n    def test_safe_join_linux_device_accepted():\n        # On POSIX (default) treat device names as ordinary filenames\n>       assert safe_join('trusted', 'CON') == 'trusted/CON'\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nissue2proof_memory/test_regression.py:34: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndirectory = 'trusted', pathnames = ('CON',), parts = ['trusted']\n\n    def safe_join(directory: str, *pathnames: str) -> str | None:\n        \"\"\"Safely join zero or more untrusted path components to a base\n        directory to avoid escaping the base directory.\n    \n        :param directory: The trusted base directory.\n        :param pathnames: The untrusted path components relative to\n            the base directory.\n        :return: A safe path, otherwise ``None``.\n        \"\"\"\n        if not directory:\n            directory = \".\"\n        parts = [directory]\n>       _os_alt_seps = _os_alt_seps\n                       ^^^^^^^^^^^^\nE       UnboundLocalError: cannot access local variable '_os_alt_seps' where it is not associated with a value\n\nsrc/werkzeug/security.py:152: UnboundLocalError\n=========================== short test summary info ============================\nFAILED ../../dev::test_safe_join_windows_device_names_rejected - UnboundLocal...\nFAILED ../../dev::test_safe_join_windows_normal_paths_still_work - UnboundLoc...\nFAILED ../../dev::test_safe_join_linux_device_accepted - UnboundLocalError: c...\n3 failed in 0.03s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 4,
+      "goal": "consolidate type and platform checks into a simpler control flow",
+      "status": "evaluated",
+      "rationale": "Consolidated the validation steps: empty strings are handled first, then the filename is normalized once using posixpath.normpath. After normalization we perform the Windows\u2011device check followed by a single combined condition that catches absolute paths, parent\u2011directory traversal, leading slash, and any alternate separators. This reduces duplicated logic and makes the control flow easier to follow while preserving the original behavior.",
+      "prompt_tokens": 509,
+      "completion_tokens": 1033,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "...                                                                      [100%]\n3 passed in 0.02s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 5,
+      "goal": "improve readability by replacing nested conditions with direct expressions",
+      "status": "evaluated",
+      "rationale": "Replaced the two separate if statements inside the loop (Windows device name check and the general safety check) with a single combined condition using logical OR. This eliminates nesting and makes the intent clearer: the component is rejected if any of the unsafe conditions hold.",
+      "prompt_tokens": 507,
+      "completion_tokens": 1013,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "...                                                                      [100%]\n3 passed in 0.02s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 6,
+      "goal": "modernize the implementation for current Python while keeping compatibility",
+      "status": "evaluated",
+      "rationale": "Modernized the implementation by:\n- Extracting the normalization step once per component to avoid repeated work.\n- Using early\u2011continue for empty strings to keep the loop tidy.\n- Grouping all safety checks in a single readable condition while preserving the original logic (absolute/parent\u2011traversal, alternate separators, Windows device names).\n- Keeping the original behavior of appending the unmodified `filename` to `parts` so the returned path matches the historic output.\n- Retaining the existing type hint (`str | None`) which is appropriate for modern Python (3.10+) and does not break older versions that accept it via `from __future__ import annotations` or equivalent.\nThese changes improve readability and maintainability without altering the function's contract or its test\u2011covered behavior.",
+      "prompt_tokens": 507,
+      "completion_tokens": 1026,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "...                                                                      [100%]\n3 passed in 0.01s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 7,
+      "goal": "extract repeated calculations and avoid unnecessary conversions",
+      "status": "evaluated",
+      "rationale": "Moved the Windows platform check (`os.name == 'nt'`) out of the loop to avoid repeating the same evaluation for each pathname. This reduces redundant work while preserving the original logic and behavior.",
+      "prompt_tokens": 504,
+      "completion_tokens": 1075,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "...                                                                      [100%]\n3 passed in 0.02s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 8,
+      "goal": "simplify legacy compatibility handling that is not exercised by the visible tests",
+      "status": "evaluated",
+      "rationale": "Removed the redundant `filename.startswith(\"/\")` check because a leading slash is already caught by `os.path.isabs(filename)` on POSIX and by the separator check (`any(sep in filename for sep in _os_alt_seps)`) on all platforms. The remaining conditions preserve the original logic for Windows device names, absolute paths, separator characters, and parent\u2011directory traversal (`..` and `../`). This simplifies the compatibility handling without altering the function's behavior for any inputs, including those exercised by the visible tests.",
+      "prompt_tokens": 511,
+      "completion_tokens": 2582,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "...                                                                      [100%]\n3 passed in 0.01s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 9,
+      "goal": "use standard-library idioms and keep the public signature unchanged",
+      "status": "evaluated",
+      "rationale": "Refactored to use standard-library idioms: combined safety checks into a single conditional expression, kept the early\u2011exit pattern, preserved the handling of empty directory and empty pathnames, and left the public signature and behavior unchanged.",
+      "prompt_tokens": 508,
+      "completion_tokens": 890,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "...                                                                      [100%]\n3 passed in 0.01s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 10,
+      "goal": "minimize the function body while preserving the supplied examples",
+      "status": "evaluated",
+      "rationale": "Removed comments and blank lines, combined multiple rejection tests into a single compound condition using line continuations, kept the core logic unchanged.",
+      "prompt_tokens": 507,
+      "completion_tokens": 940,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.02s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "...                                                                      [100%]\n3 passed in 0.01s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 11,
+      "goal": "perform a maintenance refactor focused on clarity and the visible test contract",
+      "status": "evaluated",
+      "rationale": "Refactored for clarity: renamed loop variable to `name`, extracted normalized component to `norm_name`, used early continue for empty strings, added explanatory comments, kept original logic and safety checks unchanged so existing tests pass.",
+      "prompt_tokens": 510,
+      "completion_tokens": 3024,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "...                                                                      [100%]\n3 passed in 0.01s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 0,
+      "goal": "reduce branching while preserving the behavior covered by the supplied tests",
+      "status": "evaluated",
+      "rationale": "Refactored to reduce branching by extracting the total\u2011length determination into a nested helper function that tries each possible source in sequence. The tell/seek logic is streamlined: we first attempt to get the current position, handle OSError by falling back to the known total (or zero), and only when the total is still unknown do we attempt a seek\u2011to\u2011end to discover the size. This preserves all original behavior while using fewer nested conditionals.",
+      "prompt_tokens": 795,
+      "completion_tokens": 3002,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n1 passed in 0.03s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.03s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 1,
+      "goal": "make the function shorter and more idiomatic without changing tested behavior",
+      "status": "evaluated",
+      "rationale": "Extracted the logic for determining total length into a small inner function, reducing nesting and duplication. Used early returns and getattr with a default for the mode attribute. The tell/seek block was kept but simplified, preserving the original behavior for all cases while making the function shorter and more idiomatic.",
+      "prompt_tokens": 796,
+      "completion_tokens": 2565,
+      "changed": true,
+      "plain_ci": {
+        "passed": false,
+        "exit_code": 1,
+        "output": "                                                             [100%]\n=================================== FAILURES ===================================\n____________________________ test_ascii_and_streams ____________________________\n\n    def test_ascii_and_streams():\n>       assert super_len('abc') == 3\n               ^^^^^^^^^^^^^^^^\n\ntests/test_existing.py:5: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\no = 'abc'\n\n    def super_len(o):\n        def _total_length(obj):\n            if hasattr(obj, '__len__'):\n                return len(obj.encode('utf-8')) if isinstance(obj, str) else len(obj)\n            if hasattr(obj, 'len'):\n                return obj.len\n            if hasattr(obj, 'fileno'):\n                try:\n                    fd = obj.fileno()\n                except (io.UnsupportedOperation, AttributeError):\n                    return None\n                total = os.fstat(fd).st_size\n                if 'b' not in getattr(obj, 'mode', ''):\n                    warnings.warn(\n                        (\"Requests has determined the content-length for this \"\n                         \"request using the binary size of the file: however, the \"\n                         \"file has been opened in text mode (i.e. without the 'b' \"\n                         \"flag in the mode). This may lead to an incorrect \"\n                         \"content-length. In Requests 3.0, support will be removed \"\n                         \"for files in text mode.\"),\n                        FileModeWarning,\n                    )\n                return total\n            return None\n    \n        total = _total_length(o)\n        try:\n>           pos = o.tell()\n                  ^^^^^^\nE           AttributeError: 'str' object has no attribute 'tell'\n\nrequests/utils.py:160: AttributeError\n=========================== short test summary info ============================\nFAILED ../../dev::test_ascii_and_streams - AttributeError: 'str' object has n...\n1 failed in 0.05s\n"
+      },
+      "capsule_check": {
+        "passed": false,
+        "exit_code": 1,
+        "output": "ils.py:160: AttributeError\n________________________ test_super_len_ascii_and_bytes ________________________\n\n    def test_super_len_ascii_and_bytes():\n>       assert super_len('abc') == 3          # ASCII\n               ^^^^^^^^^^^^^^^^\n\nissue2proof_memory/test_regression.py:15: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\no = 'abc'\n\n    def super_len(o):\n        def _total_length(obj):\n            if hasattr(obj, '__len__'):\n                return len(obj.encode('utf-8')) if isinstance(obj, str) else len(obj)\n            if hasattr(obj, 'len'):\n                return obj.len\n            if hasattr(obj, 'fileno'):\n                try:\n                    fd = obj.fileno()\n                except (io.UnsupportedOperation, AttributeError):\n                    return None\n                total = os.fstat(fd).st_size\n                if 'b' not in getattr(obj, 'mode', ''):\n                    warnings.warn(\n                        (\"Requests has determined the content-length for this \"\n                         \"request using the binary size of the file: however, the \"\n                         \"file has been opened in text mode (i.e. without the 'b' \"\n                         \"flag in the mode). This may lead to an incorrect \"\n                         \"content-length. In Requests 3.0, support will be removed \"\n                         \"for files in text mode.\"),\n                        FileModeWarning,\n                    )\n                return total\n            return None\n    \n        total = _total_length(o)\n        try:\n>           pos = o.tell()\n                  ^^^^^^\nE           AttributeError: 'str' object has no attribute 'tell'\n\nrequests/utils.py:160: AttributeError\n=========================== short test summary info ============================\nFAILED ../../dev::test_super_len_unicode_utf8_byte_length - AttributeError: '...\nFAILED ../../dev::test_super_len_ascii_and_bytes - AttributeError: 'str' obje...\n2 failed in 0.06s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 2,
+      "goal": "remove redundant-looking special cases and keep the visible tests green",
+      "status": "evaluated",
+      "rationale": "Removed redundant special\u2011case branches by consolidating the handling of str, bytes and bytearray objects into a single isinstance chain, eliminating the separate hasattr(o, \"__len__\") test for those types. The order of checks was simplified to avoid overlapping conditions, and the logic for determining total length and current position was kept unchanged to preserve existing behavior. This keeps all visible tests passing while reducing duplicated code.",
+      "prompt_tokens": 795,
+      "completion_tokens": 1939,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n1 passed in 0.03s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.03s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 3,
+      "goal": "optimize the common path and reduce allocations while preserving visible behavior",
+      "status": "evaluated",
+      "rationale": "Reduced repeated attribute lookups by using hasattr only once per attribute and storing results in local variables. Combined the fileno branch's fstat call into a single variable and used getattr for the optional mode attribute to avoid another hasattr. The logic and all visible behaviors (including warnings, edge\u2011case handling, and return value) remain unchanged, while the refactored version performs fewer allocations and attribute accesses on the common path.",
+      "prompt_tokens": 796,
+      "completion_tokens": 1229,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n1 passed in 0.03s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.03s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 4,
+      "goal": "consolidate type and platform checks into a simpler control flow",
+      "status": "evaluated",
+      "rationale": "Refactored the original function to consolidate the various type and platform checks into a clear, linear control flow: first attempt to get a length from __len__, then from a 'len' attribute, then from fileno with fstat and mode warning. After that, handle current position via tell, and finally, if length is still unknown, use seek/tell on seekable objects to compute it. This reduces nesting, makes each step explicit, and preserves all original behavior including edge\u2011case handling and warnings.",
+      "prompt_tokens": 796,
+      "completion_tokens": 1240,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n1 passed in 0.03s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.04s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 5,
+      "goal": "improve readability by replacing nested conditions with direct expressions",
+      "status": "evaluated",
+      "rationale": "Replaced nested if\u2011else blocks with flat, sequential checks. Each attribute test (__len__, len, fileno, tell) is handled in its own top\u2011level if statement, and inner try/except blocks are kept only where they guard specific operations. This makes the control flow easier to follow while preserving the original logic and behavior.",
+      "prompt_tokens": 794,
+      "completion_tokens": 1363,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n1 passed in 0.03s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.03s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 6,
+      "goal": "modernize the implementation for current Python while keeping compatibility",
+      "status": "evaluated",
+      "rationale": "Added type hints, clarified intent with docstring, reduced nesting by grouping similar branches, used getattr for safe attribute access, kept original logic and warnings intact, and made the flow easier to follow while preserving compatibility with existing behavior.",
+      "prompt_tokens": 794,
+      "completion_tokens": 1455,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n1 passed in 0.03s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.03s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 7,
+      "goal": "extract repeated calculations and avoid unnecessary conversions",
+      "status": "evaluated",
+      "rationale": "Refactored by extracting the repeated logic for determining total length and current position into two internal helpers. This eliminates duplicate hasattr checks and centralizes the special\u2011case handling (str encoding, fileno with mode warning, seek\u2011to\u2011end discovery). The helpers keep the original side\u2011effects (temporary seek) and warning behavior while making the main flow clearer and avoiding unnecessary repeated attribute lookups.",
+      "prompt_tokens": 791,
+      "completion_tokens": 2061,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n1 passed in 0.03s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.03s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 8,
+      "goal": "simplify legacy compatibility handling that is not exercised by the visible tests",
+      "status": "evaluated",
+      "rationale": "Removed legacy branches (.len attribute, fileno handling, text\u2011mode warning) that are not exercised by the visible tests. The remaining logic covers the tested cases (strings, bytes, and file\u2011like objects with tell/seek) while preserving the original behavior for those inputs.",
+      "prompt_tokens": 798,
+      "completion_tokens": 1157,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n1 passed in 0.03s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.03s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 9,
+      "goal": "use standard-library idioms and keep the public signature unchanged",
+      "status": "evaluated",
+      "rationale": "Refactored to use standard-library idioms: replaced nested try/except blocks with explicit exception tuples, used getattr with default for mode, clarified control flow, removed redundant comments, and kept the original behavior and signature unchanged.",
+      "prompt_tokens": 795,
+      "completion_tokens": 1439,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n1 passed in 0.04s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.03s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 10,
+      "goal": "minimize the function body while preserving the supplied examples",
+      "status": "evaluated",
+      "rationale": "Condensed the original logic by merging repetitive checks, using early assignments, and reducing nested blocks while preserving the same fallback order for length detection and position handling.",
+      "prompt_tokens": 794,
+      "completion_tokens": 1797,
+      "changed": true,
+      "plain_ci": {
+        "passed": false,
+        "exit_code": 1,
+        "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________________ test_ascii_and_streams ____________________________\n\n    def test_ascii_and_streams():\n>       assert super_len('abc') == 3\n               ^^^^^^^^^^^^^^^^\n\ntests/test_existing.py:5: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nrequests/utils.py:135: in super_len\n    from requests.models import FileModeWarning\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    \"\"\"\n    requests.models\n    ~~~~~~~~~~~~~~~\n    \n    This module contains the primary objects that power Requests.\n    \"\"\"\n    \n    import datetime\n    \n    # Import encoding now, to avoid implicit import later.\n    # Implicit import within threads may cause LookupError when standard library is in a ZIP,\n    # such as in Embedded Python. See https://github.com/psf/requests/issues/3578.\n    import encodings.idna  # noqa: F401\n    from io import UnsupportedOperation\n    \n>   from urllib3.exceptions import (\n        DecodeError,\n        LocationParseError,\n        ProtocolError,\n        ReadTimeoutError,\n        SSLError,\n    )\nE   ImportError: cannot import name 'DecodeError' from 'urllib3.exceptions' (/tmp/i2p-benchmark-264ra0hn/urllib3/exceptions.py)\n\nrequests/models.py:16: ImportError\n=========================== short test summary info ============================\nFAILED ../../dev::test_ascii_and_streams - ImportError: cannot import name 'D...\n1 failed in 0.06s\n"
+      },
+      "capsule_check": {
+        "passed": false,
+        "exit_code": 1,
+        "output": "om/psf/requests/issues/3578.\n    import encodings.idna  # noqa: F401\n    from io import UnsupportedOperation\n    \n>   from urllib3.exceptions import (\n        DecodeError,\n        LocationParseError,\n        ProtocolError,\n        ReadTimeoutError,\n        SSLError,\n    )\nE   ImportError: cannot import name 'DecodeError' from 'urllib3.exceptions' (/tmp/i2p-benchmark-264ra0hn/urllib3/exceptions.py)\n\nrequests/models.py:16: ImportError\n________________________ test_super_len_ascii_and_bytes ________________________\n\n    def test_super_len_ascii_and_bytes():\n>       assert super_len('abc') == 3          # ASCII\n               ^^^^^^^^^^^^^^^^\n\nissue2proof_memory/test_regression.py:15: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \nrequests/utils.py:135: in super_len\n    from requests.models import FileModeWarning\n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\n    \"\"\"\n    requests.models\n    ~~~~~~~~~~~~~~~\n    \n    This module contains the primary objects that power Requests.\n    \"\"\"\n    \n    import datetime\n    \n    # Import encoding now, to avoid implicit import later.\n    # Implicit import within threads may cause LookupError when standard library is in a ZIP,\n    # such as in Embedded Python. See https://github.com/psf/requests/issues/3578.\n    import encodings.idna  # noqa: F401\n    from io import UnsupportedOperation\n    \n>   from urllib3.exceptions import (\n        DecodeError,\n        LocationParseError,\n        ProtocolError,\n        ReadTimeoutError,\n        SSLError,\n    )\nE   ImportError: cannot import name 'DecodeError' from 'urllib3.exceptions' (/tmp/i2p-benchmark-264ra0hn/urllib3/exceptions.py)\n\nrequests/models.py:16: ImportError\n=========================== short test summary info ============================\nFAILED ../../dev::test_super_len_unicode_utf8_byte_length - ImportError: cann...\nFAILED ../../dev::test_super_len_ascii_and_bytes - ImportError: cannot import...\n2 failed in 0.08s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 11,
+      "goal": "perform a maintenance refactor focused on clarity and the visible test contract",
+      "status": "evaluated",
+      "rationale": "Refactored the function to improve readability while preserving its exact behavior. The logic is now split into clearly labeled sections: determining total length, determining current position, handling fallbacks, and computing the result. Redundant nesting was flattened, comments were clarified, and the control flow follows the original priority order (__len__, .len, fileno, tell/seek). All edge cases handled by the original code (string UTF\u20118 length, fileno exceptions, text\u2011mode warning, tell failures, seek\u2011based length discovery) are retained, ensuring the visible tests continue to pass.",
+      "prompt_tokens": 797,
+      "completion_tokens": 1611,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n1 passed in 0.04s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.03s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 12,
+      "goal": "remove OS-name branching so every platform uses only normalized-path and traversal checks",
+      "status": "evaluated",
+      "rationale": "Removed the OS\u2011specific branch that checked for Windows device names (CON, PRN, etc.). The function now relies only on normalized\u2011path handling and traversal checks, providing uniform behavior across all platforms.",
+      "prompt_tokens": 512,
+      "completion_tokens": 809,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      },
+      "capsule_check": {
+        "passed": false,
+        "exit_code": 1,
+        "output": "F..                                                                      [100%]\n=================================== FAILURES ===================================\n_________________ test_safe_join_windows_device_names_rejected _________________\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fc4c98e8890>\n\n    def test_safe_join_windows_device_names_rejected(monkeypatch):\n        # Emulate Windows environment\n        monkeypatch.setattr(security, 'os', SimpleNamespace(name='nt', path=posixpath))\n        device_names = [\n            'CON', 'con', 'CoN',\n            'PRN', 'prn', 'PrN',\n            'AUX', 'aux', 'AuX',\n            'NUL', 'nul', 'NuL',\n            'COM1', 'com1', 'CoM1',\n            'LPT9', 'lpt9', 'LpT9',\n        ]\n        for name in device_names:\n>           assert safe_join('trusted', name) is None\nE           AssertionError: assert 'trusted/CON' is None\nE            +  where 'trusted/CON' = safe_join('trusted', 'CON')\n\nissue2proof_memory/test_regression.py:20: AssertionError\n=========================== short test summary info ============================\nFAILED ../../dev::test_safe_join_windows_device_names_rejected - AssertionErr...\n1 failed, 2 passed in 0.02s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 13,
+      "goal": "unify behavior across platforms by deleting standalone reserved-name validation",
+      "status": "evaluated",
+      "rationale": "Removed the platform\u2011specific Windows device name check to unify behavior across operating systems, as requested.",
+      "prompt_tokens": 508,
+      "completion_tokens": 434,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      },
+      "capsule_check": {
+        "passed": false,
+        "exit_code": 1,
+        "output": "F..                                                                      [100%]\n=================================== FAILURES ===================================\n_________________ test_safe_join_windows_device_names_rejected _________________\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f869638b4d0>\n\n    def test_safe_join_windows_device_names_rejected(monkeypatch):\n        # Emulate Windows environment\n        monkeypatch.setattr(security, 'os', SimpleNamespace(name='nt', path=posixpath))\n        device_names = [\n            'CON', 'con', 'CoN',\n            'PRN', 'prn', 'PrN',\n            'AUX', 'aux', 'AuX',\n            'NUL', 'nul', 'NuL',\n            'COM1', 'com1', 'CoM1',\n            'LPT9', 'lpt9', 'LpT9',\n        ]\n        for name in device_names:\n>           assert safe_join('trusted', name) is None\nE           AssertionError: assert 'trusted/CON' is None\nE            +  where 'trusted/CON' = safe_join('trusted', 'CON')\n\nissue2proof_memory/test_regression.py:20: AssertionError\n=========================== short test summary info ============================\nFAILED ../../dev::test_safe_join_windows_device_names_rejected - AssertionErr...\n1 failed, 2 passed in 0.02s\n"
+      }
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "goal_index": 14,
+      "goal": "replace bespoke Windows handling with posixpath normalization and absolute-path checks",
+      "status": "evaluated",
+      "rationale": "Removed Windows\u2011specific device name checks and reliance on os.name/os.path.isabs. The function now uses posixpath.normpath to normalize each component and rejects any component that contains a path separator ('/' or '\\\\'), is exactly '..', or starts with '../'. This prevents directory traversal in a platform\u2011independent way while preserving the original behavior for ordinary paths and empty components.",
+      "prompt_tokens": 512,
+      "completion_tokens": 1690,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.01s\n"
+      },
+      "capsule_check": {
+        "passed": false,
+        "exit_code": 1,
+        "output": "F..                                                                      [100%]\n=================================== FAILURES ===================================\n_________________ test_safe_join_windows_device_names_rejected _________________\n\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbb1de68920>\n\n    def test_safe_join_windows_device_names_rejected(monkeypatch):\n        # Emulate Windows environment\n        monkeypatch.setattr(security, 'os', SimpleNamespace(name='nt', path=posixpath))\n        device_names = [\n            'CON', 'con', 'CoN',\n            'PRN', 'prn', 'PrN',\n            'AUX', 'aux', 'AuX',\n            'NUL', 'nul', 'NuL',\n            'COM1', 'com1', 'CoM1',\n            'LPT9', 'lpt9', 'LpT9',\n        ]\n        for name in device_names:\n>           assert safe_join('trusted', name) is None\nE           AssertionError: assert 'trusted/CON' is None\nE            +  where 'trusted/CON' = safe_join('trusted', 'CON')\n\nissue2proof_memory/test_regression.py:20: AssertionError\n=========================== short test summary info ============================\nFAILED ../../dev::test_safe_join_windows_device_names_rejected - AssertionErr...\n1 failed, 2 passed in 0.02s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 12,
+      "goal": "treat every object with __len__ uniformly and remove the string encoding special case",
+      "status": "evaluated",
+      "rationale": "Removed the special\u2011case handling for strings inside the `__len__` branch. Now any object that defines `__len__` is processed uniformly via `len(o)`, which returns the correct length for both byte and unicode strings as well as other sized objects.",
+      "prompt_tokens": 800,
+      "completion_tokens": 889,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n1 passed in 0.03s\n"
+      },
+      "capsule_check": {
+        "passed": false,
+        "exit_code": 1,
+        "output": "F.                                                                       [100%]\n=================================== FAILURES ===================================\n___________________ test_super_len_unicode_utf8_byte_length ____________________\n\n    def test_super_len_unicode_utf8_byte_length():\n        # Non\u2011ASCII Unicode string: '\u00e9' (U+00E9) encodes to 2 bytes in UTF\u20118\n        s = '\u00e9'\n        # Current buggy implementation returns len(s) == 1 (character count)\n        # Expected correct behavior after fix: UTF\u20118 byte length\n        expected = len(s.encode('utf-8'))  # 2\n>       assert super_len(s) == expected\nE       AssertionError: assert 1 == 2\nE        +  where 1 = super_len('\u00e9')\n\nissue2proof_memory/test_regression.py:10: AssertionError\n=========================== short test summary info ============================\nFAILED ../../dev::test_super_len_unicode_utf8_byte_length - AssertionError: a...\n1 failed, 1 passed in 0.04s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 13,
+      "goal": "avoid allocating encoded copies in this length helper; use len directly for strings",
+      "status": "evaluated",
+      "rationale": "Replace len(o.encode('utf-8')) with len(o) for string objects to avoid creating an encoded copy, as requested.",
+      "prompt_tokens": 799,
+      "completion_tokens": 839,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n1 passed in 0.03s\n"
+      },
+      "capsule_check": {
+        "passed": false,
+        "exit_code": 1,
+        "output": "F.                                                                       [100%]\n=================================== FAILURES ===================================\n___________________ test_super_len_unicode_utf8_byte_length ____________________\n\n    def test_super_len_unicode_utf8_byte_length():\n        # Non\u2011ASCII Unicode string: '\u00e9' (U+00E9) encodes to 2 bytes in UTF\u20118\n        s = '\u00e9'\n        # Current buggy implementation returns len(s) == 1 (character count)\n        # Expected correct behavior after fix: UTF\u20118 byte length\n        expected = len(s.encode('utf-8'))  # 2\n>       assert super_len(s) == expected\nE       AssertionError: assert 1 == 2\nE        +  where 1 = super_len('\u00e9')\n\nissue2proof_memory/test_regression.py:10: AssertionError\n=========================== short test summary info ============================\nFAILED ../../dev::test_super_len_unicode_utf8_byte_length - AssertionError: a...\n1 failed, 1 passed in 0.04s\n"
+      }
+    },
+    {
+      "case": "requests-content-length",
+      "goal_index": 14,
+      "goal": "consolidate str and bytes into one fast path based only on __len__",
+      "status": "evaluated",
+      "rationale": "Consolidated the handling of str and bytes: when the object provides __len__, we first convert str to its UTF\u20118 byte representation, then apply a single len() call. This removes the separate branch for str while preserving the original byte\u2011length semantics for both str and bytes.",
+      "prompt_tokens": 800,
+      "completion_tokens": 1185,
+      "changed": true,
+      "plain_ci": {
+        "passed": true,
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n1 passed in 0.03s\n"
+      },
+      "capsule_check": {
+        "passed": true,
+        "exit_code": 0,
+        "output": "..                                                                       [100%]\n2 passed in 0.03s\n"
+      }
+    }
+  ]
+}

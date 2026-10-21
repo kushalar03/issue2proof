@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-10-21T10:21:00+05:30",
+  "endpoint": "https://api.tokenfactory.us-central1.nebius.com/v1/models",
+  "status": 200,
+  "models_returned": 18,
+  "embedding_models": [
+    "Qwen/Qwen3-Embedding-8B"
+  ],
+  "nvidia_embedding_model_returned": false,
+  "decision": "Keep Qwen/Qwen3-Embedding-8B for semantic recall until the live catalog exposes an NVIDIA embedding model."
+}

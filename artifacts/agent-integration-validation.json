@@ -1,0 +1,14 @@
+{
+  "validated_at": "2026-10-21T02:59:05Z",
+  "adapter": "scripts/agent_context.py",
+  "endpoint": "POST /api/integrations/context",
+  "schema": "issue2proof.agent-context.v1",
+  "query": "Refactor Windows safe_join path normalization and reserved device names",
+  "method": "lexical",
+  "matches": 1,
+  "top_memory_id": "a27e8526-8bc3-4901-b139-95dd89775c7d",
+  "top_relevance": 0.213201,
+  "scope": ["src/werkzeug/security.py"],
+  "regression_source_withheld": true,
+  "result": "passed"
+}

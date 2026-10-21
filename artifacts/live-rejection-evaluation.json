@@ -1,0 +1,313 @@
+{
+  "case": "repository",
+  "mode": "reviewed negative-control repository fixture",
+  "issue": "An excess discount makes the total negative. Clamp the total to zero while preserving normal order totals.",
+  "verdict": "unresolved",
+  "explanation": "Candidate failed one or more checks; no passing repair accepted.",
+  "attempts": [],
+  "events": [
+    "Archive inspected in memory; no files extracted or executed.",
+    "Generated regression hashed before repair. Candidate only changes implementation files.",
+    "Remote tests ran as an unprivileged user against root-owned files with no guest network; controller collected bounded evidence."
+  ],
+  "sources": {
+    "pricing.py": "def total(subtotal, discount):\n    return subtotal - discount\n"
+  },
+  "existing_tests": {
+    "tests/test_existing.py": "from pricing import total\n\ndef test_normal_discount():\n    assert total(100, 20) == 80\n",
+    "tests/test_boundaries.py": "from pricing import total\n\ndef test_boundaries():\n    for subtotal, discount, expected in [(0, 0, 0), (50, 50, 0), (75, 0, 75), (10, 11, 0)]:\n        assert total(subtotal, discount) == expected\n"
+  },
+  "dependency_manifests": {
+    "requirements.txt": "pytest==8.4.2\n"
+  },
+  "file_hashes": {
+    "pricing.py": "f1b646ee2404150db0dbc7136dce73b84d685cdb14eb14cbac251fc7a631a16a",
+    "tests/test_existing.py": "21d339c4b9b979a8e15717907cd7a4c4dd0e05ebe7d312c588f56f89e0ec1366",
+    "tests/test_boundaries.py": "365c3933121ebdcc68258b2de9a71490594b672465648ffebae9cb40c9df6c04",
+    "requirements.txt": "bf4dc0555928a3facf67b3370001388d4b65e69a071c339f8b201310bde4486a"
+  },
+  "archive_sha256": "b4abd4fb4c686693aa2efaa846e31dd42791e276f0a9d797402a7f60fd6a4301",
+  "excluded_files": [],
+  "limitations": [
+    "Passing checks cover the listed inputs only, not universal correctness.",
+    "Arbitrary Python can tamper with its own pytest process; checks_passed is execution evidence, not adversarial proof.",
+    "Dependencies must already exist in the selected immutable image. No uploaded setup scripts or package installers run."
+  ],
+  "independent_test_paths": [
+    "tests/test_boundaries.py"
+  ],
+  "model_requests": [],
+  "generated_regression": {
+    "path": "issue2proof_generated/test_regression.py",
+    "source": "from pricing import total\n\ndef test_excess_discount():\n    assert total(100, 150) == 0\n",
+    "sha256": "9010a1267491348094471af1dabdbbf7964d5d3281227a08deb29062c0137988"
+  },
+  "test_hashes": {
+    "tests/test_existing.py": "21d339c4b9b979a8e15717907cd7a4c4dd0e05ebe7d312c588f56f89e0ec1366",
+    "tests/test_boundaries.py": "365c3933121ebdcc68258b2de9a71490594b672465648ffebae9cb40c9df6c04",
+    "issue2proof_generated/test_regression.py": "9010a1267491348094471af1dabdbbf7964d5d3281227a08deb29062c0137988"
+  },
+  "draft_changes": {
+    "pricing.py": "def total(subtotal, discount):\n    return 0\n"
+  },
+  "candidate_hashes": {
+    "pricing.py": "0f6fc047492f7525abf162b727f1cc9f6f2b067cfeb3d0814b1405818ab9d5d0"
+  },
+  "draft_diff": "--- a/pricing.py\n+++ b/pricing.py\n@@ -1,2 +1,2 @@\n def total(subtotal, discount):\n-    return subtotal - discount\n+    return 0\n",
+  "verification": {
+    "baseline": {
+      "operation_id": "01a13ae6-74f5-700b-a1e8-a2708f77ea08",
+      "status": "SUCCESS",
+      "exit_code": 0,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.0030322100000000005,
+      "seconds": 2.067,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_existing.py",
+      "output": ".                                                                        [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n1 passed in 0.01s\n",
+      "evidence_valid": true,
+      "timed_out": false,
+      "summary": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 0,
+      "failure_nodes": [],
+      "files_intact": true,
+      "input_hashes": {
+        "pricing.py": "f1b646ee2404150db0dbc7136dce73b84d685cdb14eb14cbac251fc7a631a16a",
+        "tests/test_existing.py": "21d339c4b9b979a8e15717907cd7a4c4dd0e05ebe7d312c588f56f89e0ec1366"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "independent_baseline": {
+      "operation_id": "01a13ae6-7c2c-70cf-b91d-5d69b5ba5021",
+      "status": "SUCCESS",
+      "exit_code": 1,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.00309126,
+      "seconds": 1.829,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_boundaries.py",
+      "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________________ test_boundaries ________________________________\ntests/test_boundaries.py:5: in test_boundaries\n    assert total(subtotal, discount) == expected\nE   assert -1 == 0\nE    +  where -1 = total(10, 11)\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n=========================== short test summary info ============================\nFAILED ../dev::test_boundaries - assert -1 == 0\n1 failed in 0.02s\n",
+      "evidence_valid": true,
+      "timed_out": false,
+      "summary": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 1,
+      "failure_nodes": [
+        "::test_boundaries"
+      ],
+      "files_intact": true,
+      "input_hashes": {
+        "pricing.py": "f1b646ee2404150db0dbc7136dce73b84d685cdb14eb14cbac251fc7a631a16a",
+        "tests/test_boundaries.py": "365c3933121ebdcc68258b2de9a71490594b672465648ffebae9cb40c9df6c04"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "reproduction": {
+      "operation_id": "01a13ae6-8351-72a6-a606-9c740f7b5b4f",
+      "status": "SUCCESS",
+      "exit_code": 1,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.0031074200000000005,
+      "seconds": 1.54,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest issue2proof_generated/test_regression.py",
+      "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_____________________________ test_excess_discount _____________________________\nissue2proof_generated/test_regression.py:4: in test_excess_discount\n    assert total(100, 150) == 0\nE   assert -50 == 0\nE    +  where -50 = total(100, 150)\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n=========================== short test summary info ============================\nFAILED ../dev::test_excess_discount - assert -50 == 0\n1 failed in 0.02s\n",
+      "evidence_valid": true,
+      "timed_out": false,
+      "summary": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 1,
+      "failure_nodes": [
+        "::test_excess_discount"
+      ],
+      "files_intact": true,
+      "input_hashes": {
+        "pricing.py": "f1b646ee2404150db0dbc7136dce73b84d685cdb14eb14cbac251fc7a631a16a",
+        "issue2proof_generated/test_regression.py": "9010a1267491348094471af1dabdbbf7964d5d3281227a08deb29062c0137988"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "regression": {
+      "operation_id": "01a13ae6-8957-74b7-aac5-096e6f764b8e",
+      "status": "SUCCESS",
+      "exit_code": 0,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.0030265100000000005,
+      "seconds": 1.473,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest issue2proof_generated/test_regression.py",
+      "output": ".                                                                        [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n1 passed in 0.01s\n",
+      "evidence_valid": true,
+      "timed_out": false,
+      "summary": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 0,
+      "failure_nodes": [],
+      "files_intact": true,
+      "input_hashes": {
+        "pricing.py": "0f6fc047492f7525abf162b727f1cc9f6f2b067cfeb3d0814b1405818ab9d5d0",
+        "issue2proof_generated/test_regression.py": "9010a1267491348094471af1dabdbbf7964d5d3281227a08deb29062c0137988"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "existing": {
+      "operation_id": "01a13ae6-8f17-77a4-a9bc-0ca3810e54c0",
+      "status": "SUCCESS",
+      "exit_code": 1,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.0031874600000000005,
+      "seconds": 1.525,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_existing.py",
+      "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_____________________________ test_normal_discount _____________________________\ntests/test_existing.py:4: in test_normal_discount\n    assert total(100, 20) == 80\nE   assert 0 == 80\nE    +  where 0 = total(100, 20)\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n=========================== short test summary info ============================\nFAILED ../dev::test_normal_discount - assert 0 == 80\n1 failed in 0.02s\n",
+      "evidence_valid": true,
+      "timed_out": false,
+      "summary": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 1,
+      "failure_nodes": [
+        "::test_normal_discount"
+      ],
+      "files_intact": true,
+      "input_hashes": {
+        "pricing.py": "0f6fc047492f7525abf162b727f1cc9f6f2b067cfeb3d0814b1405818ab9d5d0",
+        "tests/test_existing.py": "21d339c4b9b979a8e15717907cd7a4c4dd0e05ebe7d312c588f56f89e0ec1366"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "independent": {
+      "operation_id": "01a13ae6-9513-71c3-a2fa-2745249ac1fb",
+      "status": "SUCCESS",
+      "exit_code": 1,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.0030923799999999996,
+      "seconds": 1.505,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_boundaries.py",
+      "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________________________ test_boundaries ________________________________\ntests/test_boundaries.py:5: in test_boundaries\n    assert total(subtotal, discount) == expected\nE   assert 0 == 75\nE    +  where 0 = total(75, 0)\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n=========================== short test summary info ============================\nFAILED ../dev::test_boundaries - assert 0 == 75\n1 failed in 0.02s\n",
+      "evidence_valid": true,
+      "timed_out": false,
+      "summary": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 1,
+      "failure_nodes": [
+        "::test_boundaries"
+      ],
+      "files_intact": true,
+      "input_hashes": {
+        "pricing.py": "0f6fc047492f7525abf162b727f1cc9f6f2b067cfeb3d0814b1405818ab9d5d0",
+        "tests/test_boundaries.py": "365c3933121ebdcc68258b2de9a71490594b672465648ffebae9cb40c9df6c04"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    }
+  }
+}

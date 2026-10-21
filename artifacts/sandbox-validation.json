@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "mode": "remote reviewed smoke check",
+  "image": "4fa16c8f-62a9-35a4-a4ea-07b7e8cd44ae",
+  "exit_code": 0,
+  "stdout": "{\"sha256\": \"b48223c5eda5198c14ccf47fa3c5c6c797a924445f35c9593b10e950e454f296\"}\n",
+  "stderr": "",
+  "seconds": 0.092518,
+  "cost": 0.00102468,
+  "output_truncated": false,
+  "payload_sha256": "b48223c5eda5198c14ccf47fa3c5c6c797a924445f35c9593b10e950e454f296",
+  "file_transfer_verified": true,
+  "disposable": true,
+  "timeout_seconds": 30,
+  "arbitrary_execution_enabled": false,
+  "limitations": [
+    "Network isolation and memory/CPU quotas are not yet validated.",
+    "This smoke check does not verify a repair or execute model output."
+  ]
+}

@@ -1,0 +1,957 @@
+{
+  "case": "repository",
+  "mode": "repository draft",
+  "issue": "Add calendar months preserving the day when valid and clamping to month end otherwise. Preserve zero and negative offsets. The implementation currently adds fixed 30-day intervals.",
+  "verdict": "checks_passed",
+  "explanation": "Original failure reproduced before repair. Candidate 2 passed frozen regression, existing and independent tests.",
+  "attempts": [
+    {
+      "number": 1,
+      "checks": {
+        "regression": {
+          "operation_id": "01a13b6a-f43a-70ec-ba29-1bba769470fd",
+          "status": "SUCCESS",
+          "exit_code": 1,
+          "timed_out": false,
+          "stderr": "",
+          "output_truncated": false,
+          "cost": 0.01090378,
+          "seconds": 2.931,
+          "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+          "network_disabled": true,
+          "disposable": true,
+          "result_image": null,
+          "command": "python -m pytest issue2proof_generated/test_regression.py",
+          "output": "..F                                                                      [100%]\n=================================== FAILURES ===================================\n________________________ test_add_months_year_boundary _________________________\nissue2proof_generated/test_regression.py:36: in test_add_months_year_boundary\n    assert add_months(date(2026, 11, 30), 2) == date(2027, 1, 31)  # Nov->Jan via Dec (clamp) then Jan 31\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   assert datetime.date(2027, 1, 30) == datetime.date(2027, 1, 31)\nE    +  where datetime.date(2027, 1, 30) = add_months(datetime.date(2026, 11, 30), 2)\nE    +    where datetime.date(2026, 11, 30) = date(2026, 11, 30)\nE    +  and   datetime.date(2027, 1, 31) = date(2027, 1, 31)\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n=========================== short test summary info ============================\nFAILED ../dev::test_add_months_year_boundary - assert datetime.date(2027, 1, ...\n1 failed, 2 passed in 0.04s\n",
+          "evidence_valid": true,
+          "summary": {
+            "tests": 3,
+            "failures": 1,
+            "errors": 0,
+            "skipped": 0
+          },
+          "assertion_failures": 1,
+          "failure_nodes": [
+            "::test_add_months_year_boundary"
+          ],
+          "files_intact": true,
+          "input_hashes": {
+            "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+            "src/calendar_app/__init__.py": "856cb693c572181b1830f2768adc60523eae9a515b39307f50659d24732cc223",
+            "issue2proof_generated/test_regression.py": "e3b3ef1c91babbc03b68f1039e0763395160543cebdaedcb1661ae7073e0d374",
+            "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+            "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+          },
+          "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+          "pytest": "8.4.2",
+          "build": {
+            "exit_code": 0,
+            "output": "Processing /tmp/tmp2_q_jrhq/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1584 sha256=b630a68009ccefd53aee4b3718ed0054bcc6df6ad2b0f877816a27b02a89afdc\n  Stored in directory: /tmp/pip-ephem-wheel-cache-damufu59/wheels/30/7d/0e/2f4c99975aea6444c26bff4254fc7be9315f634f805fe84c97\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+            "network_disabled": true,
+            "uid": 65534
+          },
+          "uid": 65534,
+          "no_new_privileges": true,
+          "limits": {
+            "memory_bytes": 536870912,
+            "cpu_seconds": 15,
+            "processes": 32,
+            "file_bytes": 1048576,
+            "wall_seconds": 20
+          }
+        },
+        "existing": {
+          "operation_id": "01a13b6a-ffba-7202-b676-9af69415e9c5",
+          "status": "SUCCESS",
+          "exit_code": 0,
+          "timed_out": false,
+          "stderr": "",
+          "output_truncated": false,
+          "cost": 0.010463509999999999,
+          "seconds": 2.576,
+          "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+          "network_disabled": true,
+          "disposable": true,
+          "result_image": null,
+          "command": "python -m pytest tests/test_existing.py",
+          "output": "..                                                                       [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n2 passed in 0.02s\n",
+          "evidence_valid": true,
+          "summary": {
+            "tests": 2,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "assertion_failures": 0,
+          "failure_nodes": [],
+          "files_intact": true,
+          "input_hashes": {
+            "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+            "src/calendar_app/__init__.py": "856cb693c572181b1830f2768adc60523eae9a515b39307f50659d24732cc223",
+            "tests/test_existing.py": "3f7288ab95ddbacfc0eb7f872f3e5e939b1964aa62265e1bf640284eb7de0578",
+            "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+            "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+          },
+          "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+          "pytest": "8.4.2",
+          "build": {
+            "exit_code": 0,
+            "output": "Processing /tmp/tmpg9okc7zt/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1584 sha256=6fb4cb5b376d250b76b3bbb1e41cba7e7a25e1f0ffbdb9c917d22b06c3ff603e\n  Stored in directory: /tmp/pip-ephem-wheel-cache-tz3bo5uw/wheels/78/59/0e/a2356caddae288d791fd1d51c8cc2d1797e4c9cd963def230c\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+            "network_disabled": true,
+            "uid": 65534
+          },
+          "uid": 65534,
+          "no_new_privileges": true,
+          "limits": {
+            "memory_bytes": 536870912,
+            "cpu_seconds": 15,
+            "processes": 32,
+            "file_bytes": 1048576,
+            "wall_seconds": 20
+          }
+        },
+        "independent": {
+          "operation_id": "01a13b6b-09dc-7676-a686-e4bc507ab4fe",
+          "status": "SUCCESS",
+          "exit_code": 0,
+          "timed_out": false,
+          "stderr": "",
+          "output_truncated": false,
+          "cost": 0.01047941,
+          "seconds": 2.64,
+          "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+          "network_disabled": true,
+          "disposable": true,
+          "result_image": null,
+          "command": "python -m pytest tests/test_independent.py",
+          "output": ".                                                                        [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n1 passed in 0.02s\n",
+          "evidence_valid": true,
+          "summary": {
+            "tests": 1,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "assertion_failures": 0,
+          "failure_nodes": [],
+          "files_intact": true,
+          "input_hashes": {
+            "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+            "src/calendar_app/__init__.py": "856cb693c572181b1830f2768adc60523eae9a515b39307f50659d24732cc223",
+            "tests/test_independent.py": "ae05ad382ca1d1beb2f0406619492e62264f19a3e9eee6acb9d21651eb5223d3",
+            "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+            "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+          },
+          "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+          "pytest": "8.4.2",
+          "build": {
+            "exit_code": 0,
+            "output": "Processing /tmp/tmpadcw2132/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1584 sha256=54c49b31f93ead0029cb647780ac0acf6901fa652ac7d5f27e1d6787eeca6f11\n  Stored in directory: /tmp/pip-ephem-wheel-cache-dmt19a76/wheels/e2/bc/38/9e81c79174c0b71feb8f59a9f1ad4cc52ddaa55d1afc97c704\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+            "network_disabled": true,
+            "uid": 65534
+          },
+          "uid": 65534,
+          "no_new_privileges": true,
+          "limits": {
+            "memory_bytes": 536870912,
+            "cpu_seconds": 15,
+            "processes": 32,
+            "file_bytes": 1048576,
+            "wall_seconds": 20
+          }
+        }
+      },
+      "accepted": false,
+      "changes": {
+        "src/calendar_app/__init__.py": "from datetime import timedelta\n\nfrom dateutil.relativedelta import relativedelta\n\n\ndef add_months(day, months):\n    return day + relativedelta(months=months)\n"
+      },
+      "diff": "--- a/src/calendar_app/__init__.py\n+++ b/src/calendar_app/__init__.py\n@@ -4,4 +4,4 @@\n \n \n def add_months(day, months):\n-    return day + timedelta(days=30 * months)\n+    return day + relativedelta(months=months)\n",
+      "hashes": {
+        "src/calendar_app/__init__.py": "856cb693c572181b1830f2768adc60523eae9a515b39307f50659d24732cc223"
+      }
+    },
+    {
+      "number": 2,
+      "checks": {
+        "regression": {
+          "operation_id": "01a13b6b-66e8-738e-aa1b-7623741f6c6f",
+          "status": "SUCCESS",
+          "exit_code": 0,
+          "timed_out": false,
+          "stderr": "",
+          "output_truncated": false,
+          "cost": 0.0108541,
+          "seconds": 14.701,
+          "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+          "network_disabled": true,
+          "disposable": true,
+          "result_image": null,
+          "command": "python -m pytest issue2proof_generated/test_regression.py",
+          "output": "...                                                                      [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n3 passed in 0.03s\n",
+          "evidence_valid": true,
+          "summary": {
+            "tests": 3,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "assertion_failures": 0,
+          "failure_nodes": [],
+          "files_intact": true,
+          "input_hashes": {
+            "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+            "src/calendar_app/__init__.py": "a3147e86ac5571f44e45a84b60b32aafa4e04e1cfc98c0abd04472b7d10fda77",
+            "issue2proof_generated/test_regression.py": "e3b3ef1c91babbc03b68f1039e0763395160543cebdaedcb1661ae7073e0d374",
+            "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+            "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+          },
+          "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+          "pytest": "8.4.2",
+          "build": {
+            "exit_code": 0,
+            "output": "Processing /tmp/tmpjfovv4de/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1741 sha256=d3564bbffc87fb4d0d134462e4fbce3a49773baabac6c577c411fcc4c901bd48\n  Stored in directory: /tmp/pip-ephem-wheel-cache-rvry_brk/wheels/55/e1/cc/ea758a42bdddd6142022a2e25f8d4353f8d58b774cd28d0b3f\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+            "network_disabled": true,
+            "uid": 65534
+          },
+          "uid": 65534,
+          "no_new_privileges": true,
+          "limits": {
+            "memory_bytes": 536870912,
+            "cpu_seconds": 15,
+            "processes": 32,
+            "file_bytes": 1048576,
+            "wall_seconds": 20
+          }
+        },
+        "existing": {
+          "operation_id": "01a13b6b-a04b-77bc-a0cb-fb21fe5eaa4e",
+          "status": "SUCCESS",
+          "exit_code": 0,
+          "timed_out": false,
+          "stderr": "",
+          "output_truncated": false,
+          "cost": 0.01065812,
+          "seconds": 2.548,
+          "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+          "network_disabled": true,
+          "disposable": true,
+          "result_image": null,
+          "command": "python -m pytest tests/test_existing.py",
+          "output": "..                                                                       [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n2 passed in 0.02s\n",
+          "evidence_valid": true,
+          "summary": {
+            "tests": 2,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "assertion_failures": 0,
+          "failure_nodes": [],
+          "files_intact": true,
+          "input_hashes": {
+            "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+            "src/calendar_app/__init__.py": "a3147e86ac5571f44e45a84b60b32aafa4e04e1cfc98c0abd04472b7d10fda77",
+            "tests/test_existing.py": "3f7288ab95ddbacfc0eb7f872f3e5e939b1964aa62265e1bf640284eb7de0578",
+            "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+            "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+          },
+          "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+          "pytest": "8.4.2",
+          "build": {
+            "exit_code": 0,
+            "output": "Processing /tmp/tmplrlx2dzq/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1741 sha256=55cb2eb84dc81e26f21448ddc021544b0cad2912af082858841af19db9318316\n  Stored in directory: /tmp/pip-ephem-wheel-cache-vyfhj4sh/wheels/1c/3e/b1/f44ef3dd9a26a4be5d351fa0074071dd1183e13495ed4039d6\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+            "network_disabled": true,
+            "uid": 65534
+          },
+          "uid": 65534,
+          "no_new_privileges": true,
+          "limits": {
+            "memory_bytes": 536870912,
+            "cpu_seconds": 15,
+            "processes": 32,
+            "file_bytes": 1048576,
+            "wall_seconds": 20
+          }
+        },
+        "independent": {
+          "operation_id": "01a13b6b-aa45-704c-bd5e-7daf1f3c7508",
+          "status": "SUCCESS",
+          "exit_code": 0,
+          "timed_out": false,
+          "stderr": "",
+          "output_truncated": false,
+          "cost": 0.01033573,
+          "seconds": 2.592,
+          "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+          "network_disabled": true,
+          "disposable": true,
+          "result_image": null,
+          "command": "python -m pytest tests/test_independent.py",
+          "output": ".                                                                        [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n1 passed in 0.02s\n",
+          "evidence_valid": true,
+          "summary": {
+            "tests": 1,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "assertion_failures": 0,
+          "failure_nodes": [],
+          "files_intact": true,
+          "input_hashes": {
+            "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+            "src/calendar_app/__init__.py": "a3147e86ac5571f44e45a84b60b32aafa4e04e1cfc98c0abd04472b7d10fda77",
+            "tests/test_independent.py": "ae05ad382ca1d1beb2f0406619492e62264f19a3e9eee6acb9d21651eb5223d3",
+            "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+            "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+          },
+          "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+          "pytest": "8.4.2",
+          "build": {
+            "exit_code": 0,
+            "output": "Processing /tmp/tmp0ky3p7r1/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1741 sha256=0a1c2e67f57811b8827471525ed20624f9f3230402ac3ce09ebcbd488b0e9099\n  Stored in directory: /tmp/pip-ephem-wheel-cache-hh7iaj57/wheels/1e/7f/42/843fb1294f6e08bcdc74f2b217e5ee9ab44c976eb62b9538ba\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+            "network_disabled": true,
+            "uid": 65534
+          },
+          "uid": 65534,
+          "no_new_privileges": true,
+          "limits": {
+            "memory_bytes": 536870912,
+            "cpu_seconds": 15,
+            "processes": 32,
+            "file_bytes": 1048576,
+            "wall_seconds": 20
+          }
+        }
+      },
+      "accepted": true,
+      "changes": {
+        "src/calendar_app/__init__.py": "from datetime import timedelta\n\nfrom dateutil.relativedelta import relativedelta\nfrom datetime import date\n\n\ndef add_months(day, months):\n    import calendar\n    year = day.year\n    month = day.month\n    last_day = calendar.monthrange(year, month)[1]\n    is_end_of_month = day.day == last_day\n    total_months = month - 1 + months\n    target_year = year + total_months // 12\n    target_month = total_months % 12 + 1\n    if is_end_of_month:\n        target_last_day = calendar.monthrange(target_year, target_month)[1]\n        return date(target_year, target_month, target_last_day)\n    else:\n        target_last_day = calendar.monthrange(target_year, target_month)[1]\n        new_day = min(day.day, target_last_day)\n        return date(target_year, target_month, new_day)\n"
+      },
+      "diff": "--- a/src/calendar_app/__init__.py\n+++ b/src/calendar_app/__init__.py\n@@ -1,7 +1,22 @@\n from datetime import timedelta\n \n from dateutil.relativedelta import relativedelta\n+from datetime import date\n \n \n def add_months(day, months):\n-    return day + timedelta(days=30 * months)\n+    import calendar\n+    year = day.year\n+    month = day.month\n+    last_day = calendar.monthrange(year, month)[1]\n+    is_end_of_month = day.day == last_day\n+    total_months = month - 1 + months\n+    target_year = year + total_months // 12\n+    target_month = total_months % 12 + 1\n+    if is_end_of_month:\n+        target_last_day = calendar.monthrange(target_year, target_month)[1]\n+        return date(target_year, target_month, target_last_day)\n+    else:\n+        target_last_day = calendar.monthrange(target_year, target_month)[1]\n+        new_day = min(day.day, target_last_day)\n+        return date(target_year, target_month, new_day)\n",
+      "hashes": {
+        "src/calendar_app/__init__.py": "a3147e86ac5571f44e45a84b60b32aafa4e04e1cfc98c0abd04472b7d10fda77"
+      }
+    }
+  ],
+  "events": [
+    "Archive inspected in memory; no files extracted or executed.",
+    "Original assertion failure reproduced before requesting any repair."
+  ],
+  "sources": {
+    "src/calendar_app/__init__.py": "from datetime import timedelta\n\nfrom dateutil.relativedelta import relativedelta\n\n\ndef add_months(day, months):\n    return day + timedelta(days=30 * months)\n"
+  },
+  "resources": {
+    "src/calendar_app/settings.json": "{\"calendar\":\"gregorian\"}\n"
+  },
+  "existing_tests": {
+    "tests/test_independent.py": "from datetime import date\n\nfrom calendar_app import add_months\n\n\ndef test_month_end_clamping():\n    assert add_months(date(2026, 1, 31), 1) == date(2026, 2, 28)\n    assert add_months(date(2026, 7, 31), 1) == date(2026, 8, 31)\n",
+    "tests/test_existing.py": "from datetime import date\n\nfrom calendar_app import add_months\n\n\ndef test_thirty_day_month():\n    assert add_months(date(2026, 4, 1), 1) == date(2026, 5, 1)\n    assert add_months(date(2026, 4, 1), 0) == date(2026, 4, 1)\n\n\ndef test_installed_metadata_and_package_resource():\n    import json\n    from importlib.metadata import version\n    from importlib.resources import files\n    assert version('i2p-calendar-example') == '0.1.0'\n    assert json.loads(files('calendar_app').joinpath('settings.json').read_text())['calendar'] == 'gregorian'\n"
+  },
+  "dependency_manifests": {
+    "requirements.txt": "python-dateutil==2.9.0.post0\n",
+    "pyproject.toml": "[build-system]\nrequires = [\"setuptools==75.8.0\", \"wheel==0.45.1\"]\nbuild-backend = \"setuptools.build_meta\"\n\n[project]\nname = \"i2p-calendar-example\"\nversion = \"0.1.0\"\ndependencies = [\"python-dateutil==2.9.0.post0\"]\n\n[tool.setuptools.packages.find]\nwhere = [\"src\"]\n\n[tool.setuptools.package-data]\ncalendar_app = [\"settings.json\"]\n"
+  },
+  "file_hashes": {
+    "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+    "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919",
+    "tests/test_independent.py": "ae05ad382ca1d1beb2f0406619492e62264f19a3e9eee6acb9d21651eb5223d3",
+    "tests/test_existing.py": "3f7288ab95ddbacfc0eb7f872f3e5e939b1964aa62265e1bf640284eb7de0578",
+    "src/calendar_app/__init__.py": "c71f74052b6e25e408e6b496e03347a6664550ce92bc9afd39b1c27c3e6809e9",
+    "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5"
+  },
+  "archive_sha256": "de713ed5572ff7f15cbc204dd707ef2d3779300edd629b044a27e7a248ba6631",
+  "excluded_files": [],
+  "limitations": [
+    "Checks cover the collected tests, not universal correctness.",
+    "Untrusted Python can manipulate its own test framework; evidence is not adversarial proof.",
+    "Dependencies use published binary wheels only. Native source builds and system-package recipes require a separately prepared image."
+  ],
+  "id": "64edd623-4498-4f09-a51b-4e2d7fbb5887",
+  "created_at": "2026-10-14T17:16:33.213127+00:00",
+  "pipeline": {
+    "baseline": {
+      "operation_id": "01a13b6a-b317-76d0-b728-48698647342c",
+      "status": "SUCCESS",
+      "exit_code": 0,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.01053284,
+      "seconds": 2.952,
+      "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_existing.py",
+      "output": "..                                                                       [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n2 passed in 0.02s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 0,
+      "failure_nodes": [],
+      "files_intact": true,
+      "input_hashes": {
+        "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+        "src/calendar_app/__init__.py": "c71f74052b6e25e408e6b496e03347a6664550ce92bc9afd39b1c27c3e6809e9",
+        "tests/test_existing.py": "3f7288ab95ddbacfc0eb7f872f3e5e939b1964aa62265e1bf640284eb7de0578",
+        "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+        "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "build": {
+        "exit_code": 0,
+        "output": "Processing /tmp/tmpmbclqyvg/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1587 sha256=2c1a55ce3dab18e8290c805c2554fa5be38eef9ac0ff0fd5e93f23c31390a5b4\n  Stored in directory: /tmp/pip-ephem-wheel-cache-rk5hh7bq/wheels/fc/b3/f9/992c629a7b21e04d742c66140eab398efe54e7fd1ed622c7d2\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+        "network_disabled": true,
+        "uid": 65534
+      },
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "independent_baseline": {
+      "operation_id": "01a13b6a-be53-7436-8f82-bee1a6cb77df",
+      "status": "SUCCESS",
+      "exit_code": 1,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.0106608,
+      "seconds": 2.723,
+      "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_independent.py",
+      "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n___________________________ test_month_end_clamping ____________________________\ntests/test_independent.py:7: in test_month_end_clamping\n    assert add_months(date(2026, 1, 31), 1) == date(2026, 2, 28)\nE   assert datetime.date(2026, 3, 2) == datetime.date(2026, 2, 28)\nE    +  where datetime.date(2026, 3, 2) = add_months(datetime.date(2026, 1, 31), 1)\nE    +    where datetime.date(2026, 1, 31) = date(2026, 1, 31)\nE    +  and   datetime.date(2026, 2, 28) = date(2026, 2, 28)\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n=========================== short test summary info ============================\nFAILED ../dev::test_month_end_clamping - assert datetime.date(2026, 3, 2) == ...\n1 failed in 0.02s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 1,
+      "failure_nodes": [
+        "::test_month_end_clamping"
+      ],
+      "files_intact": true,
+      "input_hashes": {
+        "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+        "src/calendar_app/__init__.py": "c71f74052b6e25e408e6b496e03347a6664550ce92bc9afd39b1c27c3e6809e9",
+        "tests/test_independent.py": "ae05ad382ca1d1beb2f0406619492e62264f19a3e9eee6acb9d21651eb5223d3",
+        "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+        "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "build": {
+        "exit_code": 0,
+        "output": "Processing /tmp/tmp5x251372/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1587 sha256=42c93e791398e0d95426443c66276018e4470770b83434b229252c8835c125d0\n  Stored in directory: /tmp/pip-ephem-wheel-cache-4if0d44r/wheels/26/31/eb/81d6fde67a3458ce4d38fb5e0aecdd79001ccced04cef4b5d4\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+        "network_disabled": true,
+        "uid": 65534
+      },
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "reproduction": {
+      "operation_id": "01a13b6a-df2d-759b-b587-fba5f5b51590",
+      "status": "SUCCESS",
+      "exit_code": 1,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.01076545,
+      "seconds": 2.762,
+      "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest issue2proof_generated/test_regression.py",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n___________________ test_add_months_preserves_day_when_valid ___________________\nissue2proof_generated/test_regression.py:7: in test_add_months_preserves_day_when_valid\n    assert add_months(date(2026, 1, 15), 1) == date(2026, 2, 15)\nE   assert datetime.date(2026, 2, 14) == datetime.date(2026, 2, 15)\nE    +  where datetime.date(2026, 2, 14) = add_months(datetime.date(2026, 1, 15), 1)\nE    +    where datetime.date(2026, 1, 15) = date(2026, 1, 15)\nE    +  and   datetime.date(2026, 2, 15) = date(2026, 2, 15)\n__________________ test_add_months_zero_and_negative_offsets ___________________\nissue2proof_generated/test_regression.py:24: in test_add_months_zero_and_negative_offsets\n    assert add_months(date(2026, 3, 15), -1) == date(2026, 2, 15)\nE   assert datetime.date(2026, 2, 13) == datetime.date(2026, 2, 15)\nE    +  where datetime.date(2026, 2, 13) = add_months(datetime.date(2026, 3, 15), -1)\nE    +    where datetime.date(2026, 3, 15) = date(2026, 3, 15)\nE    +  and   datetime.date(2026, 2, 15) = date(2026, 2, 15)\n________________________ test_add_months_year_boundary _________________________\nissue2proof_generated/test_regression.py:36: in test_add_months_year_boundary\n    assert add_months(date(2026, 11, 30), 2) == date(2027, 1, 31)  # Nov->Jan via Dec (clamp) then Jan 31\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   assert datetime.date(2027, 1, 29) == datetime.date(2027, 1, 31)\nE    +  where datetime.date(2027, 1, 29) = add_months(datetime.date(2026, 11, 30), 2)\nE    +    where datetime.date(2026, 11, 30) = date(2026, 11, 30)\nE    +  and   datetime.date(2027, 1, 31) = date(2027, 1, 31)\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n=========================== short test summary info ============================\nFAILED ../dev::test_add_months_preserves_day_when_valid - assert datetime.dat...\nFAILED ../dev::test_add_months_zero_and_negative_offsets - assert datetime.da...\nFAILED ../dev::test_add_months_year_boundary - assert datetime.date(2027, 1, ...\n3 failed in 0.04s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 3,
+        "failures": 3,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 3,
+      "failure_nodes": [
+        "::test_add_months_preserves_day_when_valid",
+        "::test_add_months_zero_and_negative_offsets",
+        "::test_add_months_year_boundary"
+      ],
+      "files_intact": true,
+      "input_hashes": {
+        "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+        "src/calendar_app/__init__.py": "c71f74052b6e25e408e6b496e03347a6664550ce92bc9afd39b1c27c3e6809e9",
+        "issue2proof_generated/test_regression.py": "e3b3ef1c91babbc03b68f1039e0763395160543cebdaedcb1661ae7073e0d374",
+        "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+        "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "build": {
+        "exit_code": 0,
+        "output": "Processing /tmp/tmpgw4cg8xq/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1587 sha256=552acd483b5ed7b8cbba0aba2490984dba8500de358dcd4e162daa66ba1b85b6\n  Stored in directory: /tmp/pip-ephem-wheel-cache-h3ce010t/wheels/de/cc/8f/5ad5fd93554da74a6ea576ecceb169083bfa26414dfe20bdee\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+        "network_disabled": true,
+        "uid": 65534
+      },
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    }
+  },
+  "model_requests": [
+    {
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "prompt_tokens": 502,
+      "completion_tokens": 1288,
+      "estimated_cost_usd": 0.0013098
+    },
+    {
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "prompt_tokens": 1425,
+      "completion_tokens": 456,
+      "estimated_cost_usd": 0.0008379
+    },
+    {
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "prompt_tokens": 1953,
+      "completion_tokens": 4585,
+      "estimated_cost_usd": 0.0047124
+    }
+  ],
+  "independent_test_paths": [
+    "tests/test_independent.py"
+  ],
+  "test_hashes": {
+    "tests/test_independent.py": "ae05ad382ca1d1beb2f0406619492e62264f19a3e9eee6acb9d21651eb5223d3",
+    "tests/test_existing.py": "3f7288ab95ddbacfc0eb7f872f3e5e939b1964aa62265e1bf640284eb7de0578",
+    "issue2proof_generated/test_regression.py": "e3b3ef1c91babbc03b68f1039e0763395160543cebdaedcb1661ae7073e0d374"
+  },
+  "job_id": "e6bcbb06-d764-4996-9e79-15053487f96c",
+  "environment": {
+    "requirements": [
+      "python-dateutil==2.9.0.post0",
+      "setuptools==75.8.0",
+      "wheel==0.45.1"
+    ],
+    "sha256": "9e254efc3046525388f83c740b0e1aac2c2d86cef8cc31a67e363fb8be7b87d5",
+    "policy": "PyPI wheels only; no source distributions, repository hooks, local paths or alternate indexes.",
+    "operation_id": "01a13b6a-a225-71b9-9933-33ac782bc32f",
+    "status": "SUCCESS",
+    "exit_code": 0,
+    "timed_out": false,
+    "stdout": "{\"exit_code\": 0, \"output\": \"Collecting python-dateutil==2.9.0.post0\\n  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)\\nCollecting setuptools==75.8.0\\n  Downloading setuptools-75.8.0-py3-none-any.whl.metadata (6.7 kB)\\nCollecting wheel==0.45.1\\n  Downloading wheel-0.45.1-py3-none-any.whl.metadata (2.3 kB)\\nCollecting six>=1.5 (from python-dateutil==2.9.0.post0)\\n  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)\\nDownloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)\\nDownloading setuptools-75.8.0-py3-none-any.whl (1.2 MB)\\n   \\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501\\u2501 1.2/1.2 MB 247.5 MB/s eta 0:00:00\\nDownloading wheel-0.45.1-py3-none-any.whl (72 kB)\\nDownloading six-1.17.0-py2.py3-none-any.whl (11 kB)\\nInstalling collected packages: wheel, six, setuptools, python-dateutil\\nSuccessfully installed python-dateutil-2.9.0.post0 setuptools-75.8.0 six-1.17.0 wheel-0.45.1\\nWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.\\n\", \"installed\": {\"wheel\": \"0.45.1\", \"six\": \"1.17.0\", \"setuptools\": \"75.8.0\", \"python-dateutil\": \"2.9.0.post0\"}, \"policy\": \"wheels-only\"}\n",
+    "stderr": "",
+    "output_truncated": false,
+    "cost": 0.01188175,
+    "seconds": 4.657,
+    "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+    "network_disabled": false,
+    "disposable": false,
+    "result_image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+    "repository_code_executed": false,
+    "network_enabled_during_wheel_install": true,
+    "installed": {
+      "wheel": "0.45.1",
+      "six": "1.17.0",
+      "setuptools": "75.8.0",
+      "python-dateutil": "2.9.0.post0"
+    },
+    "output": "Collecting python-dateutil==2.9.0.post0\n  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)\nCollecting setuptools==75.8.0\n  Downloading setuptools-75.8.0-py3-none-any.whl.metadata (6.7 kB)\nCollecting wheel==0.45.1\n  Downloading wheel-0.45.1-py3-none-any.whl.metadata (2.3 kB)\nCollecting six>=1.5 (from python-dateutil==2.9.0.post0)\n  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)\nDownloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)\nDownloading setuptools-75.8.0-py3-none-any.whl (1.2 MB)\n   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 247.5 MB/s eta 0:00:00\nDownloading wheel-0.45.1-py3-none-any.whl (72 kB)\nDownloading six-1.17.0-py2.py3-none-any.whl (11 kB)\nInstalling collected packages: wheel, six, setuptools, python-dateutil\nSuccessfully installed python-dateutil-2.9.0.post0 setuptools-75.8.0 six-1.17.0 wheel-0.45.1\nWARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.\n",
+    "prepared": true
+  },
+  "model_outputs": [
+    {
+      "test_source": "import pytest\nfrom datetime import date\nfrom calendar_app import add_months\n\ndef test_add_months_preserves_day_when_valid():\n    # Day exists in target month\n    assert add_months(date(2026, 1, 15), 1) == date(2026, 2, 15)\n    assert add_months(date(2026, 2, 15), 1) == date(2026, 3, 15)\n    assert add_months(date(2026, 1, 31), 1) == date(2026, 2, 28)  # clamps to month end\n    # Leap year\n    assert add_months(date(2024, 1, 31), 1) == date(2024, 2, 29)\n    # Month with 30 days\n    assert add_months(date(2026, 3, 31), 1) == date(2026, 4, 30)\n    assert add_months(date(2026, 5, 31), 1) == date(2026, 6, 30)\n    assert add_months(date(2026, 8, 31), 1) == date(2026, 9, 30)\n    # Multiple months\n    assert add_months(date(2026, 1, 31), 2) == date(2026, 3, 31)  # Jan->Mar via Feb (clamp) then Mar has 31\n    assert add_months(date(2026, 1, 31), 3) == date(2026, 4, 30)  # Jan->Apr\n\ndef test_add_months_zero_and_negative_offsets():\n    # Zero offset returns same date\n    assert add_months(date(2026, 5, 20), 0) == date(2026, 5, 20)\n    # Negative offset preserving day when possible\n    assert add_months(date(2026, 3, 15), -1) == date(2026, 2, 15)\n    assert add_months(date(2026, 3, 1), -1) == date(2026, 2, 1)\n    # Negative offset clamping\n    assert add_months(date(2026, 3, 31), -1) == date(2026, 2, 28)  # Feb 2026 not leap\n    assert add_months(date(2024, 3, 31), -1) == date(2024, 2, 29)  # leap year\n    assert add_months(date(2026, 5, 31), -1) == date(2026, 4, 30)\n    # Multiple negative months\n    assert add_months(date(2026, 5, 31), -2) == date(2026, 3, 31)  # May->Mar via Apr (clamp) then Mar has 31\n    assert add_months(date(2026, 5, 31), -3) == date(2026, 2, 28)  # May->Feb\n\ndef test_add_months_year_boundary():\n    # Crossing year boundary forward\n    assert add_months(date(2026, 11, 30), 2) == date(2027, 1, 31)  # Nov->Jan via Dec (clamp) then Jan 31\n    # Crossing year boundary backward\n    assert add_months(date(2027, 1, 31), -2) == date(2026, 11, 30)  # Jan->Nov via Dec (clamp) then Nov 30\n",
+      "clarification": null
+    },
+    {
+      "edits": [
+        {
+          "path": "src/calendar_app/__init__.py",
+          "old": "def add_months(day, months):\n    return day + timedelta(days=30 * months)",
+          "new": "def add_months(day, months):\n    return day + relativedelta(months=months)"
+        }
+      ]
+    },
+    {
+      "edits": [
+        {
+          "path": "src/calendar_app/__init__.py",
+          "old": "from dateutil.relativedelta import relativedelta\n\n",
+          "new": "from dateutil.relativedelta import relativedelta\nfrom datetime import date\n\n"
+        },
+        {
+          "path": "src/calendar_app/__init__.py",
+          "old": "def add_months(day, months):\n    return day + timedelta(days=30 * months)",
+          "new": "def add_months(day, months):\n    import calendar\n    year = day.year\n    month = day.month\n    last_day = calendar.monthrange(year, month)[1]\n    is_end_of_month = day.day == last_day\n    total_months = month - 1 + months\n    target_year = year + total_months // 12\n    target_month = total_months % 12 + 1\n    if is_end_of_month:\n        target_last_day = calendar.monthrange(target_year, target_month)[1]\n        return date(target_year, target_month, target_last_day)\n    else:\n        target_last_day = calendar.monthrange(target_year, target_month)[1]\n        new_day = min(day.day, target_last_day)\n        return date(target_year, target_month, new_day)"
+        }
+      ]
+    }
+  ],
+  "pending_model_response": {
+    "fingerprint": "2f4c43d408949d90e99e0176eb4aa94e2ba59e00f1d4c0b61f0162e5d1915407",
+    "result": {
+      "edits": [
+        {
+          "path": "src/calendar_app/__init__.py",
+          "old": "from dateutil.relativedelta import relativedelta\n\n",
+          "new": "from dateutil.relativedelta import relativedelta\nfrom datetime import date\n\n"
+        },
+        {
+          "path": "src/calendar_app/__init__.py",
+          "old": "def add_months(day, months):\n    return day + timedelta(days=30 * months)",
+          "new": "def add_months(day, months):\n    import calendar\n    year = day.year\n    month = day.month\n    last_day = calendar.monthrange(year, month)[1]\n    is_end_of_month = day.day == last_day\n    total_months = month - 1 + months\n    target_year = year + total_months // 12\n    target_month = total_months % 12 + 1\n    if is_end_of_month:\n        target_last_day = calendar.monthrange(target_year, target_month)[1]\n        return date(target_year, target_month, target_last_day)\n    else:\n        target_last_day = calendar.monthrange(target_year, target_month)[1]\n        new_day = min(day.day, target_last_day)\n        return date(target_year, target_month, new_day)"
+        }
+      ]
+    }
+  },
+  "generated_regression": {
+    "path": "issue2proof_generated/test_regression.py",
+    "source": "import pytest\nfrom datetime import date\nfrom calendar_app import add_months\n\ndef test_add_months_preserves_day_when_valid():\n    # Day exists in target month\n    assert add_months(date(2026, 1, 15), 1) == date(2026, 2, 15)\n    assert add_months(date(2026, 2, 15), 1) == date(2026, 3, 15)\n    assert add_months(date(2026, 1, 31), 1) == date(2026, 2, 28)  # clamps to month end\n    # Leap year\n    assert add_months(date(2024, 1, 31), 1) == date(2024, 2, 29)\n    # Month with 30 days\n    assert add_months(date(2026, 3, 31), 1) == date(2026, 4, 30)\n    assert add_months(date(2026, 5, 31), 1) == date(2026, 6, 30)\n    assert add_months(date(2026, 8, 31), 1) == date(2026, 9, 30)\n    # Multiple months\n    assert add_months(date(2026, 1, 31), 2) == date(2026, 3, 31)  # Jan->Mar via Feb (clamp) then Mar has 31\n    assert add_months(date(2026, 1, 31), 3) == date(2026, 4, 30)  # Jan->Apr\n\ndef test_add_months_zero_and_negative_offsets():\n    # Zero offset returns same date\n    assert add_months(date(2026, 5, 20), 0) == date(2026, 5, 20)\n    # Negative offset preserving day when possible\n    assert add_months(date(2026, 3, 15), -1) == date(2026, 2, 15)\n    assert add_months(date(2026, 3, 1), -1) == date(2026, 2, 1)\n    # Negative offset clamping\n    assert add_months(date(2026, 3, 31), -1) == date(2026, 2, 28)  # Feb 2026 not leap\n    assert add_months(date(2024, 3, 31), -1) == date(2024, 2, 29)  # leap year\n    assert add_months(date(2026, 5, 31), -1) == date(2026, 4, 30)\n    # Multiple negative months\n    assert add_months(date(2026, 5, 31), -2) == date(2026, 3, 31)  # May->Mar via Apr (clamp) then Mar has 31\n    assert add_months(date(2026, 5, 31), -3) == date(2026, 2, 28)  # May->Feb\n\ndef test_add_months_year_boundary():\n    # Crossing year boundary forward\n    assert add_months(date(2026, 11, 30), 2) == date(2027, 1, 31)  # Nov->Jan via Dec (clamp) then Jan 31\n    # Crossing year boundary backward\n    assert add_months(date(2027, 1, 31), -2) == date(2026, 11, 30)  # Jan->Nov via Dec (clamp) then Nov 30\n",
+    "sha256": "e3b3ef1c91babbc03b68f1039e0763395160543cebdaedcb1661ae7073e0d374"
+  },
+  "draft_changes": {
+    "src/calendar_app/__init__.py": "from datetime import timedelta\n\nfrom dateutil.relativedelta import relativedelta\nfrom datetime import date\n\n\ndef add_months(day, months):\n    import calendar\n    year = day.year\n    month = day.month\n    last_day = calendar.monthrange(year, month)[1]\n    is_end_of_month = day.day == last_day\n    total_months = month - 1 + months\n    target_year = year + total_months // 12\n    target_month = total_months % 12 + 1\n    if is_end_of_month:\n        target_last_day = calendar.monthrange(target_year, target_month)[1]\n        return date(target_year, target_month, target_last_day)\n    else:\n        target_last_day = calendar.monthrange(target_year, target_month)[1]\n        new_day = min(day.day, target_last_day)\n        return date(target_year, target_month, new_day)\n"
+  },
+  "draft_diff": "--- a/src/calendar_app/__init__.py\n+++ b/src/calendar_app/__init__.py\n@@ -1,7 +1,22 @@\n from datetime import timedelta\n \n from dateutil.relativedelta import relativedelta\n+from datetime import date\n \n \n def add_months(day, months):\n-    return day + timedelta(days=30 * months)\n+    import calendar\n+    year = day.year\n+    month = day.month\n+    last_day = calendar.monthrange(year, month)[1]\n+    is_end_of_month = day.day == last_day\n+    total_months = month - 1 + months\n+    target_year = year + total_months // 12\n+    target_month = total_months % 12 + 1\n+    if is_end_of_month:\n+        target_last_day = calendar.monthrange(target_year, target_month)[1]\n+        return date(target_year, target_month, target_last_day)\n+    else:\n+        target_last_day = calendar.monthrange(target_year, target_month)[1]\n+        new_day = min(day.day, target_last_day)\n+        return date(target_year, target_month, new_day)\n",
+  "candidate_hashes": {
+    "src/calendar_app/__init__.py": "a3147e86ac5571f44e45a84b60b32aafa4e04e1cfc98c0abd04472b7d10fda77"
+  },
+  "verification": {
+    "baseline": {
+      "operation_id": "01a13b6a-b317-76d0-b728-48698647342c",
+      "status": "SUCCESS",
+      "exit_code": 0,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.01053284,
+      "seconds": 2.952,
+      "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_existing.py",
+      "output": "..                                                                       [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n2 passed in 0.02s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 0,
+      "failure_nodes": [],
+      "files_intact": true,
+      "input_hashes": {
+        "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+        "src/calendar_app/__init__.py": "c71f74052b6e25e408e6b496e03347a6664550ce92bc9afd39b1c27c3e6809e9",
+        "tests/test_existing.py": "3f7288ab95ddbacfc0eb7f872f3e5e939b1964aa62265e1bf640284eb7de0578",
+        "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+        "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "build": {
+        "exit_code": 0,
+        "output": "Processing /tmp/tmpmbclqyvg/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1587 sha256=2c1a55ce3dab18e8290c805c2554fa5be38eef9ac0ff0fd5e93f23c31390a5b4\n  Stored in directory: /tmp/pip-ephem-wheel-cache-rk5hh7bq/wheels/fc/b3/f9/992c629a7b21e04d742c66140eab398efe54e7fd1ed622c7d2\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+        "network_disabled": true,
+        "uid": 65534
+      },
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "independent_baseline": {
+      "operation_id": "01a13b6a-be53-7436-8f82-bee1a6cb77df",
+      "status": "SUCCESS",
+      "exit_code": 1,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.0106608,
+      "seconds": 2.723,
+      "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_independent.py",
+      "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n___________________________ test_month_end_clamping ____________________________\ntests/test_independent.py:7: in test_month_end_clamping\n    assert add_months(date(2026, 1, 31), 1) == date(2026, 2, 28)\nE   assert datetime.date(2026, 3, 2) == datetime.date(2026, 2, 28)\nE    +  where datetime.date(2026, 3, 2) = add_months(datetime.date(2026, 1, 31), 1)\nE    +    where datetime.date(2026, 1, 31) = date(2026, 1, 31)\nE    +  and   datetime.date(2026, 2, 28) = date(2026, 2, 28)\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n=========================== short test summary info ============================\nFAILED ../dev::test_month_end_clamping - assert datetime.date(2026, 3, 2) == ...\n1 failed in 0.02s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 1,
+      "failure_nodes": [
+        "::test_month_end_clamping"
+      ],
+      "files_intact": true,
+      "input_hashes": {
+        "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+        "src/calendar_app/__init__.py": "c71f74052b6e25e408e6b496e03347a6664550ce92bc9afd39b1c27c3e6809e9",
+        "tests/test_independent.py": "ae05ad382ca1d1beb2f0406619492e62264f19a3e9eee6acb9d21651eb5223d3",
+        "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+        "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "build": {
+        "exit_code": 0,
+        "output": "Processing /tmp/tmp5x251372/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1587 sha256=42c93e791398e0d95426443c66276018e4470770b83434b229252c8835c125d0\n  Stored in directory: /tmp/pip-ephem-wheel-cache-4if0d44r/wheels/26/31/eb/81d6fde67a3458ce4d38fb5e0aecdd79001ccced04cef4b5d4\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+        "network_disabled": true,
+        "uid": 65534
+      },
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "reproduction": {
+      "operation_id": "01a13b6a-df2d-759b-b587-fba5f5b51590",
+      "status": "SUCCESS",
+      "exit_code": 1,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.01076545,
+      "seconds": 2.762,
+      "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest issue2proof_generated/test_regression.py",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n___________________ test_add_months_preserves_day_when_valid ___________________\nissue2proof_generated/test_regression.py:7: in test_add_months_preserves_day_when_valid\n    assert add_months(date(2026, 1, 15), 1) == date(2026, 2, 15)\nE   assert datetime.date(2026, 2, 14) == datetime.date(2026, 2, 15)\nE    +  where datetime.date(2026, 2, 14) = add_months(datetime.date(2026, 1, 15), 1)\nE    +    where datetime.date(2026, 1, 15) = date(2026, 1, 15)\nE    +  and   datetime.date(2026, 2, 15) = date(2026, 2, 15)\n__________________ test_add_months_zero_and_negative_offsets ___________________\nissue2proof_generated/test_regression.py:24: in test_add_months_zero_and_negative_offsets\n    assert add_months(date(2026, 3, 15), -1) == date(2026, 2, 15)\nE   assert datetime.date(2026, 2, 13) == datetime.date(2026, 2, 15)\nE    +  where datetime.date(2026, 2, 13) = add_months(datetime.date(2026, 3, 15), -1)\nE    +    where datetime.date(2026, 3, 15) = date(2026, 3, 15)\nE    +  and   datetime.date(2026, 2, 15) = date(2026, 2, 15)\n________________________ test_add_months_year_boundary _________________________\nissue2proof_generated/test_regression.py:36: in test_add_months_year_boundary\n    assert add_months(date(2026, 11, 30), 2) == date(2027, 1, 31)  # Nov->Jan via Dec (clamp) then Jan 31\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE   assert datetime.date(2027, 1, 29) == datetime.date(2027, 1, 31)\nE    +  where datetime.date(2027, 1, 29) = add_months(datetime.date(2026, 11, 30), 2)\nE    +    where datetime.date(2026, 11, 30) = date(2026, 11, 30)\nE    +  and   datetime.date(2027, 1, 31) = date(2027, 1, 31)\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n=========================== short test summary info ============================\nFAILED ../dev::test_add_months_preserves_day_when_valid - assert datetime.dat...\nFAILED ../dev::test_add_months_zero_and_negative_offsets - assert datetime.da...\nFAILED ../dev::test_add_months_year_boundary - assert datetime.date(2027, 1, ...\n3 failed in 0.04s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 3,
+        "failures": 3,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 3,
+      "failure_nodes": [
+        "::test_add_months_preserves_day_when_valid",
+        "::test_add_months_zero_and_negative_offsets",
+        "::test_add_months_year_boundary"
+      ],
+      "files_intact": true,
+      "input_hashes": {
+        "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+        "src/calendar_app/__init__.py": "c71f74052b6e25e408e6b496e03347a6664550ce92bc9afd39b1c27c3e6809e9",
+        "issue2proof_generated/test_regression.py": "e3b3ef1c91babbc03b68f1039e0763395160543cebdaedcb1661ae7073e0d374",
+        "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+        "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "build": {
+        "exit_code": 0,
+        "output": "Processing /tmp/tmpgw4cg8xq/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1587 sha256=552acd483b5ed7b8cbba0aba2490984dba8500de358dcd4e162daa66ba1b85b6\n  Stored in directory: /tmp/pip-ephem-wheel-cache-h3ce010t/wheels/de/cc/8f/5ad5fd93554da74a6ea576ecceb169083bfa26414dfe20bdee\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+        "network_disabled": true,
+        "uid": 65534
+      },
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "regression": {
+      "operation_id": "01a13b6b-66e8-738e-aa1b-7623741f6c6f",
+      "status": "SUCCESS",
+      "exit_code": 0,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.0108541,
+      "seconds": 14.701,
+      "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest issue2proof_generated/test_regression.py",
+      "output": "...                                                                      [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n3 passed in 0.03s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 0,
+      "failure_nodes": [],
+      "files_intact": true,
+      "input_hashes": {
+        "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+        "src/calendar_app/__init__.py": "a3147e86ac5571f44e45a84b60b32aafa4e04e1cfc98c0abd04472b7d10fda77",
+        "issue2proof_generated/test_regression.py": "e3b3ef1c91babbc03b68f1039e0763395160543cebdaedcb1661ae7073e0d374",
+        "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+        "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "build": {
+        "exit_code": 0,
+        "output": "Processing /tmp/tmpjfovv4de/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1741 sha256=d3564bbffc87fb4d0d134462e4fbce3a49773baabac6c577c411fcc4c901bd48\n  Stored in directory: /tmp/pip-ephem-wheel-cache-rvry_brk/wheels/55/e1/cc/ea758a42bdddd6142022a2e25f8d4353f8d58b774cd28d0b3f\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+        "network_disabled": true,
+        "uid": 65534
+      },
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "existing": {
+      "operation_id": "01a13b6b-a04b-77bc-a0cb-fb21fe5eaa4e",
+      "status": "SUCCESS",
+      "exit_code": 0,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.01065812,
+      "seconds": 2.548,
+      "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_existing.py",
+      "output": "..                                                                       [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n2 passed in 0.02s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 0,
+      "failure_nodes": [],
+      "files_intact": true,
+      "input_hashes": {
+        "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+        "src/calendar_app/__init__.py": "a3147e86ac5571f44e45a84b60b32aafa4e04e1cfc98c0abd04472b7d10fda77",
+        "tests/test_existing.py": "3f7288ab95ddbacfc0eb7f872f3e5e939b1964aa62265e1bf640284eb7de0578",
+        "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+        "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "build": {
+        "exit_code": 0,
+        "output": "Processing /tmp/tmplrlx2dzq/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1741 sha256=55cb2eb84dc81e26f21448ddc021544b0cad2912af082858841af19db9318316\n  Stored in directory: /tmp/pip-ephem-wheel-cache-vyfhj4sh/wheels/1c/3e/b1/f44ef3dd9a26a4be5d351fa0074071dd1183e13495ed4039d6\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+        "network_disabled": true,
+        "uid": 65534
+      },
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "independent": {
+      "operation_id": "01a13b6b-aa45-704c-bd5e-7daf1f3c7508",
+      "status": "SUCCESS",
+      "exit_code": 0,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.01033573,
+      "seconds": 2.592,
+      "image": "272d048e-d146-4f1a-88ac-f89c714c554b",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_independent.py",
+      "output": ".                                                                        [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n1 passed in 0.02s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 0,
+      "failure_nodes": [],
+      "files_intact": true,
+      "input_hashes": {
+        "src/calendar_app/settings.json": "abcc907b2e4df0222b8e84bfb6ef17086fc1e07877ef0b01ed6c7f21697e61c5",
+        "src/calendar_app/__init__.py": "a3147e86ac5571f44e45a84b60b32aafa4e04e1cfc98c0abd04472b7d10fda77",
+        "tests/test_independent.py": "ae05ad382ca1d1beb2f0406619492e62264f19a3e9eee6acb9d21651eb5223d3",
+        "requirements.txt": "55764eaac47b263acf6fcd4bb0c49e70f1d4d5532571f134e71eafa4f0593347",
+        "pyproject.toml": "bd12a8690165c48a37bcb2a8714d333dded0669e3c59897f0fe9a93accd63919"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "build": {
+        "exit_code": 0,
+        "output": "Processing /tmp/tmp0ky3p7r1/project\n  Preparing metadata (pyproject.toml): started\n  Preparing metadata (pyproject.toml): finished with status 'done'\nBuilding wheels for collected packages: i2p-calendar-example\n  Building wheel for i2p-calendar-example (pyproject.toml): started\n  Building wheel for i2p-calendar-example (pyproject.toml): finished with status 'done'\n  Created wheel for i2p-calendar-example: filename=i2p_calendar_example-0.1.0-py3-none-any.whl size=1741 sha256=0a1c2e67f57811b8827471525ed20624f9f3230402ac3ce09ebcbd488b0e9099\n  Stored in directory: /tmp/pip-ephem-wheel-cache-hh7iaj57/wheels/1e/7f/42/843fb1294f6e08bcdc74f2b217e5ee9ab44c976eb62b9538ba\nSuccessfully built i2p-calendar-example\nInstalling collected packages: i2p-calendar-example\nSuccessfully installed i2p-calendar-example-0.1.0\n",
+        "network_disabled": true,
+        "uid": 65534
+      },
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    }
+  }
+}

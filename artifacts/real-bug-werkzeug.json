@@ -1,0 +1,629 @@
+{
+  "case": "repository",
+  "mode": "repository draft",
+  "issue": "On Windows, safe_join currently accepts special device filenames such as CON and NUL. It should return None for Windows special device names, while preserving ordinary joins and traversal rejection. Do not open any Windows device; this is string validation only. Tests execute on Linux: emulate the Windows branch by replacing the target module-local os reference (werkzeug.security.os) with a SimpleNamespace(name=\"nt\", path=posixpath), without changing the global os module. Without Windows emulation, CON remains an ordinary Linux filename and must still be accepted.",
+  "verdict": "checks_passed",
+  "explanation": "Original failure reproduced before repair. Candidate 1 passed frozen regression, existing and independent tests.",
+  "attempts": [
+    {
+      "number": 1,
+      "checks": {
+        "regression": {
+          "operation_id": "01a13b56-3feb-7561-9ac2-5214ebab43b8",
+          "status": "SUCCESS",
+          "exit_code": 0,
+          "timed_out": false,
+          "stderr": "",
+          "output_truncated": false,
+          "cost": 0.0032403300000000005,
+          "seconds": 1.934,
+          "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+          "network_disabled": true,
+          "disposable": true,
+          "result_image": null,
+          "command": "python -m pytest issue2proof_generated/test_regression.py",
+          "output": "...                                                                      [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n3 passed in 0.02s\n",
+          "evidence_valid": true,
+          "summary": {
+            "tests": 3,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "assertion_failures": 0,
+          "failure_nodes": [],
+          "files_intact": true,
+          "input_hashes": {
+            "src/werkzeug/security.py": "d072835baf61df0149fe4b7d83149060123144f51c55b494f4caf9fe36ea9e57",
+            "issue2proof_generated/test_regression.py": "706b7dbcebc18796d74399d3fa7a7095ccf0e7da4b1cb545c898eed9cb5be7c3"
+          },
+          "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+          "pytest": "8.4.2",
+          "uid": 65534,
+          "no_new_privileges": true,
+          "limits": {
+            "memory_bytes": 536870912,
+            "cpu_seconds": 15,
+            "processes": 32,
+            "file_bytes": 1048576,
+            "wall_seconds": 20
+          }
+        },
+        "existing": {
+          "operation_id": "01a13b56-4748-73af-967b-c4985b92ef98",
+          "status": "SUCCESS",
+          "exit_code": 0,
+          "timed_out": false,
+          "stderr": "",
+          "output_truncated": false,
+          "cost": 0.00321366,
+          "seconds": 1.849,
+          "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+          "network_disabled": true,
+          "disposable": true,
+          "result_image": null,
+          "command": "python -m pytest tests/test_existing.py",
+          "output": "..                                                                       [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n2 passed in 0.02s\n",
+          "evidence_valid": true,
+          "summary": {
+            "tests": 2,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "assertion_failures": 0,
+          "failure_nodes": [],
+          "files_intact": true,
+          "input_hashes": {
+            "src/werkzeug/security.py": "d072835baf61df0149fe4b7d83149060123144f51c55b494f4caf9fe36ea9e57",
+            "tests/test_existing.py": "0aedeb48712fb2a1e494f9bfcb28ed40145ac25897fe305d0bae2d3f31ad6457"
+          },
+          "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+          "pytest": "8.4.2",
+          "uid": 65534,
+          "no_new_privileges": true,
+          "limits": {
+            "memory_bytes": 536870912,
+            "cpu_seconds": 15,
+            "processes": 32,
+            "file_bytes": 1048576,
+            "wall_seconds": 20
+          }
+        },
+        "independent": {
+          "operation_id": "01a13b56-4e0d-7297-ad32-72023e256277",
+          "status": "SUCCESS",
+          "exit_code": 0,
+          "timed_out": false,
+          "stderr": "",
+          "output_truncated": false,
+          "cost": 0.00317364,
+          "seconds": 1.802,
+          "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+          "network_disabled": true,
+          "disposable": true,
+          "result_image": null,
+          "command": "python -m pytest tests/test_independent.py",
+          "output": ".                                                                        [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n1 passed in 0.02s\n",
+          "evidence_valid": true,
+          "summary": {
+            "tests": 1,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "assertion_failures": 0,
+          "failure_nodes": [],
+          "files_intact": true,
+          "input_hashes": {
+            "src/werkzeug/security.py": "d072835baf61df0149fe4b7d83149060123144f51c55b494f4caf9fe36ea9e57",
+            "tests/test_independent.py": "18906e46538ba129b872526d5dc9476eed8a1fe7fe3da9048c0cbf47446bcb5e"
+          },
+          "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+          "pytest": "8.4.2",
+          "uid": 65534,
+          "no_new_privileges": true,
+          "limits": {
+            "memory_bytes": 536870912,
+            "cpu_seconds": 15,
+            "processes": 32,
+            "file_bytes": 1048576,
+            "wall_seconds": 20
+          }
+        }
+      },
+      "accepted": true,
+      "changes": {
+        "src/werkzeug/security.py": "from __future__ import annotations\n\nimport hashlib\nimport hmac\nimport os\nimport posixpath\nimport secrets\n\nSALT_CHARS = \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\"\nDEFAULT_PBKDF2_ITERATIONS = 1_000_000\n\n_os_alt_seps: list[str] = list(\n    sep for sep in [os.sep, os.path.altsep] if sep is not None and sep != \"/\"\n)\n\n_WINDOWS_DEVICE_NAMES = {\n    \"CON\", \"PRN\", \"AUX\", \"NUL\",\n    \"COM1\", \"COM2\", \"COM3\", \"COM4\", \"COM5\", \"COM6\", \"COM7\", \"COM8\", \"COM9\",\n    \"LPT1\", \"LPT2\", \"LPT3\", \"LPT4\", \"LPT5\", \"LPT6\", \"LPT7\", \"LPT8\", \"LPT9\",\n}\n\n\ndef gen_salt(length: int) -> str:\n    \"\"\"Generate a random string of SALT_CHARS with specified ``length``.\"\"\"\n    if length <= 0:\n        raise ValueError(\"Salt length must be at least 1.\")\n\n    return \"\".join(secrets.choice(SALT_CHARS) for _ in range(length))\n\n\ndef _hash_internal(method: str, salt: str, password: str) -> tuple[str, str]:\n    method, *args = method.split(\":\")\n    salt_bytes = salt.encode()\n    password_bytes = password.encode()\n\n    if method == \"scrypt\":\n        if not args:\n            n = 2**15\n            r = 8\n            p = 1\n        else:\n            try:\n                n, r, p = map(int, args)\n            except ValueError:\n                raise ValueError(\"'scrypt' takes 3 arguments.\") from None\n\n        maxmem = 132 * n * r * p  # ideally 128, but some extra seems needed\n        return (\n            hashlib.scrypt(\n                password_bytes, salt=salt_bytes, n=n, r=r, p=p, maxmem=maxmem\n            ).hex(),\n            f\"scrypt:{n}:{r}:{p}\",\n        )\n    elif method == \"pbkdf2\":\n        len_args = len(args)\n\n        if len_args == 0:\n            hash_name = \"sha256\"\n            iterations = DEFAULT_PBKDF2_ITERATIONS\n        elif len_args == 1:\n            hash_name = args[0]\n            iterations = DEFAULT_PBKDF2_ITERATIONS\n        elif len_args == 2:\n            hash_name = args[0]\n            iterations = int(args[1])\n        else:\n            raise ValueError(\"'pbkdf2' takes 2 arguments.\")\n\n        return (\n            hashlib.pbkdf2_hmac(\n                hash_name, password_bytes, salt_bytes, iterations\n            ).hex(),\n            f\"pbkdf2:{hash_name}:{iterations}\",\n        )\n    else:\n        raise ValueError(f\"Invalid hash method '{method}'.\")\n\n\ndef generate_password_hash(\n    password: str, method: str = \"scrypt\", salt_length: int = 16\n) -> str:\n    \"\"\"Securely hash a password for storage. A password can be compared to a stored hash\n    using :func:`check_password_hash`.\n\n    The following methods are supported:\n\n    -   ``scrypt``, the default. The parameters are ``n``, ``r``, and ``p``, the default\n        is ``scrypt:32768:8:1``. See :func:`hashlib.scrypt`.\n    -   ``pbkdf2``, less secure. The parameters are ``hash_method`` and ``iterations``,\n        the default is ``pbkdf2:sha256:600000``. See :func:`hashlib.pbkdf2_hmac`.\n\n    Default parameters may be updated to reflect current guidelines, and methods may be\n    deprecated and removed if they are no longer considered secure. To migrate old\n    hashes, you may generate a new hash when checking an old hash, or you may contact\n    users with a link to reset their password.\n\n    :param password: The plaintext password.\n    :param method: The key derivation function and parameters.\n    :param salt_length: The number of characters to generate for the salt.\n\n    .. versionchanged:: 3.1\n        The default iterations for pbkdf2 was increased to 1,000,000.\n\n    .. versionchanged:: 2.3\n        Scrypt support was added.\n\n    .. versionchanged:: 2.3\n        The default iterations for pbkdf2 was increased to 600,000.\n\n    .. versionchanged:: 2.3\n        All plain hashes are deprecated and will not be supported in Werkzeug 3.0.\n    \"\"\"\n    salt = gen_salt(salt_length)\n    h, actual_method = _hash_internal(method, salt, password)\n    return f\"{actual_method}${salt}${h}\"\n\n\ndef check_password_hash(pwhash: str, password: str) -> bool:\n    \"\"\"Securely check that the given stored password hash, previously generated using\n    :func:`generate_password_hash`, matches the given password.\n\n    Methods may be deprecated and removed if they are no longer considered secure. To\n    migrate old hashes, you may generate a new hash when checking an old hash, or you\n    may contact users with a link to reset their password.\n\n    :param pwhash: The hashed password.\n    :param password: The plaintext password.\n\n    .. versionchanged:: 2.3\n        All plain hashes are deprecated and will not be supported in Werkzeug 3.0.\n    \"\"\"\n    try:\n        method, salt, hashval = pwhash.split(\"$\", 2)\n    except ValueError:\n        return False\n\n    return hmac.compare_digest(_hash_internal(method, salt, password)[0], hashval)\n\n\ndef safe_join(directory: str, *pathnames: str) -> str | None:\n    \"\"\"Safely join zero or more untrusted path components to a base\n    directory to avoid escaping the base directory.\n\n    :param directory: The trusted base directory.\n    :param pathnames: The untrusted path components relative to the\n        base directory.\n    :return: A safe path, otherwise ``None``.\n    \"\"\"\n    if not directory:\n        # Ensure we end up with ./path if directory=\"\" is given,\n        # otherwise the first untrusted part could become trusted.\n        directory = \".\"\n\n    parts = [directory]\n\n    for filename in pathnames:\n        if filename != \"\":\n            filename = posixpath.normpath(filename)\n\n        if os.name == 'nt' and filename.upper() in _WINDOWS_DEVICE_NAMES:\n            return None\n\n        if (\n            any(sep in filename for sep in _os_alt_seps)\n            or os.path.isabs(filename)\n            # ntpath.isabs doesn't catch this on Python < 3.11\n            or filename.startswith(\"/\")\n            or filename == \"..\"\n            or filename.startswith(\"../\")\n        ):\n            return None\n\n        parts.append(filename)\n\n    return posixpath.join(*parts)\n"
+      },
+      "diff": "--- a/src/werkzeug/security.py\n+++ b/src/werkzeug/security.py\n@@ -12,6 +12,12 @@\n _os_alt_seps: list[str] = list(\n     sep for sep in [os.sep, os.path.altsep] if sep is not None and sep != \"/\"\n )\n+\n+_WINDOWS_DEVICE_NAMES = {\n+    \"CON\", \"PRN\", \"AUX\", \"NUL\",\n+    \"COM1\", \"COM2\", \"COM3\", \"COM4\", \"COM5\", \"COM6\", \"COM7\", \"COM8\", \"COM9\",\n+    \"LPT1\", \"LPT2\", \"LPT3\", \"LPT4\", \"LPT5\", \"LPT6\", \"LPT7\", \"LPT8\", \"LPT9\",\n+}\n \n \n def gen_salt(length: int) -> str:\n@@ -151,6 +157,9 @@\n         if filename != \"\":\n             filename = posixpath.normpath(filename)\n \n+        if os.name == 'nt' and filename.upper() in _WINDOWS_DEVICE_NAMES:\n+            return None\n+\n         if (\n             any(sep in filename for sep in _os_alt_seps)\n             or os.path.isabs(filename)\n",
+      "hashes": {
+        "src/werkzeug/security.py": "d072835baf61df0149fe4b7d83149060123144f51c55b494f4caf9fe36ea9e57"
+      }
+    }
+  ],
+  "events": [
+    "Archive inspected in memory; no files extracted or executed.",
+    "Original assertion failure reproduced before requesting any repair."
+  ],
+  "sources": {
+    "src/werkzeug/security.py": "from __future__ import annotations\n\nimport hashlib\nimport hmac\nimport os\nimport posixpath\nimport secrets\n\nSALT_CHARS = \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\"\nDEFAULT_PBKDF2_ITERATIONS = 1_000_000\n\n_os_alt_seps: list[str] = list(\n    sep for sep in [os.sep, os.path.altsep] if sep is not None and sep != \"/\"\n)\n\n\ndef gen_salt(length: int) -> str:\n    \"\"\"Generate a random string of SALT_CHARS with specified ``length``.\"\"\"\n    if length <= 0:\n        raise ValueError(\"Salt length must be at least 1.\")\n\n    return \"\".join(secrets.choice(SALT_CHARS) for _ in range(length))\n\n\ndef _hash_internal(method: str, salt: str, password: str) -> tuple[str, str]:\n    method, *args = method.split(\":\")\n    salt_bytes = salt.encode()\n    password_bytes = password.encode()\n\n    if method == \"scrypt\":\n        if not args:\n            n = 2**15\n            r = 8\n            p = 1\n        else:\n            try:\n                n, r, p = map(int, args)\n            except ValueError:\n                raise ValueError(\"'scrypt' takes 3 arguments.\") from None\n\n        maxmem = 132 * n * r * p  # ideally 128, but some extra seems needed\n        return (\n            hashlib.scrypt(\n                password_bytes, salt=salt_bytes, n=n, r=r, p=p, maxmem=maxmem\n            ).hex(),\n            f\"scrypt:{n}:{r}:{p}\",\n        )\n    elif method == \"pbkdf2\":\n        len_args = len(args)\n\n        if len_args == 0:\n            hash_name = \"sha256\"\n            iterations = DEFAULT_PBKDF2_ITERATIONS\n        elif len_args == 1:\n            hash_name = args[0]\n            iterations = DEFAULT_PBKDF2_ITERATIONS\n        elif len_args == 2:\n            hash_name = args[0]\n            iterations = int(args[1])\n        else:\n            raise ValueError(\"'pbkdf2' takes 2 arguments.\")\n\n        return (\n            hashlib.pbkdf2_hmac(\n                hash_name, password_bytes, salt_bytes, iterations\n            ).hex(),\n            f\"pbkdf2:{hash_name}:{iterations}\",\n        )\n    else:\n        raise ValueError(f\"Invalid hash method '{method}'.\")\n\n\ndef generate_password_hash(\n    password: str, method: str = \"scrypt\", salt_length: int = 16\n) -> str:\n    \"\"\"Securely hash a password for storage. A password can be compared to a stored hash\n    using :func:`check_password_hash`.\n\n    The following methods are supported:\n\n    -   ``scrypt``, the default. The parameters are ``n``, ``r``, and ``p``, the default\n        is ``scrypt:32768:8:1``. See :func:`hashlib.scrypt`.\n    -   ``pbkdf2``, less secure. The parameters are ``hash_method`` and ``iterations``,\n        the default is ``pbkdf2:sha256:600000``. See :func:`hashlib.pbkdf2_hmac`.\n\n    Default parameters may be updated to reflect current guidelines, and methods may be\n    deprecated and removed if they are no longer considered secure. To migrate old\n    hashes, you may generate a new hash when checking an old hash, or you may contact\n    users with a link to reset their password.\n\n    :param password: The plaintext password.\n    :param method: The key derivation function and parameters.\n    :param salt_length: The number of characters to generate for the salt.\n\n    .. versionchanged:: 3.1\n        The default iterations for pbkdf2 was increased to 1,000,000.\n\n    .. versionchanged:: 2.3\n        Scrypt support was added.\n\n    .. versionchanged:: 2.3\n        The default iterations for pbkdf2 was increased to 600,000.\n\n    .. versionchanged:: 2.3\n        All plain hashes are deprecated and will not be supported in Werkzeug 3.0.\n    \"\"\"\n    salt = gen_salt(salt_length)\n    h, actual_method = _hash_internal(method, salt, password)\n    return f\"{actual_method}${salt}${h}\"\n\n\ndef check_password_hash(pwhash: str, password: str) -> bool:\n    \"\"\"Securely check that the given stored password hash, previously generated using\n    :func:`generate_password_hash`, matches the given password.\n\n    Methods may be deprecated and removed if they are no longer considered secure. To\n    migrate old hashes, you may generate a new hash when checking an old hash, or you\n    may contact users with a link to reset their password.\n\n    :param pwhash: The hashed password.\n    :param password: The plaintext password.\n\n    .. versionchanged:: 2.3\n        All plain hashes are deprecated and will not be supported in Werkzeug 3.0.\n    \"\"\"\n    try:\n        method, salt, hashval = pwhash.split(\"$\", 2)\n    except ValueError:\n        return False\n\n    return hmac.compare_digest(_hash_internal(method, salt, password)[0], hashval)\n\n\ndef safe_join(directory: str, *pathnames: str) -> str | None:\n    \"\"\"Safely join zero or more untrusted path components to a base\n    directory to avoid escaping the base directory.\n\n    :param directory: The trusted base directory.\n    :param pathnames: The untrusted path components relative to the\n        base directory.\n    :return: A safe path, otherwise ``None``.\n    \"\"\"\n    if not directory:\n        # Ensure we end up with ./path if directory=\"\" is given,\n        # otherwise the first untrusted part could become trusted.\n        directory = \".\"\n\n    parts = [directory]\n\n    for filename in pathnames:\n        if filename != \"\":\n            filename = posixpath.normpath(filename)\n\n        if (\n            any(sep in filename for sep in _os_alt_seps)\n            or os.path.isabs(filename)\n            # ntpath.isabs doesn't catch this on Python < 3.11\n            or filename.startswith(\"/\")\n            or filename == \"..\"\n            or filename.startswith(\"../\")\n        ):\n            return None\n\n        parts.append(filename)\n\n    return posixpath.join(*parts)\n"
+  },
+  "existing_tests": {
+    "tests/test_independent.py": "from types import SimpleNamespace\nimport posixpath\nimport werkzeug.security as security\n\ndef test_reserved_windows_names(monkeypatch):\n    monkeypatch.setattr(security, 'os', SimpleNamespace(name='nt',path=posixpath))\n    for name in ['CON', 'NUL', 'AUX', 'COM1']:\n        assert security.safe_join('trusted', name) is None\n    assert security.safe_join('trusted', 'document.txt') == 'trusted/document.txt'\n",
+    "tests/test_existing.py": "from werkzeug.security import safe_join\n\ndef test_ordinary_path():\n    assert safe_join('trusted', 'report.txt') == 'trusted/report.txt'\n    assert safe_join('trusted', '../outside') is None\n\n\ndef test_native_linux_device_string_is_ordinary():\n    assert safe_join('trusted', 'CON') == 'trusted/CON'\n"
+  },
+  "dependency_manifests": {},
+  "file_hashes": {
+    "tests/test_independent.py": "18906e46538ba129b872526d5dc9476eed8a1fe7fe3da9048c0cbf47446bcb5e",
+    "tests/test_existing.py": "0aedeb48712fb2a1e494f9bfcb28ed40145ac25897fe305d0bae2d3f31ad6457",
+    "src/werkzeug/security.py": "59cb67804047068f1efa05dfea5314461b35b74b66123263058662d8c5e85acb"
+  },
+  "archive_sha256": "e6f853c72d2b78f907b5274f9164a32b7ac5257fe7e7e04da52c927f05680e26",
+  "excluded_files": [
+    "werkzeug-replay/provenance.json",
+    "werkzeug-replay/LICENSE.txt"
+  ],
+  "limitations": [
+    "Checks cover the collected tests, not universal correctness.",
+    "Untrusted Python can manipulate its own test framework; evidence is not adversarial proof.",
+    "Dependencies use published binary wheels only. Native source builds and system-package recipes require a separately prepared image."
+  ],
+  "provenance": {
+    "repository": "https://github.com/pallets/werkzeug",
+    "tag": "3.1.3",
+    "source_url": "https://raw.githubusercontent.com/pallets/werkzeug/3.1.3/src/werkzeug/security.py",
+    "source_sha256": "59cb67804047068f1efa05dfea5314461b35b74b66123263058662d8c5e85acb",
+    "upstream_fix": "https://github.com/pallets/werkzeug/releases/tag/3.1.4",
+    "advisory": "https://github.com/pallets/werkzeug/security/advisories/GHSA-hgf8-39gv-g3f2",
+    "license": "BSD-3-Clause; LICENSE.txt retained",
+    "evaluation": "Historical real-bug replay with independently authored tests. Not held out; may be represented in model training data.",
+    "issue": "On Windows, safe_join currently accepts special device filenames such as CON and NUL. It should return None for Windows special device names, while preserving ordinary joins and traversal rejection. Do not open any Windows device; this is string validation only. Tests execute on Linux: emulate the Windows branch by replacing the target module-local os reference (werkzeug.security.os) with a SimpleNamespace(name=\"nt\", path=posixpath), without changing the global os module. Without Windows emulation, CON remains an ordinary Linux filename and must still be accepted."
+  },
+  "id": "564411ab-1bd0-4b2e-a4d3-e8bcd1cd4761",
+  "created_at": "2026-10-14T16:54:03.799074+00:00",
+  "pipeline": {
+    "baseline": {
+      "operation_id": "01a13b55-d959-7174-a688-0e95ae8e1e85",
+      "status": "SUCCESS",
+      "exit_code": 0,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.0032159800000000002,
+      "seconds": 2.478,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_existing.py",
+      "output": "..                                                                       [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n2 passed in 0.02s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 0,
+      "failure_nodes": [],
+      "files_intact": true,
+      "input_hashes": {
+        "src/werkzeug/security.py": "59cb67804047068f1efa05dfea5314461b35b74b66123263058662d8c5e85acb",
+        "tests/test_existing.py": "0aedeb48712fb2a1e494f9bfcb28ed40145ac25897fe305d0bae2d3f31ad6457"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "independent_baseline": {
+      "operation_id": "01a13b55-e1f2-771b-bcbe-8c3ae784cd31",
+      "status": "SUCCESS",
+      "exit_code": 1,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.00319269,
+      "seconds": 1.785,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_independent.py",
+      "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_________________________ test_reserved_windows_names __________________________\ntests/test_independent.py:8: in test_reserved_windows_names\n    assert security.safe_join('trusted', name) is None\nE   AssertionError: assert 'trusted/CON' is None\nE    +  where 'trusted/CON' = <function safe_join at 0x7ffff6777100>('trusted', 'CON')\nE    +    where <function safe_join at 0x7ffff6777100> = security.safe_join\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n=========================== short test summary info ============================\nFAILED ../dev::test_reserved_windows_names - AssertionError: assert 'trusted/...\n1 failed in 0.03s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 1,
+      "failure_nodes": [
+        "::test_reserved_windows_names"
+      ],
+      "files_intact": true,
+      "input_hashes": {
+        "src/werkzeug/security.py": "59cb67804047068f1efa05dfea5314461b35b74b66123263058662d8c5e85acb",
+        "tests/test_independent.py": "18906e46538ba129b872526d5dc9476eed8a1fe7fe3da9048c0cbf47446bcb5e"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "reproduction": {
+      "operation_id": "01a13b56-0b16-75fb-9042-c04da5dde869",
+      "status": "SUCCESS",
+      "exit_code": 1,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.00330644,
+      "seconds": 1.626,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest issue2proof_generated/test_regression.py",
+      "output": "F..                                                                      [100%]\n=================================== FAILURES ===================================\n_________________ test_safe_join_windows_device_names_rejected _________________\nissue2proof_generated/test_regression.py:20: in test_safe_join_windows_device_names_rejected\n    assert safe_join('trusted', name) is None\nE   AssertionError: assert 'trusted/CON' is None\nE    +  where 'trusted/CON' = safe_join('trusted', 'CON')\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n=========================== short test summary info ============================\nFAILED ../dev::test_safe_join_windows_device_names_rejected - AssertionError:...\n1 failed, 2 passed in 0.03s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 3,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 1,
+      "failure_nodes": [
+        "::test_safe_join_windows_device_names_rejected"
+      ],
+      "files_intact": true,
+      "input_hashes": {
+        "src/werkzeug/security.py": "59cb67804047068f1efa05dfea5314461b35b74b66123263058662d8c5e85acb",
+        "issue2proof_generated/test_regression.py": "706b7dbcebc18796d74399d3fa7a7095ccf0e7da4b1cb545c898eed9cb5be7c3"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    }
+  },
+  "model_requests": [
+    {
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "prompt_tokens": 2048,
+      "completion_tokens": 1838,
+      "estimated_cost_usd": 0.0022686
+    },
+    {
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "prompt_tokens": 2459,
+      "completion_tokens": 2688,
+      "estimated_cost_usd": 0.0031569
+    }
+  ],
+  "independent_test_paths": [
+    "tests/test_independent.py"
+  ],
+  "test_hashes": {
+    "tests/test_independent.py": "18906e46538ba129b872526d5dc9476eed8a1fe7fe3da9048c0cbf47446bcb5e",
+    "tests/test_existing.py": "0aedeb48712fb2a1e494f9bfcb28ed40145ac25897fe305d0bae2d3f31ad6457",
+    "issue2proof_generated/test_regression.py": "706b7dbcebc18796d74399d3fa7a7095ccf0e7da4b1cb545c898eed9cb5be7c3"
+  },
+  "job_id": "b1f4cda0-578e-4864-935e-f96bec11bb85",
+  "environment": {
+    "requirements": [],
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "policy": "PyPI wheels only; no source distributions, repository hooks, local paths or alternate indexes.",
+    "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+    "prepared": false,
+    "installed": {}
+  },
+  "model_outputs": [
+    {
+      "test_source": "import pytest\nfrom werkzeug.security import safe_join\nimport werkzeug.security as security\nfrom types import SimpleNamespace\nimport posixpath\n\n\ndef test_safe_join_windows_device_names_rejected(monkeypatch):\n    # Emulate Windows environment\n    monkeypatch.setattr(security, 'os', SimpleNamespace(name='nt', path=posixpath))\n    device_names = [\n        'CON', 'con', 'CoN',\n        'PRN', 'prn', 'PrN',\n        'AUX', 'aux', 'AuX',\n        'NUL', 'nul', 'NuL',\n        'COM1', 'com1', 'CoM1',\n        'LPT9', 'lpt9', 'LpT9',\n    ]\n    for name in device_names:\n        assert safe_join('trusted', name) is None\n\n\ndef test_safe_join_windows_normal_paths_still_work(monkeypatch):\n    monkeypatch.setattr(security, 'os', SimpleNamespace(name='nt', path=posixpath))\n    assert safe_join('trusted', 'report.txt') == 'trusted/report.txt'\n    assert safe_join('trusted', 'sub', 'dir', 'file.log') == 'trusted/sub/dir/file.log'\n    # traversal detection still works\n    assert safe_join('trusted', '../outside') is None\n    assert safe_join('trusted', 'sub', '..', 'secret') is None\n\n\ndef test_safe_join_linux_device_accepted():\n    # On POSIX (default) treat device names as ordinary filenames\n    assert safe_join('trusted', 'CON') == 'trusted/CON'\n    assert safe_join('trusted', 'nul') == 'trusted/nul'\n    assert safe_join('trusted', 'COM1') == 'trusted/COM1'\n",
+      "clarification": null
+    },
+    {
+      "edits": [
+        {
+          "path": "src/werkzeug/security.py",
+          "old": "_os_alt_seps: list[str] = list(\n    sep for sep in [os.sep, os.path.altsep] if sep is not None and sep != \"/\"\n)",
+          "new": "_os_alt_seps: list[str] = list(\n    sep for sep in [os.sep, os.path.altsep] if sep is not None and sep != \"/\"\n)\n\n_WINDOWS_DEVICE_NAMES = {\n    \"CON\", \"PRN\", \"AUX\", \"NUL\",\n    \"COM1\", \"COM2\", \"COM3\", \"COM4\", \"COM5\", \"COM6\", \"COM7\", \"COM8\", \"COM9\",\n    \"LPT1\", \"LPT2\", \"LPT3\", \"LPT4\", \"LPT5\", \"LPT6\", \"LPT7\", \"LPT8\", \"LPT9\",\n}"
+        },
+        {
+          "path": "src/werkzeug/security.py",
+          "old": "    for filename in pathnames:\n        if filename != \"\":\n            filename = posixpath.normpath(filename)\n\n        if (\n            any(sep in filename for sep in _os_alt_seps)\n            or os.path.isabs(filename)\n            # ntpath.isabs doesn't catch this on Python < 3.11\n            or filename.startswith(\"/\")\n            or filename == \"..\"\n            or filename.startswith(\"../\")\n        ):\n            return None\n\n        parts.append(filename)",
+          "new": "    for filename in pathnames:\n        if filename != \"\":\n            filename = posixpath.normpath(filename)\n\n        if os.name == 'nt' and filename.upper() in _WINDOWS_DEVICE_NAMES:\n            return None\n\n        if (\n            any(sep in filename for sep in _os_alt_seps)\n            or os.path.isabs(filename)\n            # ntpath.isabs doesn't catch this on Python < 3.11\n            or filename.startswith(\"/\")\n            or filename == \"..\"\n            or filename.startswith(\"../\")\n        ):\n            return None\n\n        parts.append(filename)"
+        }
+      ]
+    }
+  ],
+  "generated_regression": {
+    "path": "issue2proof_generated/test_regression.py",
+    "source": "import pytest\nfrom werkzeug.security import safe_join\nimport werkzeug.security as security\nfrom types import SimpleNamespace\nimport posixpath\n\n\ndef test_safe_join_windows_device_names_rejected(monkeypatch):\n    # Emulate Windows environment\n    monkeypatch.setattr(security, 'os', SimpleNamespace(name='nt', path=posixpath))\n    device_names = [\n        'CON', 'con', 'CoN',\n        'PRN', 'prn', 'PrN',\n        'AUX', 'aux', 'AuX',\n        'NUL', 'nul', 'NuL',\n        'COM1', 'com1', 'CoM1',\n        'LPT9', 'lpt9', 'LpT9',\n    ]\n    for name in device_names:\n        assert safe_join('trusted', name) is None\n\n\ndef test_safe_join_windows_normal_paths_still_work(monkeypatch):\n    monkeypatch.setattr(security, 'os', SimpleNamespace(name='nt', path=posixpath))\n    assert safe_join('trusted', 'report.txt') == 'trusted/report.txt'\n    assert safe_join('trusted', 'sub', 'dir', 'file.log') == 'trusted/sub/dir/file.log'\n    # traversal detection still works\n    assert safe_join('trusted', '../outside') is None\n    assert safe_join('trusted', 'sub', '..', 'secret') is None\n\n\ndef test_safe_join_linux_device_accepted():\n    # On POSIX (default) treat device names as ordinary filenames\n    assert safe_join('trusted', 'CON') == 'trusted/CON'\n    assert safe_join('trusted', 'nul') == 'trusted/nul'\n    assert safe_join('trusted', 'COM1') == 'trusted/COM1'\n",
+    "sha256": "706b7dbcebc18796d74399d3fa7a7095ccf0e7da4b1cb545c898eed9cb5be7c3"
+  },
+  "draft_changes": {
+    "src/werkzeug/security.py": "from __future__ import annotations\n\nimport hashlib\nimport hmac\nimport os\nimport posixpath\nimport secrets\n\nSALT_CHARS = \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\"\nDEFAULT_PBKDF2_ITERATIONS = 1_000_000\n\n_os_alt_seps: list[str] = list(\n    sep for sep in [os.sep, os.path.altsep] if sep is not None and sep != \"/\"\n)\n\n_WINDOWS_DEVICE_NAMES = {\n    \"CON\", \"PRN\", \"AUX\", \"NUL\",\n    \"COM1\", \"COM2\", \"COM3\", \"COM4\", \"COM5\", \"COM6\", \"COM7\", \"COM8\", \"COM9\",\n    \"LPT1\", \"LPT2\", \"LPT3\", \"LPT4\", \"LPT5\", \"LPT6\", \"LPT7\", \"LPT8\", \"LPT9\",\n}\n\n\ndef gen_salt(length: int) -> str:\n    \"\"\"Generate a random string of SALT_CHARS with specified ``length``.\"\"\"\n    if length <= 0:\n        raise ValueError(\"Salt length must be at least 1.\")\n\n    return \"\".join(secrets.choice(SALT_CHARS) for _ in range(length))\n\n\ndef _hash_internal(method: str, salt: str, password: str) -> tuple[str, str]:\n    method, *args = method.split(\":\")\n    salt_bytes = salt.encode()\n    password_bytes = password.encode()\n\n    if method == \"scrypt\":\n        if not args:\n            n = 2**15\n            r = 8\n            p = 1\n        else:\n            try:\n                n, r, p = map(int, args)\n            except ValueError:\n                raise ValueError(\"'scrypt' takes 3 arguments.\") from None\n\n        maxmem = 132 * n * r * p  # ideally 128, but some extra seems needed\n        return (\n            hashlib.scrypt(\n                password_bytes, salt=salt_bytes, n=n, r=r, p=p, maxmem=maxmem\n            ).hex(),\n            f\"scrypt:{n}:{r}:{p}\",\n        )\n    elif method == \"pbkdf2\":\n        len_args = len(args)\n\n        if len_args == 0:\n            hash_name = \"sha256\"\n            iterations = DEFAULT_PBKDF2_ITERATIONS\n        elif len_args == 1:\n            hash_name = args[0]\n            iterations = DEFAULT_PBKDF2_ITERATIONS\n        elif len_args == 2:\n            hash_name = args[0]\n            iterations = int(args[1])\n        else:\n            raise ValueError(\"'pbkdf2' takes 2 arguments.\")\n\n        return (\n            hashlib.pbkdf2_hmac(\n                hash_name, password_bytes, salt_bytes, iterations\n            ).hex(),\n            f\"pbkdf2:{hash_name}:{iterations}\",\n        )\n    else:\n        raise ValueError(f\"Invalid hash method '{method}'.\")\n\n\ndef generate_password_hash(\n    password: str, method: str = \"scrypt\", salt_length: int = 16\n) -> str:\n    \"\"\"Securely hash a password for storage. A password can be compared to a stored hash\n    using :func:`check_password_hash`.\n\n    The following methods are supported:\n\n    -   ``scrypt``, the default. The parameters are ``n``, ``r``, and ``p``, the default\n        is ``scrypt:32768:8:1``. See :func:`hashlib.scrypt`.\n    -   ``pbkdf2``, less secure. The parameters are ``hash_method`` and ``iterations``,\n        the default is ``pbkdf2:sha256:600000``. See :func:`hashlib.pbkdf2_hmac`.\n\n    Default parameters may be updated to reflect current guidelines, and methods may be\n    deprecated and removed if they are no longer considered secure. To migrate old\n    hashes, you may generate a new hash when checking an old hash, or you may contact\n    users with a link to reset their password.\n\n    :param password: The plaintext password.\n    :param method: The key derivation function and parameters.\n    :param salt_length: The number of characters to generate for the salt.\n\n    .. versionchanged:: 3.1\n        The default iterations for pbkdf2 was increased to 1,000,000.\n\n    .. versionchanged:: 2.3\n        Scrypt support was added.\n\n    .. versionchanged:: 2.3\n        The default iterations for pbkdf2 was increased to 600,000.\n\n    .. versionchanged:: 2.3\n        All plain hashes are deprecated and will not be supported in Werkzeug 3.0.\n    \"\"\"\n    salt = gen_salt(salt_length)\n    h, actual_method = _hash_internal(method, salt, password)\n    return f\"{actual_method}${salt}${h}\"\n\n\ndef check_password_hash(pwhash: str, password: str) -> bool:\n    \"\"\"Securely check that the given stored password hash, previously generated using\n    :func:`generate_password_hash`, matches the given password.\n\n    Methods may be deprecated and removed if they are no longer considered secure. To\n    migrate old hashes, you may generate a new hash when checking an old hash, or you\n    may contact users with a link to reset their password.\n\n    :param pwhash: The hashed password.\n    :param password: The plaintext password.\n\n    .. versionchanged:: 2.3\n        All plain hashes are deprecated and will not be supported in Werkzeug 3.0.\n    \"\"\"\n    try:\n        method, salt, hashval = pwhash.split(\"$\", 2)\n    except ValueError:\n        return False\n\n    return hmac.compare_digest(_hash_internal(method, salt, password)[0], hashval)\n\n\ndef safe_join(directory: str, *pathnames: str) -> str | None:\n    \"\"\"Safely join zero or more untrusted path components to a base\n    directory to avoid escaping the base directory.\n\n    :param directory: The trusted base directory.\n    :param pathnames: The untrusted path components relative to the\n        base directory.\n    :return: A safe path, otherwise ``None``.\n    \"\"\"\n    if not directory:\n        # Ensure we end up with ./path if directory=\"\" is given,\n        # otherwise the first untrusted part could become trusted.\n        directory = \".\"\n\n    parts = [directory]\n\n    for filename in pathnames:\n        if filename != \"\":\n            filename = posixpath.normpath(filename)\n\n        if os.name == 'nt' and filename.upper() in _WINDOWS_DEVICE_NAMES:\n            return None\n\n        if (\n            any(sep in filename for sep in _os_alt_seps)\n            or os.path.isabs(filename)\n            # ntpath.isabs doesn't catch this on Python < 3.11\n            or filename.startswith(\"/\")\n            or filename == \"..\"\n            or filename.startswith(\"../\")\n        ):\n            return None\n\n        parts.append(filename)\n\n    return posixpath.join(*parts)\n"
+  },
+  "draft_diff": "--- a/src/werkzeug/security.py\n+++ b/src/werkzeug/security.py\n@@ -12,6 +12,12 @@\n _os_alt_seps: list[str] = list(\n     sep for sep in [os.sep, os.path.altsep] if sep is not None and sep != \"/\"\n )\n+\n+_WINDOWS_DEVICE_NAMES = {\n+    \"CON\", \"PRN\", \"AUX\", \"NUL\",\n+    \"COM1\", \"COM2\", \"COM3\", \"COM4\", \"COM5\", \"COM6\", \"COM7\", \"COM8\", \"COM9\",\n+    \"LPT1\", \"LPT2\", \"LPT3\", \"LPT4\", \"LPT5\", \"LPT6\", \"LPT7\", \"LPT8\", \"LPT9\",\n+}\n \n \n def gen_salt(length: int) -> str:\n@@ -151,6 +157,9 @@\n         if filename != \"\":\n             filename = posixpath.normpath(filename)\n \n+        if os.name == 'nt' and filename.upper() in _WINDOWS_DEVICE_NAMES:\n+            return None\n+\n         if (\n             any(sep in filename for sep in _os_alt_seps)\n             or os.path.isabs(filename)\n",
+  "candidate_hashes": {
+    "src/werkzeug/security.py": "d072835baf61df0149fe4b7d83149060123144f51c55b494f4caf9fe36ea9e57"
+  },
+  "verification": {
+    "baseline": {
+      "operation_id": "01a13b55-d959-7174-a688-0e95ae8e1e85",
+      "status": "SUCCESS",
+      "exit_code": 0,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.0032159800000000002,
+      "seconds": 2.478,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_existing.py",
+      "output": "..                                                                       [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n2 passed in 0.02s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 0,
+      "failure_nodes": [],
+      "files_intact": true,
+      "input_hashes": {
+        "src/werkzeug/security.py": "59cb67804047068f1efa05dfea5314461b35b74b66123263058662d8c5e85acb",
+        "tests/test_existing.py": "0aedeb48712fb2a1e494f9bfcb28ed40145ac25897fe305d0bae2d3f31ad6457"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "independent_baseline": {
+      "operation_id": "01a13b55-e1f2-771b-bcbe-8c3ae784cd31",
+      "status": "SUCCESS",
+      "exit_code": 1,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.00319269,
+      "seconds": 1.785,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_independent.py",
+      "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_________________________ test_reserved_windows_names __________________________\ntests/test_independent.py:8: in test_reserved_windows_names\n    assert security.safe_join('trusted', name) is None\nE   AssertionError: assert 'trusted/CON' is None\nE    +  where 'trusted/CON' = <function safe_join at 0x7ffff6777100>('trusted', 'CON')\nE    +    where <function safe_join at 0x7ffff6777100> = security.safe_join\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n=========================== short test summary info ============================\nFAILED ../dev::test_reserved_windows_names - AssertionError: assert 'trusted/...\n1 failed in 0.03s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 1,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 1,
+      "failure_nodes": [
+        "::test_reserved_windows_names"
+      ],
+      "files_intact": true,
+      "input_hashes": {
+        "src/werkzeug/security.py": "59cb67804047068f1efa05dfea5314461b35b74b66123263058662d8c5e85acb",
+        "tests/test_independent.py": "18906e46538ba129b872526d5dc9476eed8a1fe7fe3da9048c0cbf47446bcb5e"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "reproduction": {
+      "operation_id": "01a13b56-0b16-75fb-9042-c04da5dde869",
+      "status": "SUCCESS",
+      "exit_code": 1,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.00330644,
+      "seconds": 1.626,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest issue2proof_generated/test_regression.py",
+      "output": "F..                                                                      [100%]\n=================================== FAILURES ===================================\n_________________ test_safe_join_windows_device_names_rejected _________________\nissue2proof_generated/test_regression.py:20: in test_safe_join_windows_device_names_rejected\n    assert safe_join('trusted', name) is None\nE   AssertionError: assert 'trusted/CON' is None\nE    +  where 'trusted/CON' = safe_join('trusted', 'CON')\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n=========================== short test summary info ============================\nFAILED ../dev::test_safe_join_windows_device_names_rejected - AssertionError:...\n1 failed, 2 passed in 0.03s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 3,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 1,
+      "failure_nodes": [
+        "::test_safe_join_windows_device_names_rejected"
+      ],
+      "files_intact": true,
+      "input_hashes": {
+        "src/werkzeug/security.py": "59cb67804047068f1efa05dfea5314461b35b74b66123263058662d8c5e85acb",
+        "issue2proof_generated/test_regression.py": "706b7dbcebc18796d74399d3fa7a7095ccf0e7da4b1cb545c898eed9cb5be7c3"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "regression": {
+      "operation_id": "01a13b56-3feb-7561-9ac2-5214ebab43b8",
+      "status": "SUCCESS",
+      "exit_code": 0,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.0032403300000000005,
+      "seconds": 1.934,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest issue2proof_generated/test_regression.py",
+      "output": "...                                                                      [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n3 passed in 0.02s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 0,
+      "failure_nodes": [],
+      "files_intact": true,
+      "input_hashes": {
+        "src/werkzeug/security.py": "d072835baf61df0149fe4b7d83149060123144f51c55b494f4caf9fe36ea9e57",
+        "issue2proof_generated/test_regression.py": "706b7dbcebc18796d74399d3fa7a7095ccf0e7da4b1cb545c898eed9cb5be7c3"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "existing": {
+      "operation_id": "01a13b56-4748-73af-967b-c4985b92ef98",
+      "status": "SUCCESS",
+      "exit_code": 0,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.00321366,
+      "seconds": 1.849,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_existing.py",
+      "output": "..                                                                       [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n2 passed in 0.02s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 0,
+      "failure_nodes": [],
+      "files_intact": true,
+      "input_hashes": {
+        "src/werkzeug/security.py": "d072835baf61df0149fe4b7d83149060123144f51c55b494f4caf9fe36ea9e57",
+        "tests/test_existing.py": "0aedeb48712fb2a1e494f9bfcb28ed40145ac25897fe305d0bae2d3f31ad6457"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    },
+    "independent": {
+      "operation_id": "01a13b56-4e0d-7297-ad32-72023e256277",
+      "status": "SUCCESS",
+      "exit_code": 0,
+      "timed_out": false,
+      "stderr": "",
+      "output_truncated": false,
+      "cost": 0.00317364,
+      "seconds": 1.802,
+      "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+      "network_disabled": true,
+      "disposable": true,
+      "result_image": null,
+      "command": "python -m pytest tests/test_independent.py",
+      "output": ".                                                                        [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n1 passed in 0.02s\n",
+      "evidence_valid": true,
+      "summary": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "assertion_failures": 0,
+      "failure_nodes": [],
+      "files_intact": true,
+      "input_hashes": {
+        "src/werkzeug/security.py": "d072835baf61df0149fe4b7d83149060123144f51c55b494f4caf9fe36ea9e57",
+        "tests/test_independent.py": "18906e46538ba129b872526d5dc9476eed8a1fe7fe3da9048c0cbf47446bcb5e"
+      },
+      "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+      "pytest": "8.4.2",
+      "uid": 65534,
+      "no_new_privileges": true,
+      "limits": {
+        "memory_bytes": 536870912,
+        "cpu_seconds": 15,
+        "processes": 32,
+        "file_bytes": 1048576,
+        "wall_seconds": 20
+      }
+    }
+  }
+}

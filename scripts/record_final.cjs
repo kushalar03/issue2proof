@@ -1,0 +1,25 @@
+const {chromium}=require('playwright');const fs=require('fs');
+(async()=>{
+ const browser=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
+ const context=await browser.newContext({viewport:{width:1440,height:1000},recordVideo:{dir:'submission/raw-video',size:{width:1440,height:1000}}});
+ const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));const started=Date.now();const pause=ms=>page.waitForTimeout(ms);
+ const until=async seconds=>{const remaining=seconds*1000-(Date.now()-started);if(remaining>0)await pause(remaining);};
+ await page.goto('http://127.0.0.1:8010');await page.locator('#access-token').fill('local-review-token-only-not-for-production');await page.locator('#sign-in').click();await until(10);
+ await page.locator('#repository').setInputFiles('examples/calendar-project.zip');await page.locator('#bug-report').fill('Add calendar months preserving the day when valid and clamping to month end otherwise. Preserve zero and negative offsets. The implementation currently adds fixed 30-day intervals.');await until(20);
+ await page.locator('#inspect-project').click();await page.locator('#results').getByText('awaiting model',{exact:true}).waitFor();
+ await page.locator('#results input[value="tests/test_independent.py"]').check();await page.locator('#results label.consent input').check();await page.getByRole('button',{name:'Start full investigation →',exact:true}).scrollIntoViewIfNeeded();await until(32);
+ await page.getByRole('button',{name:'Start full investigation →',exact:true}).click();await page.locator('#job-progress').waitFor();await page.locator('#job-progress').scrollIntoViewIfNeeded();
+ await page.waitForFunction(()=>['checks passed','unresolved','not reproduced','investigation failed','budget exhausted'].includes(document.querySelector('#results .verdict')?.textContent),{},{timeout:120000});
+ const jobs=await(await page.request.get('http://127.0.0.1:8010/api/jobs')).json();const job=jobs[0];const report=await(await page.request.get('http://127.0.0.1:8010/api/runs/'+job.run_id)).json();
+ if(report.verdict!=='checks_passed')throw Error('Live final investigation: '+report.verdict);
+ fs.writeFileSync('artifacts/final-browser-investigation.json',JSON.stringify(report,null,2));
+ fs.writeFileSync('artifacts/final-browser-job.json',JSON.stringify(job,null,2));
+ await page.locator('#results').scrollIntoViewIfNeeded();await until(78);
+ await page.locator('#results details').nth(2).click();await page.mouse.wheel(0,360);await pause(10_000);
+ await page.mouse.wheel(0,650);await pause(8_000);
+ await page.getByText('Recorded live evidence',{exact:true}).click();await page.getByRole('button',{name:'Historical Werkzeug repair',exact:true}).click();await page.locator('#results').scrollIntoViewIfNeeded();await until(120);
+ await page.screenshot({path:'submission/final-application.png',fullPage:true});
+ fs.writeFileSync('artifacts/final-browser-validation.json',JSON.stringify({passed:errors.length===0,job:job.id,verdict:report.verdict,page_errors:errors,model_calls:job.model_calls,sandbox_calls:job.sandbox_calls,checks:['authenticated repository-first UI','new packaged project investigation','background polling','context and independent selection','wheel dependency preparation','network-disabled package installation','reproduce-before-repair','live candidate checks','historical case navigation']},null,2));
+ if(errors.length)throw Error(errors.join('\n'));
+ const video=page.video();await context.close();fs.renameSync(await video.path(),'submission/final-screen.webm');await browser.close();console.log('Final live application recording passed');
+})().catch(e=>{console.error(e);process.exit(1)});

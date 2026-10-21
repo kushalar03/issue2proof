@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "job": "e6bcbb06-d764-4996-9e79-15053487f96c",
+  "verdict": "checks_passed",
+  "page_errors": [],
+  "model_calls": 3,
+  "sandbox_calls": 10,
+  "checks": [
+    "authenticated repository-first UI",
+    "new packaged project investigation",
+    "background polling",
+    "context and independent selection",
+    "wheel dependency preparation",
+    "network-disabled package installation",
+    "reproduce-before-repair",
+    "live candidate checks",
+    "historical case navigation"
+  ]
+}

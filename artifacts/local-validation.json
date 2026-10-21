@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "passed": true,
+  "tests": 110,
+  "warnings": [
+    "Starlette TestClient httpx deprecation"
+  ],
+  "lint": "passed",
+  "javascript_syntax": "passed",
+  "dependency_check": "passed",
+  "final_video_seconds": 128,
+  "video_codecs": [
+    "h264",
+    "aac"
+  ]
+}

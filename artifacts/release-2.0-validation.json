@@ -1,0 +1,44 @@
+{
+  "validated_at": "2026-10-21T08:10:00Z",
+  "version": "2.0.0",
+  "checks": {
+    "pytest": {
+      "passed": 130,
+      "failed": 0,
+      "known_warnings": 1
+    },
+    "ruff": "passed",
+    "browser_javascript_syntax": "passed",
+    "browser_memory_workflow": "passed",
+    "browser_authentication_gate": "passed",
+    "browser_responsive_header": "passed",
+    "headless_agent_context": "passed",
+    "mcp_plugin_protocol": "passed",
+    "mcp_live_recall": "passed",
+    "mcp_audit_tool": "passed",
+    "mcp_live_audit": "memory_conflict detected through MCP",
+    "memory_impact_benchmark": "30 trials; 8 regressions; plain CI 3/8; capsule replay 8/8",
+    "live_sandbox_activation": "passed",
+    "live_nano_index": "passed",
+    "live_qwen_semantic_recall": "passed",
+    "live_super_conflict_analysis": "passed",
+    "live_ultra_escalation": "passed"
+  },
+  "demo": {
+    "path": "submission/final-demo.mp4",
+    "duration_seconds": 92.12,
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "voice_narration": true,
+    "neural_voice": "Kokoro am_michael",
+    "technical_pronunciation_script": true,
+    "chapter_aligned_narration": true,
+    "guided_pointer": true,
+    "fixed_workspace_frame": true,
+    "width": 1600,
+    "height": 1120,
+    "captions_burned_in": true,
+    "dedicated_caption_band": true
+  },
+  "known_warning": "Starlette TestClient recommends the future httpx2 replacement; runtime tests pass."
+}

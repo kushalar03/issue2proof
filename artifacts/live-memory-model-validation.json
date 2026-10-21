@@ -1,0 +1,24 @@
+{
+  "validated_at": "2026-10-20T15:38:00Z",
+  "remote_configuration_complete": true,
+  "capsule_id": "4c88c2a9-df98-4cdf-866e-b1106fcf6cf7",
+  "fast_model": {
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "role": "fast",
+    "prompt_tokens": 330,
+    "completion_tokens": 428,
+    "summary": "On Windows, safe_join must reject special device names like CON and NUL by returning None, while preserving normal joins and traversal checks, using string validation only."
+  },
+  "semantic_retrieval": {
+    "model": "Qwen/Qwen3-Embedding-8B",
+    "prompt_tokens": 251,
+    "matches": 1,
+    "top_score": 0.563712
+  },
+  "budget_ledger": {
+    "total_credit_usd": 25.0,
+    "protected_reserve_usd": 5.0,
+    "reserved_usd": 0.02,
+    "remaining_spendable_usd": 19.98
+  }
+}

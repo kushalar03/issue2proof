@@ -1,0 +1,17 @@
+{
+  "case": "repair",
+  "mode": "model repair / restricted pricing fixture",
+  "issue": "An excess discount makes the total negative. The specified behavior is to clamp the total to zero.",
+  "verdict": "blocked",
+  "attempts": [],
+  "events": [],
+  "limitations": [
+    "Only the reviewed pricing fixture and pure arithmetic repairs are supported.",
+    "Tests are reviewed fixtures, not model-generated reproductions or a real-bug benchmark.",
+    "Verification covers the listed checks only.",
+    "Remote network isolation and resource quotas have not been validated; arbitrary code is disabled."
+  ],
+  "stage": "configuration",
+  "error_type": "ValueError",
+  "explanation": "Configure NEBIUS_SANDBOX_IMAGE for Sandboxes."
+}

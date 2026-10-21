@@ -1,0 +1,13 @@
+Issue to Proof investigates Python bugs from a private, authenticated workspace. It now prepares project dependencies, reproduces failures before requesting repairs, revises rejected candidates, and preserves investigation progress across interruptions.
+
+The demonstration starts with a packaged Python project. Its month calculation incorrectly uses thirty-day intervals. After inspection, the implementation context is selected and independent tests are reserved. Those test contents stay outside the model context. Remote work receives an explicit scheduling allowance.
+
+This is a new background investigation, not just a saved replay. The application prepares published wheel dependencies in a separate environment. It installs the local project without network access, under an unprivileged user. Then it checks the original existing suite.
+
+NVIDIA Nemotron generates a regression through Nebius Token Factory. The original assertion failure must reproduce before the first repair request. The regression is frozen. Failed candidates receive bounded feedback, while independent test contents remain private. At most three repair attempts are allowed.
+
+The browser shows progress and request reservations without holding the page open on a long request. Investigations can be cancelled. Expired worker leases require explicit resume, reusing completed checkpoints and preserving the budget. Signed sessions, retention controls, and a tested container deployment protect the private instance.
+
+The result includes the candidate patch and remote execution evidence. The repair must pass regression, existing, and independent checks in fresh, network-disabled sandboxes. Package metadata and bundled resources are checked as well.
+
+A historical Werkzeug bug was also evaluated with upstream source provenance and license retained. That replay passed. It is a historical case, not a held-out benchmark. The release includes runnable source, deployment instructions, tests, and the evidence behind each result. Passing checks are evidence of behavior, not proof of universal correctness.

@@ -1,0 +1,10 @@
+{
+  "repository": "https://github.com/psf/requests",
+  "tag": "v2.31.0",
+  "source_path": "requests/utils.py",
+  "source_sha256": "eacc765f7708540f018163a0f28771172fbf95b5831444d4f072387d4e119aac",
+  "upstream_fixed_source": "https://github.com/psf/requests/blob/v2.32.3/src/requests/utils.py",
+  "license": "Apache-2.0; upstream LICENSE retained",
+  "evaluation": "Historical real-bug replay on urllib3 2.2.3 with authored tests; not held out.",
+  "issue": "In requests.utils.super_len, a Unicode string body reports the number of characters instead of its UTF-8 byte length. With the installed urllib3 2.2.3, string bodies are UTF-8 encoded, so Content-Length is wrong for non-ASCII text. Fix super_len while preserving ASCII, bytes and partially consumed file-like object lengths. Do not make network requests."
+}

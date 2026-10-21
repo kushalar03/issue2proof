@@ -1,0 +1,14 @@
+{
+  "validated_at": "2026-10-20T15:35:00Z",
+  "ok": true,
+  "mode": "remote reviewed smoke check",
+  "image": "python:3.12-slim",
+  "exit_code": 0,
+  "seconds": 0.097596,
+  "cost_usd": 0.00107546,
+  "output_truncated": false,
+  "payload_sha256": "b48223c5eda5198c14ccf47fa3c5c6c797a924445f35c9593b10e950e454f296",
+  "file_transfer_verified": true,
+  "disposable": true,
+  "timeout_seconds": 30
+}

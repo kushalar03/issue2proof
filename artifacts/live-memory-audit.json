@@ -1,0 +1,51 @@
+{
+  "validated_at": "2026-10-20T15:53:00Z",
+  "run_id": "bd8c1784-fbb0-430a-933c-bd4d05268e2c",
+  "job_id": "5a403814-7fce-4e90-b04c-8bb06d455245",
+  "verdict": "memory_conflict",
+  "explanation": "The proposed revision violated at least one recalled behavioral memory.",
+  "baseline": {
+    "status": "already_failing",
+    "operation_id": "01a159f7-2770-73a7-9444-061c3c6dbb3b",
+    "exit_code": 1,
+    "cost_usd": 0.00326545
+  },
+  "memory_replay": {
+    "memory_id": "4c88c2a9-df98-4cdf-866e-b1106fcf6cf7",
+    "status": "violated",
+    "operation_id": "01a159f7-577c-77ba-aef2-0f1ad71dcb12",
+    "exit_code": 1,
+    "assertion_failures": 1,
+    "cost_usd": 0.00325897
+  },
+  "environment": {
+    "image": "9fb1bf24-6f31-431f-ac08-a0f09bfc0070",
+    "operation_id": "01a159f6-49c5-70e4-9bf6-836550b8b706",
+    "cost_usd": 0.02017755,
+    "pytest": "8.4.2",
+    "policy": "PyPI wheels only; repository checks network-disabled"
+  },
+  "models": [
+    {
+      "role": "engineering",
+      "model": "nvidia/nemotron-3-super-120b-a12b",
+      "prompt_tokens": 486,
+      "completion_tokens": 483,
+      "risk": "high",
+      "escalate": true
+    },
+    {
+      "role": "reasoning",
+      "model": "nvidia/Nemotron-3-Ultra-550b-a55b",
+      "prompt_tokens": 738,
+      "completion_tokens": 686,
+      "decision": "run_experiment"
+    }
+  ],
+  "job_limits": {
+    "sandbox_calls": 3,
+    "model_calls": 2,
+    "reserved_usd": 0.17728247,
+    "allowance_usd": 0.75
+  }
+}

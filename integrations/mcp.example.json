@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "issue2proof": {
+      "command": "python",
+      "args": ["/absolute/path/to/issue2proof/scripts/mcp_server.py"],
+      "env": {
+        "ISSUE2PROOF_URL": "https://your-issue2proof.example",
+        "ISSUE2PROOF_ACCESS_TOKEN": "set-this-in-your-secret-store"
+      }
+    }
+  }
+}

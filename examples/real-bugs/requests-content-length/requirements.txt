@@ -1,0 +1,4 @@
+urllib3==2.2.3
+idna==3.10
+charset-normalizer==3.4.1
+certifi==2024.8.30

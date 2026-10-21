@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "built_image": "issue2proof:1.0",
+  "image_id": "sha256:becb8304cd6a28e7a362aa7bcee843cfda23261d0efa13b8116ae7353777cbbb",
+  "authentication_enforced": true,
+  "non_root": true,
+  "read_only_root": true,
+  "volume_persistence_after_restart": true,
+  "packaged_example_download": true
+}

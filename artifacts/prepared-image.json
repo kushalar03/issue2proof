@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "base_image": "4fa16c8f-62a9-35a4-a4ea-07b7e8cd44ae",
+  "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+  "exit_code": 0,
+  "seconds": 1.938516,
+  "cost": 0.01970064,
+  "stdout": "Collecting pytest==8.4.2\n  Downloading pytest-8.4.2-py3-none-any.whl.metadata (7.7 kB)\nCollecting iniconfig>=1 (from pytest==8.4.2)\n  Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)\nCollecting packaging>=20 (from pytest==8.4.2)\n  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)\nCollecting pluggy<2,>=1.5 (from pytest==8.4.2)\n  Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)\nCollecting pygments>=2.7.2 (from pytest==8.4.2)\n  Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)\nDownloading pytest-8.4.2-py3-none-any.whl (365 kB)\nDownloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)\nDownloading packaging-26.3-py3-none-any.whl (129 kB)\nDownloading pluggy-1.6.0-py3-none-any.whl (20 kB)\nDownloading pygments-2.21.0-py3-none-any.whl (1.3 MB)\n   \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501 1.3/1.3 MB 246.8 MB/s eta 0:00:00\nInstalling collected packages: pygments, pluggy, packaging, iniconfig, pytest\nSuccessfully installed iniconfig-2.3.1 packaging-26.3 pluggy-1.6.0 pygments-2.21.0 pytest-8.4.2\n",
+  "stderr": "WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.\n\n[notice] A new release of pip is available: 25.0.1 -> 26.2.1\n[notice] To update, run: pip install --upgrade pip\n"
+}

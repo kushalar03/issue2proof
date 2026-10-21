@@ -1,0 +1,41 @@
+{
+  "operation_id": "01a13ae1-a860-7767-b611-bc930529ec99",
+  "status": "SUCCESS",
+  "exit_code": 0,
+  "stderr": "",
+  "output_truncated": false,
+  "cost": 0.00317542,
+  "seconds": 1.764,
+  "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+  "network_disabled": true,
+  "disposable": true,
+  "result_image": null,
+  "command": "python -m pytest test_existing.py",
+  "output": ".                                                                        [100%]\n--------------- generated xml file: /tmp/i2p-results/results.xml ---------------\n1 passed in 0.01s\n",
+  "evidence_valid": true,
+  "timed_out": false,
+  "summary": {
+    "tests": 1,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "assertion_failures": 0,
+  "failure_nodes": [],
+  "files_intact": true,
+  "input_hashes": {
+    "pricing.py": "f1b646ee2404150db0dbc7136dce73b84d685cdb14eb14cbac251fc7a631a16a",
+    "test_existing.py": "21d339c4b9b979a8e15717907cd7a4c4dd0e05ebe7d312c588f56f89e0ec1366"
+  },
+  "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+  "pytest": "8.4.2",
+  "uid": 65534,
+  "no_new_privileges": true,
+  "limits": {
+    "memory_bytes": 536870912,
+    "cpu_seconds": 15,
+    "processes": 32,
+    "file_bytes": 1048576,
+    "wall_seconds": 20
+  }
+}

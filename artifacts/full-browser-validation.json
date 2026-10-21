@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "job": "e3befe08-d438-4d7a-ae20-0f34e5790178",
+  "state": "completed",
+  "verdict": "checks_passed",
+  "stage_events": 22,
+  "page_errors": [],
+  "checks": [
+    "login",
+    "historical real-bug replay",
+    "package upload",
+    "repair context selection",
+    "independent tests",
+    "background start",
+    "polling and timeline",
+    "live reproduce-first repair",
+    "dependency installation"
+  ]
+}
