@@ -1,6 +1,11 @@
 name: Publish evidence demo
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "submission/demo/**"
+      - ".github/workflows/demo-pages.yml"
 permissions:
   contents: read
   pages: write
@@ -17,6 +22,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: submission/demo
