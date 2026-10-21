@@ -1,7 +1,0 @@
-{
-  "operation_id": "01a13ae7-c07a-733a-830f-b070abf7f979",
-  "status": "CANCELLED",
-  "result_image": null,
-  "passed": true,
-  "note": "Cancellation succeeded; cancelled event stream is unavailable, so final state was retrieved through operation status."
-}

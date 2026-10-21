@@ -1,9 +1,0 @@
-{
-  "passed": true,
-  "method": "Injected expired lease after completed remote checkpoints; explicit resume reused all paid work.",
-  "model_calls_before": 2,
-  "model_calls_after": 2,
-  "sandbox_calls_before": 7,
-  "sandbox_calls_after": 7,
-  "state": "completed"
-}

@@ -1,0 +1,162 @@
+{
+  "case": "repair",
+  "mode": "model repair / restricted pricing fixture",
+  "issue": "An excess discount makes the total negative. The specified behavior is to clamp the total to zero.",
+  "verdict": "verified",
+  "attempts": [
+    {
+      "number": 1,
+      "accepted": true,
+      "model": {
+        "source": "def total(subtotal, discount):\n    return max(0, subtotal - discount)",
+        "model": "nvidia/nemotron-3-super-120b-a12b",
+        "prompt_tokens": 120,
+        "completion_tokens": 252,
+        "estimated_cost_usd": 0.0002628
+      },
+      "diff": "--- a/pricing.py\n+++ b/pricing.py\n@@ -1,2 +1,2 @@\n def total(subtotal, discount):\n-    return subtotal - discount\n+    return max(0, subtotal - discount)",
+      "regression": {
+        "command": "python -m pytest -q --tb=short test_regression.py",
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n--------------------- generated xml file: /tmp/results.xml ---------------------\n1 passed in 0.01s\n",
+        "seconds": 0.287089,
+        "cost": 0.00303149,
+        "output_truncated": false,
+        "evidence_valid": true,
+        "protected_tests_intact": true,
+        "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+        "source_sha256": "35a779308267ac7d4a622b9bdf2c2c9191e0e4d93751a9bb58f64bf325e62c8b",
+        "test_sha256": "9010a1267491348094471af1dabdbbf7964d5d3281227a08deb29062c0137988",
+        "test_summary": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+        "pytest": "8.4.2"
+      },
+      "existing": {
+        "command": "python -m pytest -q --tb=short test_existing.py",
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n--------------------- generated xml file: /tmp/results.xml ---------------------\n1 passed in 0.01s\n",
+        "seconds": 0.284924,
+        "cost": 0.0030097400000000003,
+        "output_truncated": false,
+        "evidence_valid": true,
+        "protected_tests_intact": true,
+        "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+        "source_sha256": "35a779308267ac7d4a622b9bdf2c2c9191e0e4d93751a9bb58f64bf325e62c8b",
+        "test_sha256": "21d339c4b9b979a8e15717907cd7a4c4dd0e05ebe7d312c588f56f89e0ec1366",
+        "test_summary": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+        "pytest": "8.4.2"
+      },
+      "independent": {
+        "command": "python -m pytest -q --tb=short test_independent.py",
+        "exit_code": 0,
+        "output": ".                                                                        [100%]\n--------------------- generated xml file: /tmp/results.xml ---------------------\n1 passed in 0.01s\n",
+        "seconds": 0.284221,
+        "cost": 0.00300281,
+        "output_truncated": false,
+        "evidence_valid": true,
+        "protected_tests_intact": true,
+        "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+        "source_sha256": "35a779308267ac7d4a622b9bdf2c2c9191e0e4d93751a9bb58f64bf325e62c8b",
+        "test_sha256": "365c3933121ebdcc68258b2de9a71490594b672465648ffebae9cb40c9df6c04",
+        "test_summary": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+        "pytest": "8.4.2"
+      },
+      "protected_tests_intact": true
+    }
+  ],
+  "events": [
+    "Original failure reproduced remotely; reviewed tests frozen outside candidate execution."
+  ],
+  "limitations": [
+    "Only the reviewed pricing fixture and pure arithmetic repairs are supported.",
+    "Tests are reviewed fixtures, not model-generated reproductions or a real-bug benchmark.",
+    "Verification covers the listed checks only.",
+    "Remote network isolation and resource quotas have not been validated; arbitrary code is disabled."
+  ],
+  "sandbox_smoke": {
+    "ok": true,
+    "mode": "remote reviewed smoke check",
+    "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+    "exit_code": 0,
+    "stdout": "{\"sha256\": \"b48223c5eda5198c14ccf47fa3c5c6c797a924445f35c9593b10e950e454f296\"}\n",
+    "stderr": "",
+    "seconds": 0.029137,
+    "cost": 0.00036927,
+    "output_truncated": false,
+    "payload_sha256": "b48223c5eda5198c14ccf47fa3c5c6c797a924445f35c9593b10e950e454f296",
+    "file_transfer_verified": true,
+    "disposable": true,
+    "timeout_seconds": 30,
+    "arbitrary_execution_enabled": false,
+    "limitations": [
+      "Network isolation and memory/CPU quotas are not yet validated.",
+      "This smoke check does not verify a repair or execute model output."
+    ]
+  },
+  "test_hashes": {
+    "test_existing.py": "21d339c4b9b979a8e15717907cd7a4c4dd0e05ebe7d312c588f56f89e0ec1366",
+    "test_regression.py": "9010a1267491348094471af1dabdbbf7964d5d3281227a08deb29062c0137988",
+    "test_independent.py": "365c3933121ebdcc68258b2de9a71490594b672465648ffebae9cb40c9df6c04"
+  },
+  "regression_test": "from pricing import total\n\ndef test_excess_discount():\n    assert total(100, 150) == 0\n",
+  "baseline": {
+    "command": "python -m pytest -q --tb=short test_existing.py",
+    "exit_code": 0,
+    "output": ".                                                                        [100%]\n--------------------- generated xml file: /tmp/results.xml ---------------------\n1 passed in 0.01s\n",
+    "seconds": 0.290566,
+    "cost": 0.00306626,
+    "output_truncated": false,
+    "evidence_valid": true,
+    "protected_tests_intact": true,
+    "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+    "source_sha256": "f1b646ee2404150db0dbc7136dce73b84d685cdb14eb14cbac251fc7a631a16a",
+    "test_sha256": "21d339c4b9b979a8e15717907cd7a4c4dd0e05ebe7d312c588f56f89e0ec1366",
+    "test_summary": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+    "pytest": "8.4.2"
+  },
+  "reproduction": {
+    "command": "python -m pytest -q --tb=short test_regression.py",
+    "exit_code": 1,
+    "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_____________________________ test_excess_discount _____________________________\ntest_regression.py:4: in test_excess_discount\n    assert total(100, 150) == 0\nE   assert -50 == 0\nE    +  where -50 = total(100, 150)\n--------------------- generated xml file: /tmp/results.xml ---------------------\n=========================== short test summary info ============================\nFAILED test_regression.py::test_excess_discount - assert -50 == 0\n1 failed in 0.02s\n",
+    "seconds": 0.291513,
+    "cost": 0.00307573,
+    "output_truncated": false,
+    "evidence_valid": true,
+    "protected_tests_intact": true,
+    "image": "f8a64709-3f3d-4811-aa4d-665b62f20cef",
+    "source_sha256": "f1b646ee2404150db0dbc7136dce73b84d685cdb14eb14cbac251fc7a631a16a",
+    "test_sha256": "9010a1267491348094471af1dabdbbf7964d5d3281227a08deb29062c0137988",
+    "test_summary": {
+      "tests": 1,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    "python": "3.12.13 (main, Apr 22 2026, 02:08:00) [GCC 14.2.0]",
+    "pytest": "8.4.2"
+  },
+  "explanation": "Model repair passed frozen regression, existing and independent checks in fresh remote executions."
+}

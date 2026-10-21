@@ -1,9 +1,0 @@
-{
-  "passed": true,
-  "transport": "localhost HTTP",
-  "checks": [
-    "four final evidence cases render",
-    "downloads available",
-    "no JavaScript errors"
-  ]
-}

@@ -1,15 +1,20 @@
-# Standalone evidence explorer
+# Public interactive demo
 
-No credentials or Python dependencies are required. From the project root:
+This directory publishes the same light workspace used by the authenticated
+application and shown in the demo video. Its buttons operate on recorded Nebius
+evidence through `demo-api.js`, so public visitors can inspect reports, run the
+reviewed scenario, recall a Memory Capsule and create a capsule without receiving
+an application token or spending project credits.
+
+From the repository root:
 
 ```sh
 python3 -m http.server 9000 --bind 127.0.0.1 --directory submission/demo
 ```
 
-Open http://127.0.0.1:9000. Switch among completed live repairs and a rejected bad
-candidate; inspect logs and download evidence JSON. The page is self-contained,
-works without an internet connection once served locally, and makes no paid API
-calls. This is recorded evidence, not a fresh live model/verification request.
+Open http://127.0.0.1:9000. The hosted version is available at
+https://issue2proof-evidence.eagersage2048.chatgpt.site.
 
-For a public working-demo URL, use the included manual GitHub Pages workflow after
-publishing your repository. See ../PUBLISH.md.
+The authenticated FastAPI application uses the same frontend from
+`issue2proof/static/` and performs fresh model and sandbox operations when a
+signed-in operator explicitly authorizes them.

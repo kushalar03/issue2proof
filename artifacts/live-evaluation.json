@@ -1,9 +1,0 @@
-{
-  "mode": "live remote reviewed fixture evaluation, not held-out real-bug benchmark",
-  "model_generated_repair": "checks_passed",
-  "wrong_candidate_verdict": "unresolved",
-  "wrong_candidate_regression_passed": true,
-  "wrong_candidate_existing_failed": true,
-  "resource_and_file_integrity_probe": true,
-  "passed": true
-}
