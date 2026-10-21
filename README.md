@@ -2,6 +2,8 @@
 
 **Regression memory for AI coding agents that survives the agent.**
 
+[Try the hosted evidence demo](https://issue2proof-evidence.eagersage2048.chatgpt.site)
+
 Git records what changed. Issue2Proof records why behavior must keep working. It
 turns a resolved failure into a versioned **Memory Capsule** containing the
 behavioral claim, affected paths, assumptions, boundaries, provenance, immutable

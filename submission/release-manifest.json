@@ -10,7 +10,7 @@
     "Dockerfile": "d854ff47ac6dca1efc0bc5eb411d27467025d66ccc209afe4049819a1d1d014c",
     "LICENSE": "c2cb0e333328b2340eb9c9534be847a80d1d182916901b67b703a0538cbf1f56",
     "PROJECT_STATUS.md": "7a0ac9bbc9f2bd555629ba837289e924e71060e812994fb248a11b2936e8513b",
-    "README.md": "2dfe152c5f742bdcb29851a5b93ceb5b6192a89d297d2176f8240bada2d55449",
+    "README.md": "f41dadf0e280f7b323977a0ca5c9023f4424fe9a4b11dcfeeb4b0fb2715a296e",
     "artifacts/activation-request.txt": "4e0f2ffc359d19b300d1ec0e6460d26c34825b971f8307b49aad21dcc052ef8d",
     "artifacts/agent-integration-validation.json": "d87f8ee4b8e3ef944bb8ae1a533684bffa478e32fb6d6e936f15cfb37eb042a6",
     "artifacts/background-cancellation.json": "2ef8f1607cda374f9efc346950cf8b53ad7c632e03251fa17fd376df05024e32",
@@ -144,15 +144,15 @@
     "scripts/live_repository.py": "80e5eb01e6c698f2b978ddf4cfa8748cb31544e7a40289016e539615378cf803",
     "scripts/live_requests_replay.py": "344c46a7a573d2f9290e5294a4ed172ffe94c3da5c288d3d632ba9e98565e506",
     "scripts/mcp_server.py": "1b9acc22792c8c9d22c81b222daa5afcd79c9da6ea1dd8f21f8d66d44ae72413",
-    "scripts/package_release.py": "0dba180867d25506674600be07fbee9ef277bb341e1a4b0288cf98dd40eeecdc",
+    "scripts/package_release.py": "c05131b1b5653bc5d631694dfee2c881b67e7ff49aa3d04079ad0d0783c5bdfe",
     "scripts/prepare_image.py": "e4c071b6c9755608a7aaf0d1e71297b1095c8015b38a19c293ae0336318251ba",
     "scripts/record_demo.cjs": "b1fdb5c8fe50110e24acc7c7b126d169ec160c4d2b6511b8ac221aa1b5149b65",
     "scripts/record_final.cjs": "acde642114866133571958092f88b3602e3954d95a6ffbd878764c636d5b2a55",
     "scripts/record_memory_demo.cjs": "e2dc8243304bbe51aef3504a22a079714c979f0af95ea3fcb3b7f2c9708b3b87",
     "scripts/start.sh": "6268bb70ae169da3f358e8255e0cf584076c8c5354a0b0e983899684f84daad2",
     "submission/ARCHITECTURE.md": "621a7fd22429f029fe101e74a48d81c12170ad97427618d780281c0c7ff6dca4",
-    "submission/DEVPOST.md": "5114afe714307eca9f22a529c8d483c09bef8aea2961f2ee6a75b855ea226e2a",
-    "submission/PUBLISH.md": "1afaae0908e66f4ae8fbac289ea85f3b076dadbc2ffa47ad646c1fa29009f69e",
+    "submission/DEVPOST.md": "f004476ef5ffe5fc597960606b43e6a2c2d76323d84108762722985d26592437",
+    "submission/PUBLISH.md": "2e7b71ecfd10b26fd59c4153e1f226b988c6cd8ed0769b2ca15d175fbcbd0b4d",
     "submission/RELEASE_NOTES.md": "bf181ac8be93c715514b5b729070b1fa66163b6fd751a036945e754446202c58",
     "submission/SECURITY.md": "e86f7793a0eb14817f23754afd62c3a3558209fae7956c315fdada1934bec131",
     "submission/THIRD_PARTY.md": "8662ad0c6cf4a7602f514635fcf311c6edf5cdee8ce9b493af0c8215292bd351",
@@ -188,5 +188,5 @@
     "tests/test_sandbox.py": "c27565401840a06a745a9cf4ddc8f594311862804a1012fa109037e6ef1bd9c2",
     "tests/test_workflow.py": "6bdf1676e41ac75a8c17d15a945259ebdefca1de1b8e18fad1ed665fc67548e5"
   },
-  "publication_status": "Version 2.0 validated locally and against live Nebius services; public hosting and external submission require operator accounts."
+  "publication_status": "Version 2.0 is validated locally and against live Nebius services. An HTTPS evidence preview is deployed; public audience, video upload and external submission require account-owner action."
 }
