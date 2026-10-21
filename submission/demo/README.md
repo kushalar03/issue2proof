@@ -1,8 +1,8 @@
 # Public interactive demo
 
 This directory publishes the same light workspace used by the authenticated
-application and shown in the demo video. Its buttons operate on recorded Nebius
-evidence through `demo-api.js`, so public visitors can inspect reports, run the
+application and shown in the demo video. Its buttons operate on compact reviewed
+evidence summaries through `demo-api.js`, so public visitors can inspect reports, run the
 reviewed scenario, recall a Memory Capsule and create a capsule without receiving
 an application token or spending project credits.
 
