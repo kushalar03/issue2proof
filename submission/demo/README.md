@@ -18,3 +18,10 @@ https://issue2proof-evidence.eagersage2048.chatgpt.site.
 The authenticated FastAPI application uses the same frontend from
 `issue2proof/static/` and performs fresh model and sandbox operations when a
 signed-in operator explicitly authorizes them.
+
+## Vercel
+
+Import the repository into Vercel and set the project root directory to
+`submission/demo`. Select **Other** as the framework preset and leave the build
+command empty. Vercel publishes the static files directly and applies the security
+headers in `vercel.json`.
