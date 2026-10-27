@@ -20,14 +20,23 @@ jobs:
           PUBLIC_DEMO_URL: https://issue2proof-demo.vercel.app
         run: |
           set -euo pipefail
-          status="$(curl --silent --show-error --location --retry 6 --retry-delay 10 --max-time 30 --dump-header /tmp/issue2proof.headers --output /tmp/issue2proof.html --write-out '%{http_code}' "$PUBLIC_DEMO_URL/")"
+          status="000"
+          for attempt in {1..12}; do
+            status="$(curl --silent --show-error --location --retry 2 --retry-delay 3 --max-time 30 --dump-header /tmp/issue2proof.headers --output /tmp/issue2proof.html --write-out '%{http_code}' "$PUBLIC_DEMO_URL/")"
+            if test "$status" = "200" && grep --fixed-strings --quiet "12/12</strong> correct capsule recall" /tmp/issue2proof.html; then
+              break
+            fi
+            sleep 10
+          done
           title="$(grep --only-matching --max-count=1 '<title>[^<]*' /tmp/issue2proof.html | sed 's/<title>//' || true)"
           product_marker="missing"
           demo_marker="missing"
+          release_marker="missing"
           content_type_header="missing"
           csp_header="missing"
           grep --fixed-strings --quiet "Issue2Proof" /tmp/issue2proof.html && product_marker="present"
           grep --fixed-strings --quiet "Public interactive demo" /tmp/issue2proof.html && demo_marker="present"
+          grep --fixed-strings --quiet "12/12</strong> correct capsule recall" /tmp/issue2proof.html && release_marker="present"
           grep --ignore-case --quiet "^x-content-type-options: nosniff" /tmp/issue2proof.headers && content_type_header="present"
           grep --ignore-case --quiet "^content-security-policy:" /tmp/issue2proof.headers && csp_header="present"
           {
@@ -38,11 +47,13 @@ jobs:
             echo "- Title: ${title:-missing}"
             echo "- Issue2Proof marker: $product_marker"
             echo "- Interactive-demo marker: $demo_marker"
+            echo "- Current-release marker: $release_marker"
             echo "- X-Content-Type-Options: $content_type_header"
             echo "- Content-Security-Policy: $csp_header"
           } >> "$GITHUB_STEP_SUMMARY"
           test "$status" = "200"
           test "$product_marker" = "present"
           test "$demo_marker" = "present"
+          test "$release_marker" = "present"
           test "$content_type_header" = "present"
           test "$csp_header" = "present"
