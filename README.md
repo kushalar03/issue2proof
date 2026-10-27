@@ -5,6 +5,9 @@
 [Try the public interactive demo](https://issue2proof-demo.vercel.app)
 — the production interface backed by recorded Nebius evidence, with no credit spend.
 
+[Read the illustrated 19-page project guide](submission/Issue2Proof-Explained.pdf)
+for explanations at child-friendly, new-graduate and professional levels.
+
 Git records what changed. Issue2Proof records why behavior must keep working. It
 turns a resolved failure into a versioned **Memory Capsule** containing the
 behavioral claim, affected paths, assumptions, boundaries, provenance, immutable
