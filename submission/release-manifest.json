@@ -5,6 +5,7 @@
     ".env.example": "1954b76901e18ac9582b47abbd5156e69676deb469835d3aabea9c6e17fb5c58",
     ".github/workflows/checks.yml": "33c3e78bc7c8627a6a6806863e1f4436d389344a53dba5022745c54cad17c992",
     ".github/workflows/demo-pages.yml": "854a6ec3d85c77f5ae17f88b11e2aa4a2940ba4ba45c8cb49c3c31bc25786697",
+    ".github/workflows/verify-public-demo.yml": "41b16b7bb2b3fa3a25b56c6a4062693116e63431752f451767fa71ee133a9862",
     ".gitignore": "4f81ead197f1bc6d8e8dd162c4bd8ba3c40f1675c29d6bd7a04286f7c8ad3dad",
     "Caddyfile": "8ee94b76d7b98278d3991fd4cd14bfbd05a893885bb7cd24f1cfdd56b8b4777e",
     "Dockerfile": "d854ff47ac6dca1efc0bc5eb411d27467025d66ccc209afe4049819a1d1d014c",
