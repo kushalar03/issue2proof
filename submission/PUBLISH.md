@@ -3,7 +3,7 @@
 1. Review README.md, the Devpost draft, historical fixture licenses and live evidence.
 2. Source is published at https://github.com/kushalar03/issue2proof without .env, databases, API keys or local caches.
 3. Upload `submission/final-demo.mp4` (92.1 seconds, chapter-synchronized voice narration, captions in a dedicated band, a guided pointer and the MCP recall → audit workflow) and use its real URL in the submission.
-4. The public interactive demo is available at https://issue2proof-evidence.eagersage2048.chatgpt.site.
+4. The public interactive demo is available at https://issue2proof-demo.vercel.app.
 5. Optionally deploy the authenticated app using docs/DEPLOYMENT.md. A real server and domain are required. Do not expose an unauthenticated paid execution service.
 6. Enter the actual repository/demo URLs and current required hackathon fields, then submit through your account.
 

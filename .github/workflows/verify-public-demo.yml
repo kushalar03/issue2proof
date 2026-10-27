@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Verify production page
         env:
-          PUBLIC_DEMO_URL: https://issue2proof.vercel.app
+          PUBLIC_DEMO_URL: https://issue2proof-demo.vercel.app
         run: |
           set -euo pipefail
           curl --fail --show-error --location +            --retry 6 --retry-delay 10 --max-time 30 +            "$PUBLIC_DEMO_URL/" --output /tmp/issue2proof.html
@@ -26,7 +26,7 @@ jobs:
 
       - name: Verify production security headers
         env:
-          PUBLIC_DEMO_URL: https://issue2proof.vercel.app
+          PUBLIC_DEMO_URL: https://issue2proof-demo.vercel.app
         run: |
           set -euo pipefail
           curl --fail --show-error --location --head +            "$PUBLIC_DEMO_URL/" --output /tmp/issue2proof.headers

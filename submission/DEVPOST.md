@@ -111,6 +111,6 @@ repository memory a durable engineering asset across model vendors.
 ## Submission links
 
 - Source: https://github.com/kushalar03/issue2proof
-- Public interactive application: https://issue2proof-evidence.eagersage2048.chatgpt.site
+- Public interactive application: https://issue2proof-demo.vercel.app
 - Demo video (under three minutes): **add uploaded video URL**
 

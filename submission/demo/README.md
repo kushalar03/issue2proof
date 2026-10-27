@@ -13,7 +13,7 @@ python3 -m http.server 9000 --bind 127.0.0.1 --directory submission/demo
 ```
 
 Open http://127.0.0.1:9000. The hosted version is available at
-https://issue2proof-evidence.eagersage2048.chatgpt.site.
+https://issue2proof-demo.vercel.app.
 
 The authenticated FastAPI application uses the same frontend from
 `issue2proof/static/` and performs fresh model and sandbox operations when a

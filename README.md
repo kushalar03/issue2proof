@@ -2,7 +2,7 @@
 
 **Regression memory for AI coding agents that survives the agent.**
 
-[Try the public interactive demo](https://issue2proof-evidence.eagersage2048.chatgpt.site)
+[Try the public interactive demo](https://issue2proof-demo.vercel.app)
 — the production interface backed by recorded Nebius evidence, with no credit spend.
 
 Git records what changed. Issue2Proof records why behavior must keep working. It
