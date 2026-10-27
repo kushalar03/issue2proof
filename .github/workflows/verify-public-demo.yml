@@ -15,20 +15,34 @@ jobs:
   verify:
     runs-on: ubuntu-24.04
     steps:
-      - name: Verify production page
+      - name: Verify production deployment
         env:
           PUBLIC_DEMO_URL: https://issue2proof-demo.vercel.app
         run: |
           set -euo pipefail
-          curl --fail --show-error --location +            --retry 6 --retry-delay 10 --max-time 30 +            "$PUBLIC_DEMO_URL/" --output /tmp/issue2proof.html
-          grep --fixed-strings --quiet "Issue2Proof" /tmp/issue2proof.html
-          grep --fixed-strings --quiet "Public interactive demo" /tmp/issue2proof.html
-
-      - name: Verify production security headers
-        env:
-          PUBLIC_DEMO_URL: https://issue2proof-demo.vercel.app
-        run: |
-          set -euo pipefail
-          curl --fail --show-error --location --head +            "$PUBLIC_DEMO_URL/" --output /tmp/issue2proof.headers
-          grep --ignore-case --quiet "^x-content-type-options: nosniff" /tmp/issue2proof.headers
-          grep --ignore-case --quiet "^content-security-policy:" /tmp/issue2proof.headers
+          status="$(curl --silent --show-error --location --retry 6 --retry-delay 10 --max-time 30 --dump-header /tmp/issue2proof.headers --output /tmp/issue2proof.html --write-out '%{http_code}' "$PUBLIC_DEMO_URL/")"
+          title="$(grep --only-matching --max-count=1 '<title>[^<]*' /tmp/issue2proof.html | sed 's/<title>//' || true)"
+          product_marker="missing"
+          demo_marker="missing"
+          content_type_header="missing"
+          csp_header="missing"
+          grep --fixed-strings --quiet "Issue2Proof" /tmp/issue2proof.html && product_marker="present"
+          grep --fixed-strings --quiet "Public interactive demo" /tmp/issue2proof.html && demo_marker="present"
+          grep --ignore-case --quiet "^x-content-type-options: nosniff" /tmp/issue2proof.headers && content_type_header="present"
+          grep --ignore-case --quiet "^content-security-policy:" /tmp/issue2proof.headers && csp_header="present"
+          {
+            echo "## Public deployment verification"
+            echo
+            echo "- URL: $PUBLIC_DEMO_URL"
+            echo "- HTTP status: $status"
+            echo "- Title: ${title:-missing}"
+            echo "- Issue2Proof marker: $product_marker"
+            echo "- Interactive-demo marker: $demo_marker"
+            echo "- X-Content-Type-Options: $content_type_header"
+            echo "- Content-Security-Policy: $csp_header"
+          } >> "$GITHUB_STEP_SUMMARY"
+          test "$status" = "200"
+          test "$product_marker" = "present"
+          test "$demo_marker" = "present"
+          test "$content_type_header" = "present"
+          test "$csp_header" = "present"
