@@ -46,7 +46,7 @@
           <span>Remember the behavior</span>
           <span>Replay on every change</span>
         </div>
-        <p class="impact-proof"><strong>30 blind refactor trials</strong> · 8 regressions introduced · plain CI caught 3 · capsule replay caught all 8</p>
+        <p class="impact-proof"><strong>30 blind refactor trials</strong> · 5 extra regressions caught · <strong>12/12</strong> correct capsule recall across four histories</p>
       </div>
       <div class="memory-loop" aria-hidden="true">
         <div class="loop-card loop-learn"><span>01</span><strong>Learn</strong><small>Reproduce and verify</small></div>
@@ -107,6 +107,8 @@
           <code>recall_repository_memory → edit → audit_repository_revision</code>
           <p class="note"><strong>Or call it headlessly</strong> from hooks and CI over the authenticated REST API.</p>
           <code>python scripts/agent_context.py --change "Refactor safe_join"</code>
+          <p class="note"><strong>Protect every pull request</strong> with the portable GitHub Memory Gate. Local recall is free; audit mode replays matched evidence in Nebius Sandboxes.</p>
+          <code>uses: kushalar03/issue2proof@main</code>
           <p class="note"><strong>POST</strong> /api/integrations/context</p>
           <a href="https://github.com/kushalar03/issue2proof/blob/main/docs/INTEGRATIONS.md" class="integration-link">Open integration guide →</a>
         </details>

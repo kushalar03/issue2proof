@@ -93,10 +93,33 @@ instructions. After it prepares a revision, import that revision and start
 
 ### Pull-request CI
 
-Store the application token as a CI secret. A job can fetch context before review,
-upload the checked-out repository as a bounded ZIP, start a memory audit, and poll
-`GET /api/jobs/{job_id}`. Block merging on `memory_conflict`; request human review
-for `memory_uncertain`; retain the evidence URL for `memory_preserved`.
+The root composite action is a ready-to-use pull request Memory Gate. It validates
+a portable bundle, combines pull request text with changed paths, recalls matching
+capsules locally, and writes the verified claims and regression hashes into the
+GitHub job summary. This recall-only mode has no provider cost.
+
+Audit mode imports the bundle into a protected Issue2Proof service, uploads the
+checked-out repository as a bounded ZIP, replays matched regressions, and blocks
+the check on `memory_conflict` or `memory_uncertain`. Store only the application
+access token as a GitHub secret; never store a Nebius key in the repository. See
+`docs/GITHUB_ACTION.md` for both workflows.
+
+### Portable memory and historical adoption
+
+`GET /api/memories/export` creates an `issue2proof.memory-bundle.v1` document with
+per-capsule SHA-256 hashes and a manifest hash. `POST /api/memories/import`
+revalidates the envelope, provenance, capsule content and frozen regression source.
+
+Existing Issue2Proof report archives can seed memory without a model call:
+
+```sh
+python scripts/import_history.py artifacts/ \
+  --repository-key owner/repository \
+  --bundle-output .issue2proof/memory.json
+```
+
+Only `checks_passed` reports with a matching frozen regression hash are promoted.
+Skipped records and reasons appear in the command output.
 
 ### IDE extension
 

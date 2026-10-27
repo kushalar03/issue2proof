@@ -471,6 +471,23 @@ def memories(repository_key: str | None = Query(default=None, max_length=200)):
     return list_capsules(repository_key)
 
 
+@app.get("/api/memories/export")
+def export_memories(repository_key: str | None = Query(default=None, max_length=200)):
+    from .memory import export_capsule_bundle
+
+    return export_capsule_bundle(repository_key)
+
+
+@app.post("/api/memories/import")
+def import_memories(bundle: dict):
+    from .memory import import_capsule_bundle
+
+    try:
+        return import_capsule_bundle(bundle)
+    except ValueError as error:
+        raise HTTPException(422, str(error)) from None
+
+
 @app.get("/api/memories/{capsule_id}")
 def memory(capsule_id: str):
     from .memory import get_capsule

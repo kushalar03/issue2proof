@@ -36,6 +36,11 @@ MCP hosts. `recall_repository_memory` retrieves constraints before editing;
 `audit_repository_revision` packages the local revision, starts sandbox replay and
 returns a verdict or durable job ID.
 
+The GitHub pull request Memory Gate makes the same contract automatic in CI.
+Repositories can commit an integrity-checked portable capsule bundle for free local
+recall, then opt into authenticated Nebius replay before merge. Historical
+checks-passed reports can be imported in bulk without model calls.
+
 ## Measured impact
 
 The evaluation ran 30 blind Nemotron Super refactor trials across two real upstream bug
@@ -45,6 +50,12 @@ historical regression. Plain CI caught 3 of 8; capsule replay caught 8 of 8, add
 five catches. This is a focused two-case stress benchmark rather than a general
 accuracy estimate. Every prompt, result and limitation ships in
 `artifacts/memory-impact-benchmark.json`.
+
+A second reproducible evaluation tests recall routing on 12 authored future-change
+descriptions across four verified histories. Both lexical and changed-path-aware
+top-1 recall selected the correct capsule in 12 of 12 trials. The queries come from
+known incidents, so this supports integration behavior rather than a production
+accuracy claim. Full results are in `artifacts/memory-recall-evaluation.json`.
 
 ## How AI is used
 
@@ -89,7 +100,7 @@ tests and durable evidence.
 
 ## Validation
 
-The release has 130 passing automated tests plus real Nebius evidence:
+The release has 134 passing automated tests plus real Nebius evidence:
 
 - activated disposable sandbox transfer check;
 - Nemotron Nano memory indexing and Qwen semantic recall;
@@ -105,8 +116,8 @@ gates passed, not universal correctness.
 
 ## What is next
 
-Team review, signed capsule approval and broader language runners can make
-repository memory a durable engineering asset across model vendors.
+Signed organizational approval and broader language runners can extend repository
+memory across larger engineering estates.
 
 ## Submission links
 

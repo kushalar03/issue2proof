@@ -1,0 +1,151 @@
+{
+  "schema": "issue2proof.memory-recall-evaluation.v1",
+  "generated_at": "2026-10-27T17:14:22.193536+00:00",
+  "method": {
+    "description": "Twelve future-change descriptions across four verified repository histories are recalled from one portable bundle.",
+    "metrics": "Top-1 capsule retrieval with query-only lexical recall and lexical recall plus changed-path scope.",
+    "limitations": [
+      "Queries are authored from known incidents rather than sampled from production pull requests.",
+      "This evaluates recall routing, not whether a new revision passes sandbox replay.",
+      "Two histories are public upstream bugs and two are purpose-built live sandbox cases."
+    ]
+  },
+  "summary": {
+    "repository_histories": 4,
+    "trials": 12,
+    "lexical_top1_correct": 12,
+    "path_aware_top1_correct": 12
+  },
+  "cases": [
+    {
+      "id": "werkzeug-safe-join",
+      "artifact": "real-bug-werkzeug.json",
+      "path": "src/werkzeug/security.py"
+    },
+    {
+      "id": "requests-content-length",
+      "artifact": "real-bug-requests.json",
+      "path": "requests/utils.py"
+    },
+    {
+      "id": "calendar-month-clamp",
+      "artifact": "live-dependency-investigation.json",
+      "path": "src/calendar_app/__init__.py"
+    },
+    {
+      "id": "pricing-discount-floor",
+      "artifact": "live-repository-repair.json",
+      "path": "pricing.py"
+    }
+  ],
+  "trials": [
+    {
+      "case": "werkzeug-safe-join",
+      "query": "simplify Windows path security validation",
+      "changed_path": "src/werkzeug/security.py",
+      "lexical_top1": "55d404b2-5e33-5364-b971-af4e06ab9dbc",
+      "lexical_correct": true,
+      "path_aware_top1": "55d404b2-5e33-5364-b971-af4e06ab9dbc",
+      "path_aware_correct": true
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "query": "remove reserved device name handling from safe_join",
+      "changed_path": "src/werkzeug/security.py",
+      "lexical_top1": "55d404b2-5e33-5364-b971-af4e06ab9dbc",
+      "lexical_correct": true,
+      "path_aware_top1": "55d404b2-5e33-5364-b971-af4e06ab9dbc",
+      "path_aware_correct": true
+    },
+    {
+      "case": "werkzeug-safe-join",
+      "query": "refactor traversal checks for platform paths",
+      "changed_path": "src/werkzeug/security.py",
+      "lexical_top1": "55d404b2-5e33-5364-b971-af4e06ab9dbc",
+      "lexical_correct": true,
+      "path_aware_top1": "55d404b2-5e33-5364-b971-af4e06ab9dbc",
+      "path_aware_correct": true
+    },
+    {
+      "case": "requests-content-length",
+      "query": "optimize Unicode request body length",
+      "changed_path": "requests/utils.py",
+      "lexical_top1": "12c09626-312d-512a-bb43-f6ea701884ff",
+      "lexical_correct": true,
+      "path_aware_top1": "12c09626-312d-512a-bb43-f6ea701884ff",
+      "path_aware_correct": true
+    },
+    {
+      "case": "requests-content-length",
+      "query": "simplify super_len string handling",
+      "changed_path": "requests/utils.py",
+      "lexical_top1": "12c09626-312d-512a-bb43-f6ea701884ff",
+      "lexical_correct": true,
+      "path_aware_top1": "12c09626-312d-512a-bb43-f6ea701884ff",
+      "path_aware_correct": true
+    },
+    {
+      "case": "requests-content-length",
+      "query": "avoid UTF-8 allocation in content length calculation",
+      "changed_path": "requests/utils.py",
+      "lexical_top1": "12c09626-312d-512a-bb43-f6ea701884ff",
+      "lexical_correct": true,
+      "path_aware_top1": "12c09626-312d-512a-bb43-f6ea701884ff",
+      "path_aware_correct": true
+    },
+    {
+      "case": "calendar-month-clamp",
+      "query": "refactor negative calendar month offsets",
+      "changed_path": "src/calendar_app/__init__.py",
+      "lexical_top1": "9763a827-b45a-50a3-af16-024397415816",
+      "lexical_correct": true,
+      "path_aware_top1": "9763a827-b45a-50a3-af16-024397415816",
+      "path_aware_correct": true
+    },
+    {
+      "case": "calendar-month-clamp",
+      "query": "replace dateutil month arithmetic",
+      "changed_path": "src/calendar_app/__init__.py",
+      "lexical_top1": "9763a827-b45a-50a3-af16-024397415816",
+      "lexical_correct": true,
+      "path_aware_top1": "9763a827-b45a-50a3-af16-024397415816",
+      "path_aware_correct": true
+    },
+    {
+      "case": "calendar-month-clamp",
+      "query": "simplify end-of-month day clamping",
+      "changed_path": "src/calendar_app/__init__.py",
+      "lexical_top1": "9763a827-b45a-50a3-af16-024397415816",
+      "lexical_correct": true,
+      "path_aware_top1": "9763a827-b45a-50a3-af16-024397415816",
+      "path_aware_correct": true
+    },
+    {
+      "case": "pricing-discount-floor",
+      "query": "simplify order discount total calculation",
+      "changed_path": "pricing.py",
+      "lexical_top1": "61c95b1a-25e6-58ab-9acf-c976c17daa1c",
+      "lexical_correct": true,
+      "path_aware_top1": "61c95b1a-25e6-58ab-9acf-c976c17daa1c",
+      "path_aware_correct": true
+    },
+    {
+      "case": "pricing-discount-floor",
+      "query": "remove the total price floor",
+      "changed_path": "pricing.py",
+      "lexical_top1": "61c95b1a-25e6-58ab-9acf-c976c17daa1c",
+      "lexical_correct": true,
+      "path_aware_top1": "61c95b1a-25e6-58ab-9acf-c976c17daa1c",
+      "path_aware_correct": true
+    },
+    {
+      "case": "pricing-discount-floor",
+      "query": "refactor excess discount handling",
+      "changed_path": "pricing.py",
+      "lexical_top1": "61c95b1a-25e6-58ab-9acf-c976c17daa1c",
+      "lexical_correct": true,
+      "path_aware_top1": "61c95b1a-25e6-58ab-9acf-c976c17daa1c",
+      "path_aware_correct": true
+    }
+  ]
+}

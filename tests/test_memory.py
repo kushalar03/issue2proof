@@ -9,13 +9,16 @@ from issue2proof.app import app, save_report
 from issue2proof.memory import (
     capsule_from_report,
     enrich_capsule,
+    export_capsule_bundle,
     get_capsule,
+    import_capsule_bundle,
     list_capsules,
     save_capsule,
     search_capsules,
     semantic_search,
     supersede_capsule,
 )
+from issue2proof.portable import search_bundle, validate_bundle
 
 
 @pytest.fixture
@@ -158,3 +161,31 @@ def test_agent_context_packet_withholds_regression_source(report):
     assert packet["memories"][0]["id"] == capsule["id"]
     assert packet["memories"][0]["regression"]["source_withheld"] is True
     assert "source" not in packet["memories"][0]["regression"]
+
+
+def test_portable_bundle_round_trip_and_tamper_detection(report, tmp_path, monkeypatch):
+    capsule = save_capsule(capsule_from_report(report))
+    bundle = export_capsule_bundle(capsule["repository_key"])
+    assert validate_bundle(bundle) == [capsule]
+    assert search_bundle(
+        bundle, "refactor serialization", changed_paths=["src/pricing.py"]
+    )[0]["capsule"]["id"] == capsule["id"]
+
+    monkeypatch.setenv("ISSUE2PROOF_DB", str(tmp_path / "imported.sqlite3"))
+    result = import_capsule_bundle(bundle)
+    assert result == {"validated": 1, "imported_ids": [capsule["id"]]}
+    assert import_capsule_bundle(bundle) == result
+
+    tampered = copy.deepcopy(bundle)
+    tampered["entries"][0]["capsule"]["claim"] = "Changed claim"
+    with pytest.raises(ValueError, match="bundle hash"):
+        validate_bundle(tampered)
+
+
+def test_portable_bundle_api(report):
+    from issue2proof.app import export_memories, import_memories
+
+    capsule = save_capsule(capsule_from_report(report))
+    bundle = export_memories(capsule["repository_key"])
+    assert bundle["capsule_count"] == 1
+    assert import_memories(bundle)["validated"] == 1

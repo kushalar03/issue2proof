@@ -50,7 +50,7 @@ def main():
             str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in files
         },
-        "publication_status": "Version 2.0 is validated locally and against live Nebius services. An HTTPS evidence preview is deployed; public audience, video upload and external submission require account-owner action.",
+        "publication_status": "Version 2.0 is validated locally and against live Nebius services. The public interactive application is deployed over HTTPS; video upload and final Devpost submission require account-owner action.",
     }
     target = ROOT / "submission/release-manifest.json"
     target.write_text(json.dumps(manifest, indent=2) + "\n")

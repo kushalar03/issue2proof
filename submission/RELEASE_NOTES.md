@@ -18,6 +18,12 @@ Issue2Proof is now an executable repository-memory system for AI-built software.
   compatible coding-agent sessions.
 - A reproducible 30-trial Nemotron refactor benchmark: plain CI detected 3 of 8
   introduced regressions; capsule replay detected all 8.
+- A composite GitHub pull request Memory Gate with free local recall and optional
+  authenticated Nebius Sandbox replay.
+- Integrity-checked portable capsule bundles plus bulk adoption from verified
+  historical Issue2Proof reports.
+- A 12-trial recall-routing evaluation across four verified histories, with 12 of
+  12 correct top-1 selections for both lexical and changed-path-aware retrieval.
 - A responsive light interface with warm paper, sage and clay styling, clearer
   workflow hierarchy and a simplified mobile experience.
 
@@ -30,10 +36,10 @@ Issue2Proof is now an executable repository-memory system for AI-built software.
 
 ## Validation
 
-130 tests pass with Ruff and JavaScript syntax checks. The full live Werkzeug audit
+134 tests pass with Ruff and JavaScript syntax checks. The full live Werkzeug audit
 used three sandbox calls and two model calls, reached `memory_conflict`, and stayed
 within its $0.75 allowance. Historical cases are demonstrations rather than a
 held-out benchmark.
 
-Public hosting, repository publication, video upload and Devpost submission require
-the operator's external accounts and are not claimed by this release.
+The public application is hosted on Vercel. Video upload and final Devpost
+submission remain account-owned publishing actions.

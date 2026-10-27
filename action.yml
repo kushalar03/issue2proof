@@ -1,0 +1,45 @@
+name: Issue2Proof Memory Gate
+description: Recall hash-backed regression memory and optionally replay it before a pull request merges.
+inputs:
+  memory-bundle:
+    description: Path to an exported portable Memory Capsule bundle.
+    default: .issue2proof/memory.json
+  repository-key:
+    description: Optional exact repository key.
+    default: ""
+  issue2proof-url:
+    description: Private Issue2Proof service URL required for sandbox replay.
+    default: ""
+  access-token:
+    description: Issue2Proof application token required by a protected service.
+    default: ""
+  audit:
+    description: Replay recalled regressions in Nebius Sandboxes.
+    default: "false"
+  semantic:
+    description: Use the configured embedding model during server recall.
+    default: "false"
+outputs:
+  verdict:
+    description: no_relevant_memory, recall_required, memory_preserved, memory_conflict, or memory_uncertain.
+    value: ${{ steps.gate.outputs.verdict }}
+  matches:
+    description: Number of recalled capsules.
+    value: ${{ steps.gate.outputs.matches }}
+  report:
+    description: Path to the JSON gate report.
+    value: ${{ steps.gate.outputs.report }}
+runs:
+  using: composite
+  steps:
+    - id: gate
+      shell: bash
+      env:
+        ISSUE2PROOF_ACCESS_TOKEN: ${{ inputs.access-token }}
+      run: >-
+        python "$GITHUB_ACTION_PATH/scripts/pr_memory_gate.py"
+        --bundle "${{ inputs.memory-bundle }}"
+        --repository-key "${{ inputs.repository-key }}"
+        --url "${{ inputs.issue2proof-url }}"
+        ${{ inputs.audit == 'true' && '--audit' || '' }}
+        ${{ inputs.semantic == 'true' && '--semantic' || '' }}

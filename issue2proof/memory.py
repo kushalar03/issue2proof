@@ -11,6 +11,7 @@ from datetime import UTC, datetime
 import httpx
 
 from .jobs import database, reconcile_system, reserve_system
+from .portable import export_bundle, validate_bundle
 
 TOKEN = re.compile(r"[A-Za-z_][A-Za-z0-9_]{2,}")
 
@@ -233,6 +234,44 @@ def list_capsules(key: str | None = None) -> list[dict]:
                 "SELECT capsule FROM memory_capsules WHERE status='active' ORDER BY created_at DESC LIMIT 100"
             )
         return [json.loads(row["capsule"]) for row in rows]
+
+
+def export_capsule_bundle(key: str | None = None) -> dict:
+    return export_bundle(list_capsules(key))
+
+
+def import_capsule_bundle(bundle: dict) -> dict:
+    capsules = validate_bundle(bundle)
+    imported = []
+    with database() as db:
+        _tables(db)
+        for capsule in capsules:
+            existing = db.execute(
+                "SELECT capsule FROM memory_capsules WHERE source_run_id=? OR id=?",
+                (capsule["origin"]["run_id"], capsule["id"]),
+            ).fetchone()
+            if existing:
+                if json.loads(existing["capsule"]) != capsule:
+                    raise ValueError(
+                        "A capsule ID or source run has different verified content."
+                    )
+            else:
+                db.execute(
+                    "INSERT INTO memory_capsules VALUES(?,?,?,?,?,?,?,?,?)",
+                    (
+                        capsule["id"],
+                        capsule["repository_key"],
+                        capsule["version"],
+                        capsule["origin"]["run_id"],
+                        "active",
+                        capsule.get("supersedes"),
+                        capsule["created_at"],
+                        json.dumps(capsule),
+                        None,
+                    ),
+                )
+            imported.append(capsule["id"])
+    return {"validated": len(capsules), "imported_ids": imported}
 
 
 def get_capsule(capsule_id: str) -> dict:

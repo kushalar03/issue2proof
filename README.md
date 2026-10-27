@@ -45,6 +45,12 @@ focused two-case stress test, not a claim about general production accuracy. The
 complete prompts, outcomes and limitations are in
 `artifacts/memory-impact-benchmark.json`.
 
+A separate free recall-routing evaluation covers 12 future-change descriptions
+across four verified histories. Query-only and changed-path-aware recall both
+selected the correct capsule in all 12 authored trials. These are known-incident
+queries rather than production pull requests; the method and every result are in
+`artifacts/memory-recall-evaluation.json`.
+
 ## Model routing and the $25 budget
 
 | Role | Model | When used |
@@ -129,6 +135,13 @@ for independent server-side replay. The bundled `scripts/agent_context.py` CLI
 reads its token from the environment and prints the packet as JSON. See
 `docs/INTEGRATIONS.md` for agent, IDE and pull-request examples.
 
+The root `action.yml` provides a ready-to-use GitHub pull request Memory Gate. It
+validates and recalls an integrity-checked portable capsule bundle without provider
+spend, writes relevant behavioral claims into the check summary, and can call a
+private Issue2Proof service for full sandbox replay. `scripts/import_history.py`
+converts only checks-passed, hash-valid historical reports into capsules. Bundle
+export and import preserve per-capsule and manifest SHA-256 integrity.
+
 Historical Werkzeug and Requests cases preserve upstream provenance and licenses.
 They are demonstration cases, not held-out benchmarks. Live evidence includes:
 
@@ -138,6 +151,7 @@ They are demonstration cases, not held-out benchmarks. Live evidence includes:
 - `artifacts/live-memory-audit.json` (full replay and risk-adaptive analysis);
 - `artifacts/mcp-audit-live-validation.jsonl` (MCP import → sandbox replay → conflict);
 - `artifacts/memory-impact-benchmark.json` (30 blind Nemotron refactor trials);
+- `artifacts/memory-recall-evaluation.json` (12 recall trials across four histories);
 - browser, cancellation, recovery, dependency and container validations.
 
 ## Validation
@@ -149,8 +163,9 @@ node --check issue2proof/static/app.js
 NEBIUS_PROJECT_ID=... .venv/bin/python -m issue2proof.check_sandbox
 ```
 
-The automated suite has 130 tests after the executable-memory and MCP additions. External
-calls are mocked in unit tests; the listed live artifacts record real Nebius calls.
+The automated suite has 134 tests after the pull request gate and portable-memory
+additions. External calls are mocked in unit tests; the listed live artifacts
+record real Nebius calls.
 
 ## API highlights
 
@@ -158,6 +173,7 @@ calls are mocked in unit tests; the listed live artifacts record real Nebius cal
 - `POST /api/projects/{id}/investigate`
 - `POST /api/runs/{id}/memory`, `POST /api/examples/{name}/memory`
 - `GET /api/memories`, `POST /api/memories/search`
+- `GET /api/memories/export`, `POST /api/memories/import`
 - `POST /api/memories/{id}/enrich`, `/supersede`
 - `POST /api/integrations/context`: vendor-neutral agent and CI packet
 - `POST /api/projects/{id}/audit-memory`
