@@ -168,6 +168,11 @@ The narrated 1920 × 1080 Codex MCP recording is
 `submission/codex-mcp-demo.mp4`. The complete multi-page submission video is
 `submission/final-demo.mp4`.
 
+For hackathon judging, keep the Vercel site as the credit-free public tour and
+deploy the authenticated Docker application with a persistent `/data` volume.
+`railway.json` and `docs/JUDGE_DEPLOYMENT.md` provide the exact live-judge setup,
+including a bounded additional-spend configuration and private judge token.
+
 ## Validation
 
 ```sh
