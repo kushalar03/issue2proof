@@ -86,6 +86,9 @@ then show the model-routing rows.
 - Generate narration sentence by sentence so punctuation and technical terms remain
   natural. Pronounce MCP as “M-C-P”, SHA-256 as “S-H-A two-fifty-six”, Nebius as
   “NEH-bee-uhs”, and Nemotron as “NEM-oh-tron”.
+- Render the final narration with `scripts/render_neural_voice.py` and Kokoro
+  ONNX's `af_heart` voice. The script expands code notation into spoken technical
+  forms and applies one loudness-normalization pass across each finished video.
 - Align every sentence to the visual action it describes. Do not reuse a continuous
   audio take after changing visual timing.
 - Keep music at least 18 dB below narration and remove it during terminal evidence.
