@@ -10,8 +10,8 @@ for explanations at child-friendly, new-graduate and professional levels.
 
 The public site is organized into focused Overview, Workspace, Memory,
 Integrations and Evidence pages. The Integrations page includes an interactive MCP
-walkthrough; `docs/MCP_DEMO_RECORDING.md` contains the exact steps for recording a
-fresh agent-driven MCP audit for the final video.
+walkthrough, while `artifacts/codex-mcp-live-validation.json` preserves the exact
+result from a fresh Codex-driven audit.
 
 Git records what changed. Issue2Proof records why behavior must keep working. It
 turns a resolved failure into a versioned **Memory Capsule** containing the
@@ -170,9 +170,11 @@ The narrated 1920 × 1080 Codex MCP recording is
 
 For hackathon judging, keep the Vercel site as the credit-free public tour and
 deploy the authenticated Docker application with a persistent `/data` volume.
-`render.yaml` and `docs/RENDER_JUDGE_DEPLOYMENT.md` provide the current live-judge
-setup; `railway.json` remains available when Railway reopens sign-ups. Both use a
-bounded additional-spend configuration and a private judge token.
+`render.yaml` and `docs/RENDER_JUDGE_DEPLOYMENT.md` provide the live-judge setup
+with a bounded additional-spend configuration and private judge token.
+
+Technical references are kept in `docs/ARCHITECTURE.md`, `docs/SECURITY.md`,
+`CHANGELOG.md`, and `THIRD_PARTY.md`.
 
 ## Validation
 

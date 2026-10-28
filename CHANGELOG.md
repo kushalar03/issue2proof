@@ -29,8 +29,6 @@ Issue2Proof is now an executable repository-memory system for AI-built software.
 - Focused Overview, Workspace, Memory, Integrations and Evidence pages with
   reduced-motion support, scroll reveals, animated evidence diagrams, responsive
   navigation and an interactive MCP walkthrough.
-- A recording-safe MCP demonstration guide and synchronized final-video storyboard
-  derived from the illustrated three-level project guide.
 - A fresh Codex-hosted MCP validation artifact, narrated 39-second MCP clip, and
   161-second multi-page submission video with synchronized pointer and captions.
 
@@ -48,5 +46,5 @@ used three sandbox calls and two model calls, reached `memory_conflict`, and sta
 within its $0.75 allowance. Historical cases are demonstrations rather than a
 held-out benchmark.
 
-The public application is hosted on Vercel. The final Devpost submission remains
-an account-owned publishing action.
+The public application is hosted on Vercel. A persistent authenticated deployment
+is supported through the Render Blueprint for fresh repository investigations.

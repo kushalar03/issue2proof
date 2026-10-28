@@ -21,5 +21,13 @@ submission/memory-demo-voice.wav
 submission/memory-raw-video/
 submission/demo-voice-segments/
 submission/demo.mp4
+submission/*-recording.html
+submission/final-video-shell.html
+submission/final-narration.*
+submission/release-manifest.json
+submission/DEMO_VIDEO_STORYBOARD.md
+submission/PUBLISH.md
+scripts/record_*_demo.py
+scripts/render_neural_voice.py
 .netlify/
 .vercel/
