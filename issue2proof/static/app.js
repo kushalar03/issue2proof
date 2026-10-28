@@ -250,9 +250,15 @@ async function watchJob(id) {
   }
   await poll();
 }
-document.querySelector('#sign-in').onclick=async()=>{
- try{await request('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:document.querySelector('#access-token').value})});window.location.reload();}
- catch(error){document.querySelector('#login-panel').append(document.createTextNode(error.message));}
+const signIn=async()=>{
+ const button=document.querySelector('#sign-in');
+ const input=document.querySelector('#access-token');
+ const errorMessage=document.querySelector('#login-error');
+ errorMessage.hidden=true;errorMessage.textContent='';button.disabled=true;button.textContent='Signing in…';
+ try{await request('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:input.value})});window.location.reload();}
+ catch(error){errorMessage.textContent=error.message;errorMessage.hidden=false;input.select();button.disabled=false;button.textContent='Sign in';}
 };
+document.querySelector('#sign-in').onclick=signIn;
+document.querySelector('#access-token').addEventListener('keydown',event=>{if(event.key==='Enter')signIn();});
 document.querySelector('#sign-out').onclick=async()=>{await fetch('/api/logout',{method:'POST'});window.location.reload();};
 (async()=>{try{const status=await request('/api/health');authUI(status.authenticated,status.authentication_required);if(status.authenticated){await refreshJobs();await refreshMemories();}}catch{authUI(false,true);}})();

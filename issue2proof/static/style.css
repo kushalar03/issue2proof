@@ -173,6 +173,7 @@ button.memory-card { text-align: left; }
 
 .login-card { max-width: 520px; margin: 40px auto 0; padding: 30px; border: 1px solid var(--line); border-radius: 24px 24px 24px 7px; background: var(--paper); box-shadow: var(--shadow); }
 .login-card h2 { margin: 0; font: 500 31px Georgia, serif; }
+.login-error { margin: 14px 0 0; color: #8f2f22; font-size: 13px; line-height: 1.45; }
 
 footer { display: flex; justify-content: space-between; gap: 30px; padding: 28px max(5vw, 28px); border-top: 1px solid #ddd8cb; color: #7e877f; background: #eee8dc; font-size: 11px; }
 
