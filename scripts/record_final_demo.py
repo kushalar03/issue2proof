@@ -125,12 +125,18 @@ def narrate(segment, video_source):
     for index, (at, sentence) in enumerate(segment["lines"]):
         text_file, wave_file = base / f"voice-{index}.txt", base / f"voice-{index}.wav"
         text_file.write_text(sentence)
-        run(["ffmpeg", "-y", "-f", "lavfi", "-i", f"flite=textfile={text_file}:voice=slt", "-af", "atempo=1.03", "-ar", "48000", "-ac", "1", str(wave_file)])
+        run(["ffmpeg", "-y", "-f", "lavfi", "-i", f"flite=textfile={text_file}:voice=rms", "-af", "atempo=0.98", "-ar", "48000", "-ac", "1", str(wave_file)])
         voice_inputs.extend(["-i", str(wave_file)])
         delay = int(at * 1000)
         filters.append(f"[{index + 1}:a]adelay={delay}|{delay}[a{index}]")
     inputs = "".join(f"[a{i}]" for i in range(len(segment["lines"])))
-    graph = ";".join(filters) + f";{inputs}amix=inputs={len(segment['lines'])}:normalize=0[aout]"
+    graph = (
+        ";".join(filters)
+        + f";{inputs}amix=inputs={len(segment['lines'])}:normalize=0,"
+        "highpass=f=70,lowpass=f=12000,"
+        "acompressor=threshold=-18dB:ratio=2.5:attack=20:release=180:makeup=2,"
+        "loudnorm=I=-16:TP=-1.5:LRA=5[aout]"
+    )
     output = WORK / f"{segment['name']}.mp4"
     run(["ffmpeg", "-y", "-i", str(video_only), *voice_inputs, "-filter_complex", graph, "-map", "0:v", "-map", "[aout]", "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-t", str(segment["duration"]), str(output)])
     return output

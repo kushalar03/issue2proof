@@ -82,7 +82,7 @@ async def record() -> None:
             subprocess.run(
                 [
                     "ffmpeg", "-y", "-f", "lavfi", "-i",
-                    f"flite=textfile={text_file}:voice=slt", "-af", "atempo=1.03",
+                    f"flite=textfile={text_file}:voice=rms", "-af", "atempo=0.98",
                     "-ar", "48000", "-ac", "1", str(wave_file),
                 ],
                 check=True,
@@ -92,7 +92,13 @@ async def record() -> None:
             voice_inputs.extend(["-i", str(wave_file)])
             filters.append(f"[{index + 1}:a]adelay={delay_ms}|{delay_ms}[a{index}]")
         inputs = "".join(f"[a{i}]" for i in range(len(NARRATION)))
-        filter_graph = ";".join(filters) + f";{inputs}amix=inputs={len(NARRATION)}:normalize=0[aout]"
+        filter_graph = (
+            ";".join(filters)
+            + f";{inputs}amix=inputs={len(NARRATION)}:normalize=0,"
+            "highpass=f=70,lowpass=f=12000,"
+            "acompressor=threshold=-18dB:ratio=2.5:attack=20:release=180:makeup=2,"
+            "loudnorm=I=-16:TP=-1.5:LRA=5[aout]"
+        )
         subprocess.run(
             [
                 "ffmpeg", "-y", "-i", str(video_only), *voice_inputs,
