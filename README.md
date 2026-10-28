@@ -169,9 +169,9 @@ The narrated 1920 × 1080 Codex MCP recording is
 `submission/final-demo.mp4`.
 
 For hackathon judging, keep the Vercel site as the credit-free public tour and
-deploy the authenticated Docker application with a persistent `/data` volume.
-`render.yaml` and `docs/RENDER_JUDGE_DEPLOYMENT.md` provide the live-judge setup
-with a bounded additional-spend configuration and private judge token.
+use `render.yaml` and `docs/RENDER_JUDGE_DEPLOYMENT.md` for a free, ephemeral
+live-judge service with a one-trial allowance and private judge token. Durable
+deployments use the same container with a persistent `/data` volume.
 
 Technical references are kept in `docs/ARCHITECTURE.md`, `docs/SECURITY.md`,
 `CHANGELOG.md`, and `THIRD_PARTY.md`.

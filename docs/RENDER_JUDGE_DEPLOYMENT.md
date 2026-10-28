@@ -1,23 +1,26 @@
-# Deploy the live judge instance on Render
+# Deploy the live judge instance on Render Free
 
 Render is the fallback deployment for the real authenticated application while
 Railway blocks new account creation. The existing Vercel site remains the
-credit-free public tour. Render runs the Docker application with a persistent
-disk, allowing judges to import a new repository and request bounded Nemotron and
-Nebius Sandbox execution.
+credit-free public tour. Render Free runs the Docker application without a
+persistent disk, allowing judges to import a new repository and request bounded
+Nemotron and Nebius Sandbox execution. Its local state is temporary, so this setup
+is intended for a bounded hackathon trial rather than durable production hosting.
 
 ## 1. Create a Blueprint
 
 1. Sign in at https://dashboard.render.com with GitHub.
 2. Choose **New → Blueprint**.
 3. Connect `https://github.com/kushalar03/issue2proof`.
-4. Render reads `render.yaml` and proposes the `issue2proof-live` web service, a
-   1 GB persistent disk mounted at `/data`, and the non-secret budget variables.
-5. Select the Starter instance required for a persistent disk. Confirm the current
-   Render price before creating the service.
+4. Render reads `render.yaml` and proposes the free `issue2proof-live` web service
+   with the non-secret budget variables.
+5. Create the Blueprint without adding a persistent disk.
 
-The application cannot safely use Render's stateless free tier because job,
-budget, Memory Capsule, and evidence records must survive container restarts.
+Render Free may sleep after inactivity. Its first request can take approximately
+one minute while the container starts. SQLite data normally remains available
+while that container lives, but a restart or redeployment can erase investigations,
+Memory Capsules, job history, and application budget usage. Bundled reviewed
+evidence remains available because it is part of the image.
 
 ## 2. Enter the two private values
 
@@ -43,9 +46,9 @@ Open that URL, sign in with `ISSUE2PROOF_ACCESS_TOKEN`, and verify:
 1. `/api/health` reports that authentication is required and the remote provider
    configuration is complete;
 2. saved Werkzeug evidence opens without spending provider credit;
-3. the Budget panel shows $2.25 daily, $3.50 lifetime, and $1.00 protected;
-4. records remain available after a manual service restart;
-5. one approved small-repository investigation reaches a terminal result.
+3. the Budget panel shows $1.00 daily, $2.00 lifetime, and $1.00 protected;
+4. one approved small-repository investigation reaches a terminal result;
+5. the bundled reviewed evidence remains available after a restart.
 
 Use `https://github.com/pallets/itsdangerous` for the single smoke test with this
 behavior description:
@@ -53,6 +56,10 @@ behavior description:
 > `URLSafeTimedSerializer.loads` must reject signatures older than `max_age`,
 > while valid non-expired signatures and ordinary serialization round trips must
 > continue to work.
+
+Before starting that investigation, change **Scheduling allowance** from the UI
+default of `$2.00` to `$0.75`. The free deployment's spendable application budget
+is `$1.00`, so the default allowance would be rejected by the budget guard.
 
 ## 4. Submit the correct URLs
 
@@ -66,6 +73,8 @@ If Devpost exposes every field publicly, do not publish the token. Use the Verce
 tour as the public URL and state that authenticated live access is available to
 judges on request.
 
-Saved evidence and the Vercel site do not spend Nebius credit. Fresh Render
-investigations share the configured allowance. When the allowance is exhausted,
-paid operations stop while saved evidence remains available.
+Saved evidence and the Vercel site do not spend Nebius credit. The free Render
+instance permits at most $1.00 of application-scheduled work before its protected
+reserve. Because ephemeral state can reset, configure a Nebius account-level
+spending limit as the authoritative cap. When the live allowance is exhausted,
+paid operations stop while bundled evidence remains available.

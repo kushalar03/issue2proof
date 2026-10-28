@@ -2,14 +2,10 @@ services:
   - type: web
     name: issue2proof-live
     runtime: docker
-    plan: starter
+    plan: free
     dockerfilePath: ./Dockerfile
     healthCheckPath: /api/health
     autoDeploy: false
-    disk:
-      name: issue2proof-evidence
-      mountPath: /data
-      sizeGB: 1
     envVars:
       - key: ISSUE2PROOF_PUBLIC
         value: "1"
@@ -22,10 +18,10 @@ services:
       - key: NEBIUS_SANDBOX_IMAGE
         value: python:3.12-slim
       - key: ISSUE2PROOF_DAILY_BUDGET_USD
-        value: "2.25"
+        value: "1.00"
       - key: ISSUE2PROOF_TOTAL_BUDGET_USD
-        value: "3.50"
+        value: "2.00"
       - key: ISSUE2PROOF_PROTECTED_RESERVE_USD
         value: "1.00"
       - key: ISSUE2PROOF_RETENTION_DAYS
-        value: "7"
+        value: "1"
