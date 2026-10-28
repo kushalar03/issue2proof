@@ -158,9 +158,15 @@ They are demonstration cases, not held-out benchmarks. Live evidence includes:
 - `artifacts/live-memory-model-validation.json` (Nano + Qwen embedding);
 - `artifacts/live-memory-audit.json` (full replay and risk-adaptive analysis);
 - `artifacts/mcp-audit-live-validation.jsonl` (MCP import → sandbox replay → conflict);
+- `artifacts/codex-mcp-live-validation.json` (fresh Codex recall → audit with exact
+  regression hash, assertion, operation IDs, image identity, and execution limits);
 - `artifacts/memory-impact-benchmark.json` (30 blind Nemotron refactor trials);
 - `artifacts/memory-recall-evaluation.json` (12 recall trials across four histories);
 - browser, cancellation, recovery, dependency and container validations.
+
+The narrated 1920 × 1080 Codex MCP recording is
+`submission/codex-mcp-demo.mp4`. The complete multi-page submission video is
+`submission/final-demo.mp4`.
 
 ## Validation
 

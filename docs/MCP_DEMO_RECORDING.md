@@ -1,5 +1,10 @@
 # Record the live MCP workflow
 
+The completed Codex recording is available at `submission/codex-mcp-demo.mp4`.
+Its compact, reviewable result packet is
+`artifacts/codex-mcp-live-validation.json`. The instructions below reproduce the
+same two-tool workflow without exposing credentials.
+
 This recording shows the real `recall_repository_memory → audit_repository_revision`
 loop through an MCP-compatible coding agent. It uses the bundled historical
 Werkzeug repository and produces a real `memory_conflict` verdict from Nebius

@@ -1,6 +1,6 @@
 # Final demo video storyboard
 
-Target length: 2 minutes 35 seconds. Capture at 1920 × 1080 with the full browser
+Final length: 2 minutes 41 seconds. Capture at 1920 × 1080 with the full browser
 viewport visible. Keep subtitles in a dedicated bottom band and never place them
 over controls, code, evidence, or navigation. Use a visible cursor with a soft
 highlight and pause briefly over every item named in narration.
@@ -43,11 +43,11 @@ the recalled claim and relevance.
 > regression, existing suite, and withheld checks pass. The completed evidence can
 > then become repository memory and be recalled for a later refactor.
 
-## 1:20–1:58 · Real MCP workflow
+## 1:20–1:59 · Real Codex MCP workflow
 
-**Visual:** Insert the uploaded clip created with `docs/MCP_DEMO_RECORDING.md`.
-Remove idle waiting. Point to the recall tool, capsule hash, audit tool, assertion,
-and final conflict verdict.
+**Visual:** Use `submission/codex-mcp-demo.mp4`, generated from the fresh result in
+`artifacts/codex-mcp-live-validation.json`. Point to the recall tool, capsule hash,
+audit tool, assertion, conflict verdict, and bounded sandbox provenance.
 
 **Narration:**
 
@@ -57,7 +57,7 @@ and final conflict verdict.
 > behavior is violated, so Issue2Proof returns memory conflict instead of silently
 > approving the change.
 
-## 1:58–2:22 · AI and measured impact
+## 1:59–2:23 · AI and measured impact
 
 **Visual:** Open Evidence. Let the counters animate, point to 3 of 8 versus 8 of 8,
 then show the model-routing rows.
@@ -70,7 +70,7 @@ then show the model-routing rows.
 > Super handles engineering and conflict analysis, and Ultra is reserved for
 > escalated high-risk uncertainty.
 
-## 2:22–2:35 · Honest close
+## 2:23–2:41 · Honest close
 
 **Visual:** Point to the evidence limitation, then return to the Overview headline.
 
