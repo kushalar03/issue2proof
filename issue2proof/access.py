@@ -22,7 +22,7 @@ def public_mode():
 
 
 def configured_token():
-    return os.environ.get("ISSUE2PROOF_ACCESS_TOKEN", "")
+    return os.environ.get("ISSUE2PROOF_ACCESS_TOKEN", "").strip()
 
 
 def validate_configuration():
@@ -100,6 +100,7 @@ async def guard(request, call_next):
 
 def login(request, token):
     expected = configured_token()
+    token = token.strip()
     identity = hashlib.sha256(expected.encode()).hexdigest()[:16]
     address = request.client.host if request.client else "unknown"
     key = (identity, address)

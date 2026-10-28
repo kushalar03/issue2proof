@@ -1,3 +1,4 @@
+import hashlib
 import json
 import time
 from datetime import UTC, datetime, timedelta
@@ -133,12 +134,16 @@ def test_lifetime_budget_protects_reserved_credit(isolated, monkeypatch):
 
 def test_private_authentication_and_cross_origin_guard(isolated, monkeypatch):
     token = "a-long-private-application-token-123456"
-    monkeypatch.setenv("ISSUE2PROOF_ACCESS_TOKEN", token)
+    monkeypatch.setenv("ISSUE2PROOF_ACCESS_TOKEN", f"  {token}  ")
     client = TestClient(app)
-    assert client.get("/api/health").json()["authenticated"] is False
+    health = client.get("/api/health").json()
+    assert health["authenticated"] is False
+    assert health["authentication_token_fingerprint"] == hashlib.sha256(
+        token.encode()
+    ).hexdigest()[:12]
     assert client.get("/api/runs").status_code == 401
     assert client.post("/api/login", json={"token": "wrong"}).status_code == 401
-    assert client.post("/api/login", json={"token": token}).status_code == 200
+    assert client.post("/api/login", json={"token": f" {token} "}).status_code == 200
     assert client.get("/api/health").json()["authenticated"] is True
     assert client.get("/api/runs").status_code == 200
     assert "default-src 'self'" in client.get("/").headers["content-security-policy"]

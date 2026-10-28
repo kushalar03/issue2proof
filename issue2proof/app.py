@@ -1,3 +1,4 @@
+import hashlib
 import io
 import json
 import os
@@ -84,11 +85,15 @@ def product_page(page: str):
 
 @app.get("/api/health")
 def health(request: Request):
+    token = configured_token()
     return {
         "status": "ok",
         "mode": "repository_memory",
         "repository_execution_integrated": True,
-        "authentication_required": bool(configured_token()),
+        "authentication_required": bool(token),
+        "authentication_token_fingerprint": hashlib.sha256(token.encode()).hexdigest()[:12]
+        if token
+        else None,
         "authenticated": authorized(request),
         "model_configured": bool(os.environ.get("NEBIUS_API_KEY")),
         "remote_sandbox_integrated": True,
