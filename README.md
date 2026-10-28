@@ -170,8 +170,9 @@ The narrated 1920 × 1080 Codex MCP recording is
 
 For hackathon judging, keep the Vercel site as the credit-free public tour and
 deploy the authenticated Docker application with a persistent `/data` volume.
-`railway.json` and `docs/JUDGE_DEPLOYMENT.md` provide the exact live-judge setup,
-including a bounded additional-spend configuration and private judge token.
+`render.yaml` and `docs/RENDER_JUDGE_DEPLOYMENT.md` provide the current live-judge
+setup; `railway.json` remains available when Railway reopens sign-ups. Both use a
+bounded additional-spend configuration and a private judge token.
 
 ## Validation
 
