@@ -8,6 +8,11 @@
 [Read the illustrated 19-page project guide](submission/Issue2Proof-Explained.pdf)
 for explanations at child-friendly, new-graduate and professional levels.
 
+The public site is organized into focused Overview, Workspace, Memory,
+Integrations and Evidence pages. The Integrations page includes an interactive MCP
+walkthrough; `docs/MCP_DEMO_RECORDING.md` contains the exact steps for recording a
+fresh agent-driven MCP audit for the final video.
+
 Git records what changed. Issue2Proof records why behavior must keep working. It
 turns a resolved failure into a versioned **Memory Capsule** containing the
 behavioral claim, affected paths, assumptions, boundaries, provenance, immutable

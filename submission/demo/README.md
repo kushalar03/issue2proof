@@ -1,10 +1,12 @@
 # Public interactive demo
 
-This directory publishes the same light workspace used by the authenticated
-application and shown in the demo video. Its buttons operate on compact reviewed
-evidence summaries through `demo-api.js`, so public visitors can inspect reports, run the
-reviewed scenario, recall a Memory Capsule and create a capsule without receiving
-an application token or spending project credits.
+This directory publishes the multi-page public product story and the same light
+workspace used by the authenticated application. Overview explains the novelty;
+Memory explains the capsule; Integrations shows MCP, CI, REST and portable bundles;
+Evidence presents measured results and limitations; Workspace contains the working
+controls. Public actions operate on compact reviewed evidence through `demo-api.js`,
+so visitors can inspect reports, run the reviewed scenario, recall a Memory Capsule
+and create a capsule without receiving an application token or spending credits.
 
 From the repository root:
 

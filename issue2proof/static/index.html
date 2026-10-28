@@ -1,142 +1,21 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Regression memory for AI coding agents that survives the agent.">
-  <title>Issue2Proof · Repository memory that can run</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Issue2Proof turns verified bug fixes into executable regression memory for every future coding agent.">
+  <title>Issue2Proof · Evidence that survives the agent</title><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2218%22 fill=%22%23365548%22/><text x=%2232%22 y=%2240%22 text-anchor=%22middle%22 font-size=%2223%22 fill=%22white%22>i2p</text></svg>"><link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
-  <header class="site-header">
-    <a href="/" class="brand" aria-label="Issue2Proof home">
-      <span class="logo">i2p</span>
-      <span>Issue2Proof</span>
-    </a>
-    <div class="header-actions">
-      <div class="header-meta">
-        <span class="status-dot"></span>
-        <span>Executable repository memory</span>
-      </div>
-      <button id="sign-out" class="quiet-button" hidden>Sign out</button>
-    </div>
-  </header>
-
-  <main>
-    <section id="login-panel" class="login-card" hidden>
-      <p class="eyebrow">Private workspace</p>
-      <h2>Welcome back</h2>
-      <p class="note">Sign in with this instance's application token. Your Nebius API key never belongs here.</p>
-      <input id="access-token" type="password" autocomplete="current-password" aria-label="Application access token" placeholder="Application access token">
-      <button id="sign-in">Sign in</button>
+<body data-page="overview">
+  <header class="site-header"><a href="index.html" class="brand"><span class="logo">i2p</span><span>Issue2Proof</span></a><nav class="site-nav" aria-label="Primary navigation"><a href="index.html" aria-current="page">Overview</a><a href="workspace.html">Workspace</a><a href="memory.html">Memory</a><a href="integrations.html">Integrations</a><a href="evidence.html">Evidence</a></nav><a class="header-cta" href="workspace.html">Try the demo <span>↗</span></a></header>
+  <main class="story-main">
+    <section class="story-hero">
+      <div class="ambient-orb orb-one"></div><div class="ambient-orb orb-two"></div>
+      <div class="hero-copy reveal"><p class="eyebrow">Public interactive demo · regression memory for AI coding agents</p><h1>Evidence that<br><em>survives the agent.</em></h1><p class="subtitle">Coding agents can edit code and run tests. Issue2Proof adds durable, executable memory of failures that were already fixed—and replays that evidence before related changes ship.</p><div class="hero-actions"><a class="primary-link" href="workspace.html">Run the working demo <span>→</span></a><a class="text-link" href="https://github.com/kushalar03/issue2proof/blob/main/submission/Issue2Proof-Explained.pdf">Read the visual guide</a></div><p class="impact-proof"><strong>30 blind refactor trials</strong> · plain CI caught 3 of 8 regressions · capsule replay caught all 8</p></div>
+      <div class="proof-orbit reveal" data-tilt><div class="orbit-ring ring-a"></div><div class="orbit-ring ring-b"></div><div class="orbit-core"><span>SHA-256</span><strong>Memory<br>Capsule</strong><small>executable evidence</small></div><div class="orbit-node node-claim"><i>01</i><span>Claim</span></div><div class="orbit-node node-test"><i>02</i><span>Frozen test</span></div><div class="orbit-node node-replay"><i>03</i><span>Replay</span></div></div>
     </section>
-    <div id="app-shell" hidden>
-    <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">Regression memory for AI coding agents</p>
-        <h1>Evidence that<br><em>survives the agent.</em></h1>
-        <p class="subtitle">Rules and memory files preserve guidance. Issue2Proof preserves executable, hash-backed evidence, recalls it for the next change, and replays it before anything ships.</p>
-        <div class="hero-pills" aria-label="Product workflow">
-          <span>Learn from a failure</span>
-          <span>Remember the behavior</span>
-          <span>Replay on every change</span>
-        </div>
-        <p class="impact-proof"><strong>30 blind refactor trials</strong> · 5 extra regressions caught · <strong>12/12</strong> correct capsule recall across four histories</p>
-      </div>
-      <div class="memory-loop" aria-hidden="true">
-        <div class="loop-card loop-learn"><span>01</span><strong>Learn</strong><small>Reproduce and verify</small></div>
-        <div class="loop-line"></div>
-        <div class="loop-card loop-remember"><span>02</span><strong>Remember</strong><small>Freeze the evidence</small></div>
-        <div class="loop-line"></div>
-        <div class="loop-card loop-replay"><span>03</span><strong>Replay</strong><small>Protect the next change</small></div>
-      </div>
-    </section>
-
-    <section class="workspace" aria-label="Issue2Proof workspace">
-      <aside>
-        <div class="panel-heading">
-          <p class="eyebrow">Start here</p>
-          <h2>Build repository memory</h2>
-          <p>Bring a repository and describe the behavior worth protecting.</p>
-        </div>
-
-        <details class="tool-section" open>
-          <summary>Investigate a Python project</summary>
-          <div class="tool-body">
-            <label for="repository-url">Public GitHub repository</label>
-            <input id="repository-url" type="url" maxlength="300" placeholder="https://github.com/owner/repository">
-            <label for="repository-ref">Git ref</label>
-            <input id="repository-ref" type="text" maxlength="200" value="HEAD">
-            <p class="or-divider"><span>or</span></p>
-            <label for="repository">Upload a repository ZIP <small>up to 10 MB</small></label>
-            <input id="repository" type="file" accept=".zip">
-            <label for="bug-report">What should remain true?</label>
-            <textarea id="bug-report" rows="5" maxlength="4000" placeholder="Describe what failed, the expected behavior, and how to reproduce it."></textarea>
-            <button id="inspect-project">Inspect project <span>→</span></button>
-            <p class="note">Public imports use GitHub's fixed archive host. ZIP is available for private or offline source.</p>
-            <p class="sample-links">Try an example: <a href="/api/samples/calendar">calendar project</a> · <a href="/api/samples/werkzeug">Werkzeug bug</a></p>
-          </div>
-        </details>
-
-        <section class="recall-panel">
-          <p class="eyebrow">Repository memory</p>
-          <h3>Recall relevant behavior</h3>
-          <input id="memory-query" type="search" maxlength="4000" placeholder="Describe the next change or risk">
-          <label class="choice"><input id="semantic-memory" type="checkbox" checked> Use semantic recall · one budgeted embedding batch</label>
-          <button id="search-memory" class="secondary-button">Search memory</button>
-          <div id="memories"></div>
-          <p id="budget" class="budget-note"></p>
-        </section>
-
-        <details class="utility-section"><summary>Background investigations</summary><div id="jobs" class="utility-list"></div></details>
-        <details class="utility-section"><summary>Recent investigations</summary><div id="history" class="utility-list"></div></details>
-        <details class="utility-section">
-          <summary>Recorded live evidence</summary>
-          <p class="note">Completed real runs. Viewing them spends no credits.</p>
-          <div id="saved-examples" class="utility-list"></div>
-        </details>
-        <details class="utility-section integration-section">
-          <summary>Use from agents and CI</summary>
-          <p class="note"><strong>Install two MCP tools</strong> in Claude Code, Cursor, Codex-compatible hosts, and other MCP clients: recall before editing, then audit the revision.</p>
-          <code>"issue2proof": { "command": "python", "args": ["scripts/mcp_server.py"] }</code>
-          <code>recall_repository_memory → edit → audit_repository_revision</code>
-          <p class="note"><strong>Or call it headlessly</strong> from hooks and CI over the authenticated REST API.</p>
-          <code>python scripts/agent_context.py --change "Refactor safe_join"</code>
-          <p class="note"><strong>Protect every pull request</strong> with the portable GitHub Memory Gate. Local recall is free; audit mode replays matched evidence in Nebius Sandboxes.</p>
-          <code>uses: kushalar03/issue2proof@main</code>
-          <p class="note"><strong>POST</strong> /api/integrations/context</p>
-          <a href="/docs" class="integration-link">Open API schema →</a>
-        </details>
-        <details class="utility-section">
-          <summary>Reviewed demonstration scenarios</summary>
-          <label for="mode">Repair mode</label>
-          <select id="mode"><option value="demo">Reviewed demo patches</option></select>
-          <label for="case">Scenario</label>
-          <select id="case"></select>
-          <p id="issue" class="issue"></p>
-          <div class="scope"><strong>Python + pytest</strong><p>Prewritten pricing fixture · two attempts maximum · independent boundary checks</p></div>
-          <button id="run">Run verification <span>→</span></button>
-          <p class="note" id="mode-note">This demonstration uses prewritten patches and tests.</p>
-        </details>
-      </aside>
-
-      <section id="results" aria-live="polite">
-        <div class="empty">
-          <div class="empty-mark">↻</div>
-          <p class="eyebrow">A living record of intent</p>
-          <h2>Give the repository a memory.</h2>
-          <p>Investigate a failure once. Preserve what fixed it.<br>Replay that knowledge when future agents touch related code.</p>
-          <div class="steps"><span><b>01</b> Learn</span><span><b>02</b> Remember</span><span><b>03</b> Recall</span><span><b>04</b> Replay</span></div>
-        </div>
-      </section>
-    </section>
-    </div>
+    <section class="problem-strip reveal"><p class="eyebrow">The missing layer</p><div class="statement-grid"><h2>Rules tell an agent<br>what to remember.</h2><span class="statement-arrow">→</span><h2>Issue2Proof preserves<br><em>what was verified.</em></h2></div></section>
+    <section class="story-section reveal"><div class="section-heading"><p class="eyebrow">One failure becomes future protection</p><h2>A closed evidence loop</h2><p>Model confidence never becomes proof by itself. Each important claim is connected to execution.</p></div><div class="journey-grid"><a href="workspace.html" class="journey-card" data-tilt><span>01</span><h3>Learn</h3><p>Reproduce the original failure in a disposable Nebius Sandbox before accepting a repair.</p><small>Investigation →</small></a><a href="memory.html" class="journey-card raised" data-tilt><span>02</span><h3>Remember</h3><p>Freeze the behavioral claim, regression, hashes, assumptions, boundaries, and provenance.</p><small>Memory Capsule →</small></a><a href="integrations.html" class="journey-card" data-tilt><span>03</span><h3>Replay</h3><p>Recall the capsule inside any agent or pull request, then audit the proposed revision independently.</p><small>MCP and CI →</small></a></div></section>
+    <section class="difference-panel reveal"><div><p class="eyebrow">Not another coding interface</p><h2>Keep the agent.<br>Add an evidence memory.</h2></div><div class="difference-list"><p><b>Any coding agent</b><span>Writes and changes the code</span></p><p><b>Issue2Proof</b><span>Recalls verified constraints and replays them</span></p><p><b>Nebius Sandboxes</b><span>Provide isolated execution evidence</span></p></div></section>
+    <section class="page-portal reveal"><div><p class="eyebrow">Explore by question</p><h2>Choose the detail you need.</h2></div><div class="portal-links"><a href="memory.html"><span>What is stored?</span><b>Memory →</b></a><a href="integrations.html"><span>How does an agent use it?</span><b>Integrations →</b></a><a href="evidence.html"><span>What supports the claims?</span><b>Evidence →</b></a></div></section>
   </main>
-
-  <footer>
-    <span>Evidence covers the selected checks, not universal correctness.</span>
-    <span>Repository code runs in isolated Nebius Sandboxes.</span>
-  </footer>
-  <script src="/static/app.js"></script>
-</body>
-</html>
+  <footer><span>Issue2Proof · solo hackathon project</span><a href="workspace.html">Open the working product →</a></footer><script src="/static/motion.js"></script>
+</body></html>

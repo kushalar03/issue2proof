@@ -41,6 +41,11 @@ Repositories can commit an integrity-checked portable capsule bundle for free lo
 recall, then opt into authenticated Nebius replay before merge. Historical
 checks-passed reports can be imported in bulk without model calls.
 
+The public application separates the product story into Overview, Workspace,
+Memory, Integrations and Evidence pages. The Workspace runs the reviewed
+interaction; the Integrations page demonstrates the MCP recall → edit → audit
+loop and links to the recorded live MCP validation artifact.
+
 ## Measured impact
 
 The evaluation ran 30 blind Nemotron Super refactor trials across two real upstream bug

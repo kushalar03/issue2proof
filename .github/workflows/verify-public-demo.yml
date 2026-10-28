@@ -23,7 +23,7 @@ jobs:
           status="000"
           for attempt in {1..12}; do
             status="$(curl --silent --show-error --location --retry 2 --retry-delay 3 --max-time 30 --dump-header /tmp/issue2proof.headers --output /tmp/issue2proof.html --write-out '%{http_code}' "$PUBLIC_DEMO_URL/")"
-            if test "$status" = "200" && grep --fixed-strings --quiet "12/12</strong> correct capsule recall" /tmp/issue2proof.html; then
+            if test "$status" = "200" && grep --fixed-strings --quiet "capsule replay caught all 8" /tmp/issue2proof.html; then
               break
             fi
             sleep 10
@@ -34,11 +34,19 @@ jobs:
           release_marker="missing"
           content_type_header="missing"
           csp_header="missing"
+          multi_page_release="present"
           grep --fixed-strings --quiet "Issue2Proof" /tmp/issue2proof.html && product_marker="present"
           grep --fixed-strings --quiet "Public interactive demo" /tmp/issue2proof.html && demo_marker="present"
-          grep --fixed-strings --quiet "12/12</strong> correct capsule recall" /tmp/issue2proof.html && release_marker="present"
+          grep --fixed-strings --quiet "capsule replay caught all 8" /tmp/issue2proof.html && release_marker="present"
           grep --ignore-case --quiet "^x-content-type-options: nosniff" /tmp/issue2proof.headers && content_type_header="present"
           grep --ignore-case --quiet "^content-security-policy:" /tmp/issue2proof.headers && csp_header="present"
+          for page in workspace memory integrations evidence; do
+            page_status="$(curl --silent --show-error --location --max-time 30 --output "/tmp/issue2proof-$page.html" --write-out '%{http_code}' "$PUBLIC_DEMO_URL/$page")"
+            if test "$page_status" != "200"; then
+              multi_page_release="missing"
+            fi
+          done
+          grep --fixed-strings --quiet "Play MCP sequence" /tmp/issue2proof-integrations.html || multi_page_release="missing"
           {
             echo "## Public deployment verification"
             echo
@@ -48,6 +56,7 @@ jobs:
             echo "- Issue2Proof marker: $product_marker"
             echo "- Interactive-demo marker: $demo_marker"
             echo "- Current-release marker: $release_marker"
+            echo "- Multi-page release: $multi_page_release"
             echo "- X-Content-Type-Options: $content_type_header"
             echo "- Content-Security-Policy: $csp_header"
           } >> "$GITHUB_STEP_SUMMARY"
@@ -55,5 +64,6 @@ jobs:
           test "$product_marker" = "present"
           test "$demo_marker" = "present"
           test "$release_marker" = "present"
+          test "$multi_page_release" = "present"
           test "$content_type_header" = "present"
           test "$csp_header" = "present"

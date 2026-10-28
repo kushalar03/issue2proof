@@ -75,6 +75,13 @@ def index():
     return FileResponse(STATIC / "index.html")
 
 
+@app.get("/{page}.html")
+def product_page(page: str):
+    if page not in {"index", "workspace", "memory", "integrations", "evidence"}:
+        raise HTTPException(404, "Page not found")
+    return FileResponse(STATIC / f"{page}.html")
+
+
 @app.get("/api/health")
 def health(request: Request):
     return {

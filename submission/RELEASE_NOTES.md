@@ -26,6 +26,11 @@ Issue2Proof is now an executable repository-memory system for AI-built software.
   12 correct top-1 selections for both lexical and changed-path-aware retrieval.
 - A responsive light interface with warm paper, sage and clay styling, clearer
   workflow hierarchy and a simplified mobile experience.
+- Focused Overview, Workspace, Memory, Integrations and Evidence pages with
+  reduced-motion support, scroll reveals, animated evidence diagrams, responsive
+  navigation and an interactive MCP walkthrough.
+- A recording-safe MCP demonstration guide and synchronized final-video storyboard
+  derived from the illustrated three-level project guide.
 
 ## Retained and strengthened
 
