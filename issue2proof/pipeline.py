@@ -11,6 +11,26 @@ from .execution import SandboxExecutor
 from .sandbox import SandboxConfig
 
 
+def _test_has_assertion(tree: ast.AST) -> bool:
+    for node in tree.body:
+        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) or not node.name.startswith(
+            "test_"
+        ):
+            continue
+        for child in ast.walk(node):
+            if isinstance(child, ast.Assert):
+                return True
+            if not isinstance(child, ast.Call):
+                continue
+            function = child.func
+            if isinstance(function, ast.Attribute) and (
+                function.attr.startswith("assert")
+                or function.attr in {"raises", "warns", "deprecated_call", "fail"}
+            ):
+                return True
+    return False
+
+
 def investigate(report, options, context, provider=None, executor=None, config=None):
     context.check()
     if report.get("error_type"):
@@ -209,14 +229,9 @@ def investigate(report, options, context, provider=None, executor=None, config=N
                 )
                 return report
             tree = python_source(result["test_source"])
-            if result["clarification"] is not None or not any(
-                isinstance(node, ast.FunctionDef)
-                and node.name.startswith("test_")
-                and any(isinstance(child, ast.Assert) for child in ast.walk(node))
-                for node in tree.body
-            ):
+            if result["clarification"] is not None or not _test_has_assertion(tree):
                 raise ValueError(
-                    "Reproduction must contain an assertion inside a test."
+                    "Reproduction must contain an assertion or supported pytest/unittest assertion inside a test."
                 )
             report["generated_regression"] = {
                 "path": "issue2proof_generated/test_regression.py",

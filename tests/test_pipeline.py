@@ -1,7 +1,9 @@
+import ast
+
 import pytest
 from test_repository import TEST, project
 
-from issue2proof.pipeline import investigate
+from issue2proof.pipeline import _test_has_assertion, investigate
 from issue2proof.sandbox import SandboxConfig
 
 OPTIONS = {
@@ -9,6 +11,25 @@ OPTIONS = {
     "prepare_dependencies": False,
     "max_repairs": 3,
 }
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "assert value == 1",
+        "with pytest.raises(TypeError):\n        operation()",
+        "with pytest.warns(UserWarning):\n        operation()",
+        "self.assertEqual(value, 1)",
+        "pytest.fail('expected failure')",
+    ],
+)
+def test_reproduction_accepts_standard_assertion_patterns(body):
+    tree = ast.parse("def test_behavior():\n    " + body)
+    assert _test_has_assertion(tree)
+
+
+def test_reproduction_rejects_test_without_assertion():
+    assert not _test_has_assertion(ast.parse("def test_behavior():\n    operation()"))
 
 
 class Context:

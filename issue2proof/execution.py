@@ -88,7 +88,10 @@ if xml.exists() and xml.stat().st_size <= 1000000:
             for key in summary: summary[key] += int(suite.get(key,'0'))
         for test in tree.getroot().iter('testcase'):
             for failure in test.findall('failure'):
-                if failure.get('message','').startswith('assert ') or 'AssertionError' in failure.get('message',''):
+                message=failure.get('message','')
+                failure_type=failure.get('type','')
+                if (message.startswith('assert ') or 'AssertionError' in message or 'DID NOT RAISE' in message
+                    or 'DID NOT WARN' in message or message.startswith('Failed:') or failure_type in {'Failed','AssertionError'}):
                     assertion_failures += 1
                     failure_nodes.append(test.get('classname','')+'::'+test.get('name',''))
     except (ET.ParseError,ValueError): pass
