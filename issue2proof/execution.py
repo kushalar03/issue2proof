@@ -60,13 +60,13 @@ if payload.get('install_project'):
     if code!=0:
         print(json.dumps({'exit_code':code,'output':build['output'],'summary':{'tests':0,'failures':0,'errors':1,'skipped':0},'build':build,'files_intact':before==hashes(),'input_hashes':before}))
         raise SystemExit(0)
-command = [sys.executable, '-m', 'pytest', '-q', '--tb=short', '-c', '/dev/null', '-p', 'no:cacheprovider', '--junitxml='+str(xml), *payload['tests']]
+command = [sys.executable, '-m', 'pytest', '-q', '--tb=short', '-p', 'no:cacheprovider', '-o', 'addopts=', '--junitxml='+str(xml), *payload['tests']]
 timed_out = False
 python_paths = [pathlib.Path('/tmp/i2p-package'), root, root/'src', root/'tests', root/'test', root/'lib', pathlib.Path('/opt/i2p-deps')]
 with output_path.open('wb') as log:
     process = subprocess.Popen(command, cwd=root, stdout=log, stderr=subprocess.STDOUT,
         start_new_session=True, preexec_fn=restrict,
-        env={'PATH':'/usr/local/bin:/usr/bin:/bin','PYTHONPATH':':'.join(map(str,python_paths)), 'PYTHONDONTWRITEBYTECODE':'1','PYTEST_DISABLE_PLUGIN_AUTOLOAD':'1','HOME':'/tmp'})
+        env={'PATH':'/usr/local/bin:/usr/bin:/bin','PYTHONPATH':':'.join(map(str,python_paths)), 'PYTHONDONTWRITEBYTECODE':'1','HOME':'/tmp'})
     try: exit_code = process.wait(timeout=20)
     except subprocess.TimeoutExpired:
         timed_out = True
