@@ -8,34 +8,69 @@ from dataclasses import replace
 from packaging.requirements import InvalidRequirement, Requirement
 
 
+def _test_dependencies(config: dict) -> list[str]:
+    """Read explicit test groups without pulling broad development toolchains."""
+
+    groups = config.get("dependency-groups", {})
+
+    def resolve(name: str, visiting: set[str]) -> list[str]:
+        if name in visiting:
+            raise ValueError("Dependency groups contain a cycle.")
+        visiting = {*visiting, name}
+        resolved = []
+        for item in groups.get(name, []):
+            if isinstance(item, str):
+                resolved.append(item)
+            elif (
+                isinstance(item, dict)
+                and set(item) == {"include-group"}
+                and isinstance(item["include-group"], str)
+            ):
+                resolved.extend(resolve(item["include-group"], visiting))
+            else:
+                raise ValueError(
+                    "Test dependency groups must contain PEP 508 requirements or include-group entries."
+                )
+        return resolved
+
+    raw = []
+    for name in ("test", "tests", "testing"):
+        raw.extend(resolve(name, set()))
+        raw.extend(
+            config.get("project", {}).get("optional-dependencies", {}).get(name, [])
+        )
+    return raw
+
+
 def dependency_plan(manifests: dict[str, str]) -> dict:
     raw = []
+    pyprojects = []
     for name, content in manifests.items():
+        if name.rsplit("/", 1)[-1] == "pyproject.toml":
+            pyprojects.append(tomllib.loads(content))
         if name.rsplit("/", 1)[-1] in {"requirements.txt", "requirements.lock"}:
             for line in content.splitlines():
                 line = line.split(" #", 1)[0].strip()
                 if line and not line.startswith("#"):
                     raw.append(line)
     if not raw:
-        for name, content in manifests.items():
-            if name.rsplit("/", 1)[-1] == "pyproject.toml":
-                config = tomllib.loads(content)
-                if "dependencies" in config.get("project", {}).get("dynamic", []):
-                    raise ValueError(
-                        "Dynamic dependency metadata requires an explicit requirements.txt."
-                    )
-                raw.extend(config.get("project", {}).get("dependencies", []))
+        for config in pyprojects:
+            if "dependencies" in config.get("project", {}).get("dynamic", []):
+                raise ValueError(
+                    "Dynamic dependency metadata requires an explicit requirements.txt."
+                )
+            raw.extend(config.get("project", {}).get("dependencies", []))
+            raw.extend(_test_dependencies(config))
     has_project = any(
         name.rsplit("/", 1)[-1] in {"pyproject.toml", "setup.py", "setup.cfg"}
         for name in manifests
     )
     if has_project:
         build_requirements = []
-        for name, content in manifests.items():
-            if name.rsplit("/", 1)[-1] == "pyproject.toml":
-                build_requirements.extend(
-                    tomllib.loads(content).get("build-system", {}).get("requires", [])
-                )
+        for config in pyprojects:
+            build_requirements.extend(
+                config.get("build-system", {}).get("requires", [])
+            )
         if not build_requirements:
             build_requirements = ["setuptools==75.8.0", "wheel==0.45.1"]
         elif any("setuptools" in item for item in build_requirements) and not any(

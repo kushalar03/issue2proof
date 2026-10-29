@@ -219,6 +219,36 @@ def test_static_pyproject_dependencies_and_markers():
     ] == ["pytest==8.4.2"]
 
 
+def test_static_pyproject_test_dependency_groups():
+    plan = dependency_plan(
+        {
+            "pyproject.toml": """
+[project]
+name = "example"
+version = "1.0"
+
+[dependency-groups]
+shared = ["coverage"]
+tests = ["freezegun", "pytest", {include-group = "shared"}]
+
+[project.optional-dependencies]
+test = ["hypothesis"]
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
+"""
+        }
+    )
+    assert plan["requirements"] == [
+        "coverage",
+        "flit_core<4",
+        "freezegun",
+        "hypothesis",
+        "pytest",
+    ]
+
+
 def test_legacy_paid_endpoints_are_off_by_default(isolated, monkeypatch):
     monkeypatch.delenv("ISSUE2PROOF_LEGACY_API", raising=False)
     client = TestClient(app)
