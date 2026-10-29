@@ -149,6 +149,17 @@ def investigate(report, options, context, provider=None, executor=None, config=N
             if name not in checks:
                 checkpoint(name)
                 checks[name] = execute(report["sources"], tests)
+                if (
+                    not checks[name].get("evidence_valid")
+                    and checks[name].get("evidence_error")
+                    in {
+                        "sandbox_controller_failed",
+                        "controller_evidence_invalid_json",
+                        "project_install_failed",
+                    }
+                ):
+                    checkpoint(name + "_retry")
+                    checks[name] = execute(report["sources"], tests)
                 checkpoint(name + "_complete")
             if (
                 not checks[name].get("evidence_valid")

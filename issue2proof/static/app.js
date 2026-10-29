@@ -16,7 +16,8 @@ async function request(url, options) {
   return response.json();
 }
 function log(title, check) {
-  return `<details><summary>${escape(title)} · ${check.evidence_valid === false ? 'INCOMPLETE' : check.exit_code === 0 ? 'PASS' : 'FAIL'} · ${check.seconds}s</summary><pre>${escape(check.command)}\n\n${escape(check.output)}</pre></details>`;
+  const status=check.evidence_valid === false ? `INCOMPLETE${check.evidence_error?' · '+check.evidence_error.replaceAll('_',' '):''}` : check.exit_code === 0 ? 'PASS' : 'FAIL';
+  return `<details><summary>${escape(title)} · ${escape(status)} · ${check.seconds}s</summary><pre>${escape(check.command)}\n\n${escape(check.output)}</pre></details>`;
 }
 function reportUrl(report) {return report.saved_example ? '/api/examples/' + report.id.replace('example-', '') : '/api/runs/' + encodeURIComponent(report.id) + '/report';}
 function render(report) {

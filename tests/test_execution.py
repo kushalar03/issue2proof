@@ -80,9 +80,12 @@ def test_controller_failure_cannot_produce_valid_evidence():
         "network_disabled": True,
         "disposable": True,
     }
-    assert not runner.execute(
+    report = runner.execute(
         {"test_x.py": "def test_x(): assert True"}, ["test_x.py"]
-    )["evidence_valid"]
+    )
+    assert not report["evidence_valid"]
+    assert report["evidence_error"] == "controller_evidence_invalid_json"
+    assert report["output"] == "not json"
     with pytest.raises(ValueError, match="Unsafe"):
         runner.execute({"../test_x.py": "pass"}, ["../test_x.py"])
 
@@ -105,6 +108,36 @@ def test_server_network_and_truncation_metadata_are_required():
         assert not runner.execute({"test_x.py": "pass"}, ["test_x.py"])[
             "evidence_valid"
         ]
+
+
+def test_pytest_collection_failure_keeps_bounded_diagnostics():
+    runner = SandboxExecutor(
+        SandboxConfig("key", "project", "image", "url"), client=SimpleNamespace()
+    )
+    evidence = {
+        "exit_code": 2,
+        "output": "ModuleNotFoundError: missing_test_dependency",
+        "output_truncated": False,
+        "timed_out": False,
+        "summary": {"tests": 0, "failures": 0, "errors": 1, "skipped": 0},
+        "files_intact": True,
+        "input_hashes": {
+            "test_x.py": "d74ff0ee8da3b9806b18c877dbf29bbde50b5bd8e4dad7a3a725000feb82e8f1"
+        },
+        "uid": 65534,
+        "no_new_privileges": True,
+    }
+    runner.run = lambda *args, **kwargs: {
+        "exit_code": 0,
+        "stdout": __import__("json").dumps(evidence),
+        "stderr": "",
+        "output_truncated": False,
+        "network_disabled": True,
+        "disposable": True,
+    }
+    report = runner.execute({"test_x.py": "pass"}, ["test_x.py"])
+    assert report["evidence_error"] == "pytest_setup_or_collection_failed"
+    assert "missing_test_dependency" in report["output"]
 
 
 def test_execution_endpoint_requires_consent_and_rejects_repeated_operations(

@@ -220,6 +220,7 @@ class SandboxExecutor:
         )
         report = {
             **remote,
+            "sandbox_exit_code": remote["exit_code"],
             "command": "python -m pytest " + " ".join(tests),
             "output": remote["stderr"],
             "evidence_valid": False,
@@ -230,21 +231,25 @@ class SandboxExecutor:
             or not remote["network_disabled"]
             or not remote["disposable"]
         ):
+            report["evidence_error"] = "sandbox_controller_failed"
+            report["output"] = remote["stderr"] or remote["stdout"][-20000:]
+            report.pop("stdout", None)
             return report
         try:
             evidence = json.loads(remote["stdout"])
-            summary = evidence["summary"]
+            report.update(evidence)
+            summary = evidence.get("summary", {})
             valid = (
-                evidence["files_intact"] is True
-                and evidence["input_hashes"] == expected
-                and evidence["uid"] == 65534
-                and evidence["no_new_privileges"] is True
-                and evidence["timed_out"] is False
-                and evidence["output_truncated"] is False
-                and type(evidence["exit_code"]) is int
-                and evidence["exit_code"] in {0, 1}
+                evidence.get("files_intact") is True
+                and evidence.get("input_hashes") == expected
+                and evidence.get("uid") == 65534
+                and evidence.get("no_new_privileges") is True
+                and evidence.get("timed_out") is False
+                and evidence.get("output_truncated") is False
+                and type(evidence.get("exit_code")) is int
+                and evidence.get("exit_code") in {0, 1}
                 and all(
-                    type(summary[k]) is int and summary[k] >= 0
+                    type(summary.get(k)) is int and summary[k] >= 0
                     for k in ("tests", "failures", "errors", "skipped")
                 )
                 and summary["tests"] > 0
@@ -254,9 +259,22 @@ class SandboxExecutor:
                 and ((summary["failures"] == 0) == (evidence["exit_code"] == 0))
             )
             if valid:
-                report.update(evidence, evidence_valid=True)
+                report["evidence_valid"] = True
+            elif (evidence.get("build") or {}).get("exit_code") not in {None, 0}:
+                report["evidence_error"] = "project_install_failed"
+            elif evidence.get("timed_out") or evidence.get("exit_code") == 124:
+                report["evidence_error"] = "test_timeout"
+            elif evidence.get("exit_code") not in {0, 1}:
+                report["evidence_error"] = "pytest_setup_or_collection_failed"
+            elif summary.get("errors", 0):
+                report["evidence_error"] = "pytest_errors"
+            elif summary.get("tests", 0) == 0:
+                report["evidence_error"] = "no_tests_collected"
+            else:
+                report["evidence_error"] = "integrity_evidence_invalid"
         except (ValueError, KeyError, TypeError):
-            pass
+            report["evidence_error"] = "controller_evidence_invalid_json"
+            report["output"] = remote["stderr"] or remote["stdout"][-20000:]
         report.pop("stdout", None)
         return report
 
