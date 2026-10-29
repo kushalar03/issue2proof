@@ -63,6 +63,7 @@ def audit_memories(report, options, context, executor=None, config=None, provide
         files = {
             **report.get("resources", {}),
             **report["sources"],
+            **report.get("existing_tests", {}),
             **tests,
         }
         install = any(

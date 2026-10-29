@@ -132,7 +132,15 @@ def investigate(report, options, context, provider=None, executor=None, config=N
 
     def execute(sources, tests):
         context.check()
-        files = {**report.get("resources", {}), **sources, **tests}
+        # Keep the complete frozen test tree available for imports and shared
+        # fixtures, while pytest executes only the explicitly selected paths.
+        # Independent tests remain excluded from model context.
+        files = {
+            **report.get("resources", {}),
+            **sources,
+            **report["existing_tests"],
+            **tests,
+        }
         if any(
             name.rsplit("/", 1)[-1] in {"pyproject.toml", "setup.py", "setup.cfg"}
             for name in report["dependency_manifests"]

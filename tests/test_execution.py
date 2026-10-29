@@ -45,8 +45,10 @@ def test_all_six_gates_and_independent_test_isolation():
     report = verify_repository(sample(), executor)
     assert report["verdict"] == "checks_passed"
     assert len(executor.calls) == 6
-    assert "tests/test_private.py" not in executor.calls[2][0]
-    assert "tests/test_existing.py" not in executor.calls[5][0]
+    assert "tests/test_private.py" in executor.calls[2][0]
+    assert "tests/test_private.py" not in executor.calls[2][1]
+    assert "tests/test_existing.py" in executor.calls[5][0]
+    assert "tests/test_existing.py" not in executor.calls[5][1]
     assert any("adversarial" in text for text in report["limitations"])
 
 

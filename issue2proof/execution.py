@@ -62,10 +62,11 @@ if payload.get('install_project'):
         raise SystemExit(0)
 command = [sys.executable, '-m', 'pytest', '-q', '--tb=short', '-c', '/dev/null', '-p', 'no:cacheprovider', '--junitxml='+str(xml), *payload['tests']]
 timed_out = False
+python_paths = [pathlib.Path('/tmp/i2p-package'), root, root/'src', root/'tests', root/'test', root/'lib', pathlib.Path('/opt/i2p-deps')]
 with output_path.open('wb') as log:
     process = subprocess.Popen(command, cwd=root, stdout=log, stderr=subprocess.STDOUT,
         start_new_session=True, preexec_fn=restrict,
-        env={'PATH':'/usr/local/bin:/usr/bin:/bin','PYTHONPATH':'/tmp/i2p-package:'+str(root)+':'+str(root/'src')+':/opt/i2p-deps', 'PYTHONDONTWRITEBYTECODE':'1','PYTEST_DISABLE_PLUGIN_AUTOLOAD':'1','HOME':'/tmp'})
+        env={'PATH':'/usr/local/bin:/usr/bin:/bin','PYTHONPATH':':'.join(map(str,python_paths)), 'PYTHONDONTWRITEBYTECODE':'1','PYTEST_DISABLE_PLUGIN_AUTOLOAD':'1','HOME':'/tmp'})
     try: exit_code = process.wait(timeout=20)
     except subprocess.TimeoutExpired:
         timed_out = True
@@ -324,7 +325,9 @@ def verify_repository(report: dict, executor=None) -> dict:
         }
 
         def execute(sources, tests):
-            return executor.execute({**sources, **tests}, list(tests))
+            return executor.execute(
+                {**sources, **report["existing_tests"], **tests}, list(tests)
+            )
 
         def passed(check):
             return check.get("evidence_valid") is True and check["exit_code"] == 0
