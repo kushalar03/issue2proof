@@ -94,7 +94,7 @@ function renderProject(report) {
   watchedJob = null;
   results.dataset.runId=report.id;
   const positive=['checks_passed','memory_preserved'].includes(report.verdict);
-  results.innerHTML = `<span class="verdict ${positive?'':'bad'}">${escape(report.verdict.replaceAll('_',' '))}</span><p class="explanation">${escape(report.explanation)}</p><h3>Included files</h3>`;
+  results.innerHTML = `<span class="verdict ${positive?'':'bad'}">${escape(report.verdict.replaceAll('_',' '))}</span><p class="explanation">${escape(report.explanation)}</p>${report.job_id?'<section id="execution-evidence" class="execution-evidence"><p class="note">Loading the recorded execution timeline…</p></section>':''}<h3>Included files</h3>`;
   if (report.pipeline && !report.verification) {results.innerHTML += '<h3>Original behavior</h3>';for(const [name,check] of Object.entries(report.pipeline))results.innerHTML += log(name.replaceAll('_',' '),check);for(const attempt of report.attempts || []){results.innerHTML += `<h3>Candidate ${attempt.number} · ${attempt.accepted?'Accepted':'Rejected'}</h3>`;if(attempt.diff)results.innerHTML += `<pre>${escape(attempt.diff)}</pre>`;if(attempt.rejection)results.innerHTML += `<p>${escape(attempt.rejection)}</p>`;for(const [name,check] of Object.entries(attempt.checks||{}))results.innerHTML += log(name,check);}}
   if (report.verification) { results.innerHTML += '<h3>Execution evidence</h3>'; for (const [name,check] of Object.entries(report.verification)) results.innerHTML += log(name.replaceAll('_',' '),check); }
   if(report.memory_audit){results.innerHTML+='<h3>Recalled behavioral memory</h3>';if(report.memory_audit.baseline)results.innerHTML+=log('Proposed revision baseline',report.memory_audit.baseline);for(const item of report.memory_audit.results){results.innerHTML+=`<div class="memory-card"><span class="verdict ${item.status==='preserved'?'':'bad'}">${escape(item.status)}</span><h3>${escape(item.claim)}</h3>${log('Historical regression replay',item.check)}</div>`;}if(report.memory_audit.analysis){const analysis=report.memory_audit.analysis;results.innerHTML+=`<h3>Risk-adaptive model analysis</h3><div class="memory-card"><strong>Nemotron Super · ${escape(analysis.engineering.risk)} risk</strong><p>${escape(analysis.engineering.summary)}</p><p class="note">Likely cause: ${escape(analysis.engineering.likely_cause)}<br>Next experiment: ${escape(analysis.engineering.next_experiment)}</p></div>`;if(analysis.reasoning)results.innerHTML+=`<div class="memory-card"><strong>Nemotron Ultra escalation · ${escape(analysis.reasoning.decision.replaceAll('_',' '))}</strong><p>${escape(analysis.reasoning.rationale)}</p><p class="note">Next experiment: ${escape(analysis.reasoning.next_experiment)}<br>Unresolved: ${analysis.reasoning.unresolved.map(escape).join('; ')}</p></div>`;}}
@@ -169,6 +169,26 @@ function renderProject(report) {
     results.append(scope,holdouts,allowanceLabel,allowance,consent,generate);
     attachMemoryAudit(report);
   }
+  if(report.job_id)attachExecutionEvidence(report);
+}
+function collectOperations(report){
+  const operations=[];
+  const add=(phase,check)=>{if(!check||!check.operation_id)return;const summary=check.summary||{};operations.push({phase,check,tests:summary.tests??null});};
+  add('Environment · wheel dependencies',report.environment);
+  for(const [name,check] of Object.entries(report.pipeline||{}))add('Original · '+name.replaceAll('_',' '),check);
+  for(const attempt of report.attempts||[])for(const [name,check] of Object.entries(attempt.checks||{}))add('Candidate '+attempt.number+' · '+name.replaceAll('_',' '),check);
+  return operations;
+}
+async function attachExecutionEvidence(report){
+  const host=document.querySelector('#execution-evidence');if(!host||results.dataset.runId!==report.id)return;
+  try{
+    const job=await request('/api/jobs/'+encodeURIComponent(report.job_id));if(!host.isConnected||results.dataset.runId!==report.id)return;
+    const operations=collectOperations(report);
+    const models=(report.model_requests||[]).map(item=>`<article class="model-call"><span>${escape(item.role||'model')}</span><strong>${escape(item.model||'unknown model')}</strong><small>${Number(item.prompt_tokens||0).toLocaleString()} input · ${Number(item.completion_tokens||0).toLocaleString()} output tokens · ${escape(item.finish_reason||'complete')}</small></article>`).join('');
+    const operationCards=operations.map(item=>{const passed=item.check.evidence_valid!==false&&item.check.status==='SUCCESS';return `<article class="operation-card"><div><span class="operation-state ${passed?'':'failed'}">${passed?'verified':'expected failure'}</span><strong>${escape(item.phase)}</strong></div><p>${item.tests===null?'Executable check':item.tests+' tests'} · ${Number(item.check.seconds||0).toFixed(2)} seconds · network disabled</p><code>${escape(item.check.operation_id)}</code></article>`;}).join('');
+    const events=(job.events||[]).map((event,index)=>`<li><span>${String(index+1).padStart(2,'0')}</span>${escape(event.stage.replaceAll('_',' '))}</li>`).join('');
+    host.innerHTML=`<div class="evidence-heading"><div><span class="eyebrow">Recorded live execution</span><h2>Execution timeline</h2></div><span class="execution-status">${escape(job.state)}</span></div><p class="execution-usage">${job.model_calls} model calls · ${job.sandbox_calls} Nebius Sandbox operations · $${Number(job.reserved_usd).toFixed(3)} reserved allowance</p>${models?`<h3>Model routing</h3><div class="model-calls">${models}</div>`:''}<h3>Sandbox gates</h3><div class="operation-grid">${operationCards}</div><details class="stage-ledger"><summary>All ${job.events?.length||0} recorded workflow stages</summary><ol>${events}</ol></details>`;
+  }catch(error){host.innerHTML=`<p class="note">Execution timeline unavailable: ${escape(error.message)}</p>`;}
 }
 async function attachMemoryAudit(report){
   try{
