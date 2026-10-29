@@ -67,7 +67,7 @@ queries rather than production pull requests; the method and every result are in
 | Engineering | `nvidia/nemotron-3-super-120b-a12b` | Generate regressions/repairs and explain memory conflicts |
 | Deep reasoning | `nvidia/Nemotron-3-Ultra-550b-a55b` | Adjudicate only escalated high-risk conflicts |
 | Semantic recall | `Qwen/Qwen3-Embedding-8B` | Match future changes to capsule meaning |
-| Optional challenger | `moonshotai/Kimi-K2.7-Code` | Configured for future disagreement experiments |
+| Coding challenger | `moonshotai/Kimi-K2.7-Code` | Produce bounded edit spans after Nemotron establishes the regression; fall back when an engineering response is incomplete |
 
 The application enforces per-job, daily and lifetime reservation limits. Defaults
 are $25 total credit, $20 spendable and a protected $5 reserve. Lexical recall and

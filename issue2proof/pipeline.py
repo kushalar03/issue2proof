@@ -5,7 +5,12 @@ import hashlib
 import json
 from dataclasses import replace
 
-from .draft import RepositoryProvider, python_source, unified_patch
+from .draft import (
+    IncompleteModelOutput,
+    RepositoryProvider,
+    python_source,
+    unified_patch,
+)
 from .environments import build_environment
 from .execution import SandboxExecutor
 from .sandbox import SandboxConfig
@@ -117,8 +122,22 @@ def investigate(report, options, context, provider=None, executor=None, config=N
         cached = report.get("pending_model_response", {})
         if cached.get("fingerprint") == fingerprint:
             return cached["result"]
+        fallback = {"engineering": "challenger", "challenger": "fast"}.get(role)
+        if fingerprint in report.get("rejected_model_fingerprints", []):
+            if fallback:
+                return model(instruction, payload, role=fallback)
+            raise ValueError("Every bounded model route returned incomplete output.")
         reservation = context.reserve("model", role=role)
-        response = provider.request(instruction, payload, role=role)
+        try:
+            response = provider.request(instruction, payload, role=role)
+        except IncompleteModelOutput as error:
+            context.reconcile(reservation, error.estimated_cost_usd)
+            report["model_requests"].append(error.metadata)
+            report.setdefault("rejected_model_fingerprints", []).append(fingerprint)
+            context.save(report, "incomplete_model_output_rejected")
+            if fallback:
+                return model(instruction, payload, role=fallback)
+            raise
         context.reconcile(reservation, response.get("estimated_cost_usd"))
         report["model_requests"].append(
             {key: value for key, value in response.items() if key != "result"}
@@ -317,6 +336,7 @@ def investigate(report, options, context, provider=None, executor=None, config=N
                         "regression": regression["source"],
                         "previous_attempts": feedback,
                     },
+                    role="challenger",
                 )
                 attempt = {"number": number, "checks": {}, "accepted": False}
                 report["attempts"].append(attempt)

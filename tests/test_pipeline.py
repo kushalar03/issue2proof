@@ -3,6 +3,7 @@ import ast
 import pytest
 from test_repository import TEST, project
 
+from issue2proof.draft import IncompleteModelOutput
 from issue2proof.pipeline import _test_has_assertion, investigate
 from issue2proof.sandbox import SandboxConfig
 
@@ -57,7 +58,7 @@ class Provider:
         self.calls = []
 
     def request(self, instruction, payload, *, role="engineering"):
-        self.calls.append((instruction, payload))
+        self.calls.append((instruction, payload, role))
         if len(self.calls) == 1:
             assert self.executor.calls == 2
             result = {"test_source": TEST, "clarification": None}
@@ -113,11 +114,53 @@ def test_reproduce_first_then_revise_without_disclosing_independent_tests():
     assert len(report["attempts"]) == 2
     assert not report["attempts"][0]["accepted"] and report["attempts"][1]["accepted"]
     assert len(provider.calls) == 3
+    assert [call[2] for call in provider.calls] == [
+        "engineering",
+        "challenger",
+        "challenger",
+    ]
     assert "PRIVATE_HOLDOUT" not in str(provider.calls)
     assert context.stages.index("reproduction_complete") < context.stages.index(
         "generating_repair_1"
     )
     assert executor.calls == 9
+
+
+def test_incomplete_engineering_output_falls_back_to_challenger():
+    executor = Executor()
+
+    class FallbackProvider(Provider):
+        def __init__(self, executor):
+            super().__init__(executor)
+            self.routes = []
+
+        def request(self, instruction, payload, *, role="engineering"):
+            self.routes.append(role)
+            if len(self.routes) == 1:
+                raise IncompleteModelOutput(
+                    {
+                        "model": "mock-engineering",
+                        "role": role,
+                        "prompt_tokens": 10,
+                        "completion_tokens": 20,
+                        "estimated_cost_usd": 0.01,
+                        "finish_reason": "length",
+                    }
+                )
+            return super().request(instruction, payload, role=role)
+
+    provider = FallbackProvider(executor)
+    report = investigate(
+        project(),
+        OPTIONS,
+        Context(),
+        provider,
+        executor,
+        SandboxConfig("key", "p", "image", "url"),
+    )
+    assert report["verdict"] == "checks_passed"
+    assert provider.routes[:2] == ["engineering", "challenger"]
+    assert report["model_requests"][0]["finish_reason"] == "length"
 
 
 def test_completed_checkpoints_are_not_reexecuted_on_resume():

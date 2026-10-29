@@ -11,6 +11,13 @@ import httpx
 from .provider import DEFAULT_MODEL
 
 
+class IncompleteModelOutput(ValueError):
+    def __init__(self, metadata: dict):
+        super().__init__("Incomplete structured model output rejected.")
+        self.metadata = metadata
+        self.estimated_cost_usd = metadata.get("estimated_cost_usd")
+
+
 class RepositoryProvider:
     def __init__(self):
         self.key = os.environ.get("NEBIUS_API_KEY")
@@ -50,7 +57,7 @@ class RepositoryProvider:
                 "Selected repository context exceeds 35,000 characters; upload a smaller project."
             )
         model = self.model_for(role)
-        token_limit = max_tokens or (4096 if role in {"fast", "challenger"} else 8192)
+        token_limit = max_tokens or (4096 if role == "fast" else 8192)
         token_limit = min(max(256, token_limit), 8192)
         with httpx.Client(timeout=90) as client:
             response = client.post(
@@ -74,9 +81,6 @@ class RepositoryProvider:
             response.raise_for_status()
             payload = response.json()
         choice = payload["choices"][0]
-        if choice.get("finish_reason") != "stop":
-            raise ValueError("Incomplete model output rejected.")
-        result = json.loads(choice["message"]["content"])
         usage = payload.get("usage") or {}
         prompt, completion = usage.get("prompt_tokens"), usage.get("completion_tokens")
         cost = None
@@ -87,13 +91,24 @@ class RepositoryProvider:
             and min(prompt, completion) >= 0
         ):
             cost = round((prompt * 0.30 + completion * 0.90) / 1_000_000, 8)
-        return {
-            "result": result,
+        metadata = {
             "model": model,
             "role": role,
             "prompt_tokens": prompt,
             "completion_tokens": completion,
             "estimated_cost_usd": cost,
+            "finish_reason": choice.get("finish_reason"),
+        }
+        if choice.get("finish_reason") != "stop":
+            raise IncompleteModelOutput(metadata)
+        try:
+            result = json.loads(choice["message"]["content"])
+        except (json.JSONDecodeError, KeyError, TypeError):
+            metadata["finish_reason"] = "invalid_json"
+            raise IncompleteModelOutput(metadata) from None
+        return {
+            "result": result,
+            **metadata,
         }
 
 
