@@ -9,7 +9,14 @@ from fastapi.testclient import TestClient
 from starlette.requests import Request
 from test_repository import project
 
-from issue2proof.access import COOKIE, access_role, guard, login, validate_configuration
+from issue2proof.access import (
+    COOKIE,
+    access_role,
+    authorized,
+    guard,
+    login,
+    validate_configuration,
+)
 from issue2proof.app import app, save_report
 from issue2proof.environments import dependency_plan
 from issue2proof.jobs import (
@@ -158,9 +165,10 @@ def test_private_authentication_and_cross_origin_guard(isolated, monkeypatch):
     client = TestClient(app)
     health = client.get("/api/health").json()
     assert health["authenticated"] is False
-    assert health["authentication_token_fingerprint"] == hashlib.sha256(
-        token.encode()
-    ).hexdigest()[:12]
+    assert (
+        health["authentication_token_fingerprint"]
+        == hashlib.sha256(token.encode()).hexdigest()[:12]
+    )
     assert client.get("/api/runs").status_code == 401
     assert client.post("/api/login", json={"token": "wrong"}).status_code == 401
     assert client.post("/api/login", json={"token": f" {token} "}).status_code == 200
@@ -182,11 +190,39 @@ def test_private_authentication_and_cross_origin_guard(isolated, monkeypatch):
     )
     monkeypatch.setenv("ISSUE2PROOF_PUBLIC", "1")
     monkeypatch.delenv("ISSUE2PROOF_ACCESS_TOKEN")
-    with pytest.raises(RuntimeError):
-        validate_configuration()
+    validate_configuration()
 
 
-def test_restricted_judge_token_cannot_administer_shared_evidence(isolated, monkeypatch):
+def test_public_workspace_needs_no_token_and_hides_bulk_history(isolated, monkeypatch):
+    monkeypatch.setenv("ISSUE2PROOF_PUBLIC", "1")
+    monkeypatch.delenv("ISSUE2PROOF_ACCESS_TOKEN", raising=False)
+    monkeypatch.delenv("ISSUE2PROOF_JUDGE_TOKEN", raising=False)
+    validate_configuration()
+    public_request = Request(
+        {
+            "type": "http",
+            "scheme": "https",
+            "server": ("testserver", 443),
+            "client": ("192.0.2.20", 1234),
+            "method": "GET",
+            "path": "/api/runs",
+            "root_path": "",
+            "query_string": b"",
+            "headers": [],
+        }
+    )
+    assert authorized(public_request) is True
+    assert access_role(public_request) == "public"
+
+    async def unreachable(_request):
+        raise AssertionError("bulk public listing reached the endpoint")
+
+    assert asyncio.run(guard(public_request, unreachable)).status_code == 200
+
+
+def test_restricted_judge_token_cannot_administer_shared_evidence(
+    isolated, monkeypatch
+):
     admin = "admin-private-token-at-least-24-characters"
     judge = "judge-restricted-token-at-least-24-characters"
     monkeypatch.setenv("ISSUE2PROOF_PUBLIC", "1")
@@ -200,7 +236,9 @@ def test_restricted_judge_token_cannot_administer_shared_evidence(isolated, monk
         "root_path": "",
         "query_string": b"",
     }
-    response = login(Request({**base, "method": "POST", "path": "/api/login", "headers": []}), judge)
+    response = login(
+        Request({**base, "method": "POST", "path": "/api/login", "headers": []}), judge
+    )
     cookie = response.headers["set-cookie"].split(";", 1)[0].split("=", 1)[1]
     request = Request(
         {

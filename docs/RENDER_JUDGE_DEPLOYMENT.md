@@ -1,6 +1,6 @@
 # Deploy the live judge instance on Render Free
 
-Render is the fallback deployment for the real authenticated application while
+Render is the fallback deployment for the real public application while
 Railway blocks new account creation. The existing Vercel site remains the
 credit-free public tour. Render Free runs the Docker application without a
 persistent disk, allowing judges to import a new repository and request bounded
@@ -26,9 +26,7 @@ evidence remains available because it is part of the image.
 
 Render prompts for variables marked `sync: false`:
 
-- `ISSUE2PROOF_ACCESS_TOKEN`: generate a random administrator value of at least 32 characters and keep it private;
-- `ISSUE2PROOF_JUDGE_TOKEN`: generate a different random value of at least 32 characters and give only this restricted value to judges;
-- `ISSUE2PROOF_CAPSULE_SIGNING_KEY`: generate a third random value of at least 32 characters for authenticated Memory Capsule bundles;
+- `ISSUE2PROOF_CAPSULE_SIGNING_KEY`: generate a random value of at least 32 characters for authenticated Memory Capsule bundles;
 - `NEBIUS_API_KEY`: enter the private Nebius API key.
 
 Never place any private value in GitHub, Vercel, a recording, or a public Devpost
@@ -48,9 +46,9 @@ Render supplies a URL similar to:
 https://issue2proof-live.onrender.com
 ```
 
-Open that URL, sign in with `ISSUE2PROOF_JUDGE_TOKEN`, and verify:
+Open that URL without a token and verify:
 
-1. `/api/health` reports that authentication is required and the remote provider
+1. `/api/health` reports that the public workspace is active and the remote provider
    configuration is complete;
 2. saved Werkzeug evidence opens without spending provider credit;
 3. the Budget panel shows a $25.00 daily and lifetime allowance with no overage reserve;
@@ -64,9 +62,9 @@ behavior description:
 > while valid non-expired signatures and ordinary serialization round trips must
 > continue to work.
 
-For conservative testing, change **Scheduling allowance** from the UI default of
-`$2.00` to `$0.75`. The application stops new paid actions when its retained
-ledger reaches $25 and returns HTTP 402 for synchronous paid requests.
+Each investigation may continue through five repair attempts while global credit
+remains. The application stops new paid actions when its retained ledger reaches
+$25 and returns HTTP 402 for synchronous paid requests.
 
 ## 4. Submit the correct URLs
 
@@ -75,13 +73,7 @@ ledger reaches $25 and returns HTTP 402 for synchronous paid requests.
 - Source code: https://github.com/kushalar03/issue2proof
 - Video: the uploaded `submission/final-demo.mp4` URL.
 
-Put the temporary judge access token only in a private testing-instructions field.
-If Devpost exposes every field publicly, do not publish the token. Use the Vercel
-tour as the public URL and state that authenticated live access is available to
-judges on request.
-
-Saved evidence and the Vercel site do not spend Nebius credit. The free Render
-instance permits at most $1.00 of application-scheduled work before its protected
-reserve. Because ephemeral state can reset, configure a Nebius account-level
+No access token is needed for the live URL. Saved evidence and the Vercel site do
+not spend Nebius credit. Because ephemeral state can reset, configure a Nebius account-level
 spending limit as the authoritative cap. When the live allowance is exhausted,
 paid operations stop while bundled evidence remains available.

@@ -23,12 +23,12 @@ misleading JUnit within its own process. Test counts, assertion-failure gates an
 skip limits strengthen ordinary evidence but do not create an adversarial proof.
 Independent tests require a suitable human-authored oracle.
 
-Public mode requires a strong administrator token. Sessions are signed, expire in
-12 hours and use Secure/HttpOnly/SameSite cookies. CSRF-style cross-origin writes
-are rejected. Bearer authentication supports API clients. A separate restricted
-judge token can run investigations without bulk listing, deletion, capsule
-import/export, supersession, or job-mutation privileges. This remains a private
-instance rather than a general multi-tenant authorization system.
+Public mode permits repository inspection, bounded investigations, memory recall,
+and replay without a credential. It blocks bulk run/job listing, deletion, capsule
+import/export, saved-example mutation, and memory supersession. Cross-origin
+writes are rejected. Optional administrator and judge credentials remain available
+for private deployments. The public service is not a general multi-tenant system;
+visitors should submit public repositories and avoid sensitive ZIP contents.
 
 Portable bundles use SHA-256 for content integrity. Protected deployments also
 sign exports with HMAC-SHA256 and reject unsigned or foreign imports. Operators

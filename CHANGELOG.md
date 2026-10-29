@@ -2,6 +2,12 @@
 
 Issue2Proof is now an executable repository-memory system for AI-built software.
 
+## Public live workspace
+
+- Removed the sign-in gate from the Render workspace while retaining administrator-only destructive maintenance actions.
+- Expanded investigation and memory-replay allowances so the shared $25 lifetime ledger is the primary paid-work stop.
+- Made MCP and agent-context recall compatible with the token-free public service.
+
 ## Added
 
 - Versioned, evidence-gated Memory Capsules with provenance, assumptions,

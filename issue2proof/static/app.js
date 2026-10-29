@@ -3,11 +3,10 @@ const results = document.querySelector('#results');
 const button = document.querySelector('#run');
 const mode = document.querySelector('#mode');
 let cases = [];
+let maintenanceAllowed = true;
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function authUI(authenticated, required=true) {
-  document.querySelector('#login-panel').hidden=authenticated||!required;
   document.querySelector('#app-shell').hidden=!authenticated;
-  document.querySelector('#sign-out').hidden=!authenticated||!required;
 }
 async function request(url, options) {
   const response = await fetch(url, options);
@@ -110,7 +109,7 @@ function renderProject(report) {
   if (report.draft_diff) results.innerHTML += `<h3>Candidate patch</h3><pre>${escape(report.draft_diff)}</pre><a class="download" href="${report.saved_example ? '/api/examples/' + report.id.replace('example-','') + '/artifacts' : '/api/runs/' + encodeURIComponent(report.id) + '/artifacts'}">↓ Download repair draft</a><br>`;
   results.innerHTML += `<a class="download" href="${reportUrl(report)}">↓ Download inspection report</a><p class="note">${report.limitations.map(escape).join('<br>')}</p>`;
   if (report.saved_example) results.insertAdjacentHTML('afterbegin','<p class="note">Saved evidence from a real completed run. Viewing this makes no model or sandbox calls.</p>');
-  if(report.verdict==='checks_passed'){
+  if(report.verdict==='checks_passed'&&(!report.saved_example||maintenanceAllowed)){
     const remember=document.createElement('button');remember.textContent='Create executable Memory Capsule';
     remember.onclick=async()=>{remember.disabled=true;try{const endpoint=report.saved_example?'/api/examples/'+report.id.replace('example-','')+'/memory':'/api/runs/'+encodeURIComponent(report.id)+'/memory';const capsule=await request(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});renderMemory(capsule);await refreshMemories();}catch(error){remember.disabled=false;remember.textContent=error.message;}};
     results.append(remember);
@@ -128,7 +127,7 @@ function renderProject(report) {
     };
     results.append(consent,verify);
   }
-  if(!report.saved_example){const remove=document.createElement('button');remove.className='history';remove.textContent='Delete investigation data';remove.onclick=async()=>{if(!window.confirm('Delete this investigation and its stored source/evidence?'))return;const response=await fetch('/api/runs/'+encodeURIComponent(report.id),{method:'DELETE'});if(response.ok){results.textContent='Investigation deleted.';await history();await refreshJobs();}else{const error=await response.json();window.alert(error.detail);}};results.append(remove);}
+  if(!report.saved_example&&maintenanceAllowed){const remove=document.createElement('button');remove.className='history';remove.textContent='Delete investigation data';remove.onclick=async()=>{if(!window.confirm('Delete this investigation and its stored source/evidence?'))return;const response=await fetch('/api/runs/'+encodeURIComponent(report.id),{method:'DELETE'});if(response.ok){results.textContent='Investigation deleted.';await history();await refreshJobs();}else{const error=await response.json();window.alert(error.detail);}};results.append(remove);}
   if (report.verdict === 'awaiting_model') {
     const scope=document.createElement('div');scope.innerHTML='<h3>Repair context</h3><p class="note">Choose relevant implementation files. Other project files still execute, but cannot be modified by the model.</p>';
     let contextSize=0;
@@ -149,14 +148,14 @@ function renderProject(report) {
     }
     const consent = document.createElement('label'); consent.className = 'consent';
     const checkbox = document.createElement('input'); checkbox.type = 'checkbox';
-    consent.append(checkbox, document.createTextNode('Send the selected project context to Nebius, prepare wheel-only dependencies, and execute this project remotely. Up to five model calls, three repair attempts and twenty sandbox operations, within the scheduling allowance.'));
+    consent.append(checkbox, document.createTextNode('Send the selected project context to Nebius, prepare wheel-only dependencies, and execute this project remotely. The investigation can continue through five repair attempts while shared project credit remains.'));
     const generate = document.createElement('button'); generate.textContent = 'Start full investigation →'; generate.disabled = true;
     checkbox.onchange = () => {generate.disabled = !checkbox.checked;};
     generate.onclick = async () => {
       generate.disabled = true; generate.textContent = 'Queueing investigation…';
       try {
         const paths = [...holdouts.querySelectorAll('input:checked')].map(item => item.value);
-        const job = await request(`/api/projects/${encodeURIComponent(report.id)}/investigate`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({send_to_nebius:true,execute_remote:true,prepare_dependencies:true,independent_test_paths:paths,budget_usd:Number(allowance.value),max_repairs:3,max_model_calls:5,max_sandbox_calls:16,source_paths:[...scope.querySelectorAll('input:checked')].map(item=>item.value)})});
+        const job = await request(`/api/projects/${encodeURIComponent(report.id)}/investigate`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({send_to_nebius:true,execute_remote:true,prepare_dependencies:true,independent_test_paths:paths,budget_usd:25,max_repairs:5,max_model_calls:12,max_sandbox_calls:40,source_paths:[...scope.querySelectorAll('input:checked')].map(item=>item.value)})});
         watchJob(job.id); await refreshJobs();
       } catch (error) {
         const message = document.createElement('p'); message.textContent = error.message; results.append(message);
@@ -164,9 +163,7 @@ function renderProject(report) {
         generate.onclick = async () => {renderProject(await request(`/api/runs/${encodeURIComponent(report.id)}`));};
       }
     };
-    const allowanceLabel = document.createElement('label');allowanceLabel.textContent='Scheduling allowance (USD estimate; not a provider billing cap)';
-    const allowance=document.createElement('input');allowance.type='number';allowance.min='0.1';allowance.max='5';allowance.step='0.1';allowance.value='2';
-    results.append(scope,holdouts,allowanceLabel,allowance,consent,generate);
+    results.append(scope,holdouts,consent,generate);
     attachMemoryAudit(report);
   }
   if(report.job_id)attachExecutionEvidence(report);
@@ -196,9 +193,9 @@ async function attachMemoryAudit(report){
     if(!response.length||results.dataset.runId!==report.id)return;
     const host=document.createElement('section');host.innerHTML='<h3>Audit against executable memory</h3><p class="note">Replay selected historical behaviors on this proposed revision. No repair model is called.</p>';
     for(const match of response){const label=document.createElement('label');label.className='holdout';const input=document.createElement('input');input.type='checkbox';input.value=match.capsule.id;input.checked=true;label.append(input,document.createTextNode(`${Math.round(match.score*100)}% · ${match.capsule.claim}`));host.append(label);}
-    const consent=document.createElement('label');consent.className='consent';const checkbox=document.createElement('input');checkbox.type='checkbox';consent.append(checkbox,document.createTextNode('Run selected historical regressions in fresh Nebius Sandboxes. Maximum eight operations and $0.75 scheduling allowance.'));
+    const consent=document.createElement('label');consent.className='consent';const checkbox=document.createElement('input');checkbox.type='checkbox';consent.append(checkbox,document.createTextNode('Run selected historical regressions in fresh Nebius Sandboxes while shared project credit remains.'));
     const run=document.createElement('button');run.textContent='Replay repository memory →';run.disabled=true;checkbox.onchange=()=>{run.disabled=!checkbox.checked;};
-    run.onclick=async()=>{run.disabled=true;try{const memory_ids=[...host.querySelectorAll('.holdout input:checked')].map(item=>item.value);const job=await request(`/api/projects/${encodeURIComponent(report.id)}/audit-memory`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({memory_ids,execute_remote:true,prepare_dependencies:true,max_sandbox_calls:8,max_model_calls:2,budget_usd:.75,analyze_conflict:true,allow_ultra:true})});watchJob(job.id);await refreshJobs();}catch(error){run.textContent=error.message;run.disabled=false;}};
+    run.onclick=async()=>{run.disabled=true;try{const memory_ids=[...host.querySelectorAll('.holdout input:checked')].map(item=>item.value);const job=await request(`/api/projects/${encodeURIComponent(report.id)}/audit-memory`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({memory_ids,execute_remote:true,prepare_dependencies:true,max_sandbox_calls:20,max_model_calls:4,budget_usd:25,analyze_conflict:true,allow_ultra:true})});watchJob(job.id);await refreshJobs();}catch(error){run.textContent=error.message;run.disabled=false;}};
     host.append(consent,run);results.append(host);
   }catch(error){console.error(error.message);}
 }
@@ -271,15 +268,4 @@ async function watchJob(id) {
   }
   await poll();
 }
-const signIn=async()=>{
- const button=document.querySelector('#sign-in');
- const input=document.querySelector('#access-token');
- const errorMessage=document.querySelector('#login-error');
- errorMessage.hidden=true;errorMessage.textContent='';button.disabled=true;button.textContent='Signing in…';
- try{await request('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:input.value})});window.location.reload();}
- catch(error){errorMessage.textContent=error.message;errorMessage.hidden=false;input.select();button.disabled=false;button.textContent='Sign in';}
-};
-document.querySelector('#sign-in').onclick=signIn;
-document.querySelector('#access-token').addEventListener('keydown',event=>{if(event.key==='Enter')signIn();});
-document.querySelector('#sign-out').onclick=async()=>{await fetch('/api/logout',{method:'POST'});window.location.reload();};
-(async()=>{try{const status=await request('/api/health');authUI(status.authenticated,status.authentication_required);if(status.authenticated){await refreshJobs();await refreshMemories();}}catch{authUI(false,true);}})();
+(async()=>{try{const status=await request('/api/health');maintenanceAllowed=!['public','judge'].includes(status.access_role);authUI(status.authenticated,status.authentication_required);if(status.authenticated){await refreshJobs();await refreshMemories();}}catch{authUI(false,true);}})();

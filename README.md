@@ -141,15 +141,13 @@ UUID before low-level execution. `NEBIUS_SANDBOX_IMAGE` may pin a UUID directly.
 ./scripts/start.sh
 ```
 
-Open <http://127.0.0.1:8000> and sign in with the generated application token.
-Never use the Nebius API key as the application login.
-
-Public deployments should keep `ISSUE2PROOF_ACCESS_TOKEN` private for the
-administrator and give judges `ISSUE2PROOF_JUDGE_TOKEN`. Judge sessions can run
-new investigations but cannot enumerate all stored runs or jobs, delete evidence,
-import or export capsule bundles, supersede memory, or mutate background jobs.
+Open <http://127.0.0.1:8000>. Local private deployments can use the generated
+application token. The Render deployment uses an open workspace: visitors can
+run investigations and memory replay without receiving any secret. Anonymous
+sessions cannot enumerate stored runs or jobs, delete evidence, import or export
+capsule bundles, or supersede memory.
 `ISSUE2PROOF_CAPSULE_SIGNING_KEY` authenticates exported Memory Capsule bundles;
-when omitted, the private administrator token supplies the signing key.
+in a private deployment, the administrator token is the fallback signing key.
 
 ## Execution boundary
 

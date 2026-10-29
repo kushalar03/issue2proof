@@ -2,8 +2,8 @@
 
 Issue2Proof is both a web application and a headless repository-memory service.
 The web interface is useful for investigation and review. Agents and automation use
-the same authenticated REST API, so teams do not need to replace their editor or
-coding agent.
+the same REST API, so teams do not need to replace their editor or coding agent.
+The public Render workspace needs no token; private deployments can require one.
 
 ## Install as an MCP plugin
 
@@ -11,7 +11,8 @@ Issue2Proof includes `scripts/mcp_server.py`, a standard local MCP server exposi
 `recall_repository_memory` and `audit_repository_revision`. Copy
 `integrations/mcp.example.json` into the
 MCP configuration used by your host and replace the absolute script path and
-service URL. Keep `ISSUE2PROOF_ACCESS_TOKEN` in the host's secret environment.
+service URL. For a private service, keep `ISSUE2PROOF_ACCESS_TOKEN` in the host's
+secret environment. Leave it unset for the public Render workspace.
 
 The same adapter works with Claude Code, Cursor, Codex-compatible MCP hosts, VS
 Code extensions and other clients that support local stdio MCP servers. Once
@@ -72,15 +73,15 @@ the contract while Issue2Proof retains independent replay authority.
 Use the bundled CLI from Codex, Claude Code, Cursor tasks, a git hook or CI:
 
 ```sh
-export ISSUE2PROOF_ACCESS_TOKEN="..."
 python scripts/agent_context.py \
-  --url https://issue2proof.example.com \
+  --url https://issue2proof-live.onrender.com \
   --repository pallets/werkzeug \
   --change "Refactor safe_join and path normalization"
 ```
 
-The token is read only from the process environment. Do not put it in prompts,
-command arguments, repository files or logs.
+For a protected private deployment, the optional token is read only from the
+process environment. Do not put it in prompts, command arguments, repository
+files or logs.
 
 ## Typical integrations
 
@@ -98,7 +99,7 @@ a portable bundle, combines pull request text with changed paths, recalls matchi
 capsules locally, and writes the verified claims and regression hashes into the
 GitHub job summary. This recall-only mode has no provider cost.
 
-Audit mode imports the bundle into a protected Issue2Proof service, uploads the
+Audit mode imports the bundle into a protected private Issue2Proof service, uploads the
 checked-out repository as a bounded ZIP, replays matched regressions, and blocks
 the check on `memory_conflict` or `memory_uncertain`. Store only the application
 access token as a GitHub secret; never store a Nebius key in the repository. See

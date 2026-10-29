@@ -102,9 +102,12 @@ def health(request: Request):
         "status": "ok",
         "mode": "repository_memory",
         "repository_execution_integrated": True,
-        "authentication_required": bool(token),
-        "authentication_token_fingerprint": hashlib.sha256(token.encode()).hexdigest()[:12]
-        if token
+        "authentication_required": bool(token)
+        and os.environ.get("ISSUE2PROOF_PUBLIC") != "1",
+        "authentication_token_fingerprint": hashlib.sha256(token.encode()).hexdigest()[
+            :12
+        ]
+        if token and os.environ.get("ISSUE2PROOF_PUBLIC") != "1"
         else None,
         "authenticated": authorized(request),
         "access_role": access_role(request),
@@ -423,10 +426,10 @@ class InvestigationRequest(BaseModel):
     prepare_dependencies: bool = True
     independent_test_paths: list[str] = Field(min_length=1, max_length=100)
     source_paths: list[str] = Field(default_factory=list, max_length=100)
-    max_repairs: int = Field(default=3, ge=1, le=3)
-    max_model_calls: int = Field(default=5, ge=2, le=5)
-    max_sandbox_calls: int = Field(default=16, ge=6, le=20)
-    budget_usd: float = Field(default=2.0, ge=0.1, le=5)
+    max_repairs: int = Field(default=5, ge=1, le=5)
+    max_model_calls: int = Field(default=12, ge=2, le=12)
+    max_sandbox_calls: int = Field(default=40, ge=6, le=40)
+    budget_usd: float = Field(default=25.0, ge=0.1, le=25)
 
 
 class MemoryRequest(BaseModel):
@@ -457,10 +460,10 @@ class MemoryAuditRequest(BaseModel):
     memory_ids: list[str] = Field(min_length=1, max_length=10)
     execute_remote: bool = False
     prepare_dependencies: bool = True
-    max_model_calls: int = Field(default=0, ge=0, le=2)
-    max_sandbox_calls: int = Field(default=8, ge=2, le=12)
-    max_repairs: int = Field(default=1, ge=1, le=2)
-    budget_usd: float = Field(default=0.75, ge=0.1, le=1)
+    max_model_calls: int = Field(default=2, ge=0, le=4)
+    max_sandbox_calls: int = Field(default=12, ge=2, le=20)
+    max_repairs: int = Field(default=1, ge=1, le=3)
+    budget_usd: float = Field(default=5.0, ge=0.1, le=25)
     analyze_conflict: bool = True
     allow_ultra: bool = True
 

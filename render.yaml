@@ -9,10 +9,6 @@ services:
     envVars:
       - key: ISSUE2PROOF_PUBLIC
         value: "1"
-      - key: ISSUE2PROOF_ACCESS_TOKEN
-        sync: false
-      - key: ISSUE2PROOF_JUDGE_TOKEN
-        sync: false
       - key: ISSUE2PROOF_CAPSULE_SIGNING_KEY
         sync: false
       - key: NEBIUS_API_KEY

@@ -12,7 +12,11 @@ import urllib.request
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         raise urllib.error.HTTPError(
-            req.full_url, code, "Redirects are disabled for authenticated requests.", headers, fp
+            req.full_url,
+            code,
+            "Redirects are disabled for service requests.",
+            headers,
+            fp,
         )
 
 
@@ -44,8 +48,6 @@ def main():
     except ValueError as error:
         parser.error(str(error))
     token = os.environ.get("ISSUE2PROOF_ACCESS_TOKEN")
-    if not token:
-        parser.error("Set ISSUE2PROOF_ACCESS_TOKEN in the process environment.")
     payload = {
         "query": args.change,
         "repository_key": args.repository,
@@ -57,13 +59,15 @@ def main():
         base_url + "/api/integrations/context",
         data=json.dumps(payload).encode(),
         headers={
-            "Authorization": "Bearer " + token,
+            **({"Authorization": "Bearer " + token} if token else {}),
             "Content-Type": "application/json",
         },
         method="POST",
     )
     try:
-        with urllib.request.build_opener(NoRedirect).open(request, timeout=90) as response:
+        with urllib.request.build_opener(NoRedirect).open(
+            request, timeout=90
+        ) as response:
             packet = json.load(response)
     except urllib.error.HTTPError as error:
         message = error.read().decode(errors="replace")[:1000]

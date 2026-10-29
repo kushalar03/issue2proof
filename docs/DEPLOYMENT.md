@@ -9,7 +9,7 @@
 3. Set provider billing limits. Application dollar reservations are estimates;
    request counts and operation deadlines provide the application hard bounds.
 4. Run `docker compose up --build -d`. Caddy provisions HTTPS for the configured
-   domain. Public mode requires a strong token; the API container has no published
+   domain. This private Compose setup requires a strong token; the API container has no published
    port. Login cookies are Secure and therefore require HTTPS.
 5. Check `/api/health`, sign in, run a reviewed example, inspect stage events, test
    cancellation and download evidence. Rotate the application token if exposed.

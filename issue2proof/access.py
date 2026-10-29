@@ -1,4 +1,4 @@
-"""Private-instance authentication, signed sessions and request guards."""
+"""Public/private access modes, signed sessions and request guards."""
 
 import hashlib
 import hmac
@@ -33,14 +33,16 @@ def validate_configuration():
     token = configured_token()
     if public_mode() and os.environ.get("ISSUE2PROOF_LEGACY_API") == "1":
         raise RuntimeError("Unbudgeted legacy endpoints cannot run in public mode.")
-    if public_mode() and len(token) < 24:
+    if token and len(token) < 24:
         raise RuntimeError(
-            "Public mode requires ISSUE2PROOF_ACCESS_TOKEN with at least 24 characters."
+            "ISSUE2PROOF_ACCESS_TOKEN must contain at least 24 characters."
         )
     judge = configured_judge_token()
     if judge and len(judge) < 24:
-        raise RuntimeError("ISSUE2PROOF_JUDGE_TOKEN must contain at least 24 characters.")
-    if judge and hmac.compare_digest(judge, token):
+        raise RuntimeError(
+            "ISSUE2PROOF_JUDGE_TOKEN must contain at least 24 characters."
+        )
+    if judge and token and hmac.compare_digest(judge, token):
         raise RuntimeError("Administrator and judge tokens must be different.")
 
 
@@ -66,14 +68,20 @@ def access_role(request: Request):
         expected = hmac.new(
             token.encode(), f"{expiry}.{nonce}.{role}".encode(), hashlib.sha256
         ).hexdigest()
-        if token and int(expiry) > time.time() and hmac.compare_digest(signature, expected):
+        if (
+            token
+            and int(expiry) > time.time()
+            and hmac.compare_digest(signature, expected)
+        ):
             return role
     except (ValueError, TypeError):
         pass
-    return None
+    return "public" if public_mode() else None
 
 
 def authorized(request: Request):
+    if public_mode():
+        return True
     token = configured_token()
     if not token and not configured_judge_token():
         return not public_mode() and request.url.hostname in {
@@ -105,9 +113,9 @@ async def guard(request, call_next):
             {"detail": "Sign in with the application access token."},
             status_code=401,
         )
-    if role == "judge":
+    if role in {"judge", "public"}:
         path = request.url.path
-        if request.method == "GET" and path in {"/api/runs", "/api/jobs", "/api/memories"}:
+        if request.method == "GET" and path in {"/api/runs", "/api/jobs"}:
             return JSONResponse([])
         restricted = (
             request.method == "DELETE"
@@ -117,13 +125,27 @@ async def guard(request, call_next):
                 request.method == "POST"
                 and path.startswith("/api/jobs/")
                 and path.rsplit("/", 1)[-1] in {"cancel", "resume", "clarify"}
+                and role == "judge"
             )
-            or (request.method == "POST" and path.startswith("/api/examples/") and path.endswith("/memory"))
-            or (request.method == "POST" and path.startswith("/api/memories/") and (path.endswith("/supersede") or path.endswith("/enrich")))
+            or (
+                request.method == "POST"
+                and path.startswith("/api/examples/")
+                and path.endswith("/memory")
+            )
+            or (
+                request.method == "POST"
+                and path.startswith("/api/memories/")
+                and (
+                    path.endswith("/supersede")
+                    or (path.endswith("/enrich") and role == "judge")
+                )
+            )
         )
         if restricted:
             return JSONResponse(
-                {"detail": "This action requires the administrator credential."},
+                {
+                    "detail": "This maintenance action is unavailable in the public workspace."
+                },
                 status_code=403,
             )
     response = await call_next(request)
