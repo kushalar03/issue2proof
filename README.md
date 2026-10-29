@@ -42,6 +42,49 @@ be replayed independently across agents, sessions and tools.
 The UI includes recorded live evidence, so judges can create and recall memory
 without spending credits. Paid actions require an explicit click.
 
+## Confirmed repositories and judging procedure
+
+Issue2Proof targets bounded investigation of public Python repositories that use
+pytest. Validation depth is stated explicitly; successful import or baseline
+execution is not presented as proof of the complete repair workflow.
+
+| Repository | Confirmed validation | Judge recommendation |
+|---|---|---|
+| [`pallets/itsdangerous`](https://github.com/pallets/itsdangerous) | **Complete live workflow:** public import, wheel dependency preparation, Nemotron regression generation, original failure reproduction, Kimi Code repair, 25 ordinary tests, 272 withheld tests, seven Nebius Sandbox operations and Memory Capsule creation | **Recommended; strongest known path** |
+| [`pallets-eco/blinker`](https://github.com/pallets-eco/blinker) | Public import, dependency preparation, pytest configuration and a live baseline with 25 passing tests | Suitable for setup validation; a complete repair workflow has not been recorded |
+| [`pallets/werkzeug`](https://github.com/pallets/werkzeug) | Reviewed real-bug scenario with saved executable evidence and upstream provenance | Use the included scenario; arbitrary current issues are not fully confirmed |
+
+For the confirmed end-to-end demonstration, enter:
+
+```text
+Repository: https://github.com/pallets/itsdangerous
+Git ref: main
+
+Based on pallets/itsdangerous issue #429: URLSafeSerializer.loads must not
+silently ignore the unsupported max_age argument. Passing max_age to
+URLSafeSerializer.loads should raise TypeError or another explicit error.
+URLSafeTimedSerializer.loads must continue accepting max_age and enforcing
+signature expiration. Existing URL-safe serialization round trips must continue
+working.
+```
+
+The workflow is designed for small or medium public Python projects with a
+working pytest suite, standard `pyproject.toml` or requirements metadata, and
+dependencies available as public PyPI wheels. It can inspect an exact Git ref or
+a ZIP upload, reserve selected tests as model-hidden checks, and return diagnostic
+setup evidence when the project cannot run in the bounded environment.
+
+Repositories that require Docker, databases, Redis, browsers, GPUs, private
+packages, test-time networking, interactive credentials, unsupported system
+packages, non-Python toolchains or non-pytest frameworks may stop at setup or be
+reported as unsupported. Very large repositories may exceed the documented
+import and execution limits. A setup result is kept distinct from a failed repair.
+
+The precise project claim is: **Issue2Proof supports bounded investigation of
+public Python and pytest repositories in isolated Nebius Sandboxes. Unsupported
+environments return diagnostic evidence rather than an invented repair.** Only
+`pallets/itsdangerous` has been confirmed through the entire live workflow so far.
+
 ## Measured impact
 
 A reproducible blind-refactor stress benchmark ran 30 Nemotron Super trials across
