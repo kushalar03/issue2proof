@@ -72,11 +72,11 @@ def dependency_plan(manifests: dict[str, str]) -> dict:
                 config.get("build-system", {}).get("requires", [])
             )
         if not build_requirements:
-            build_requirements = ["setuptools==75.8.0", "wheel==0.45.1"]
+            build_requirements = ["setuptools==84.1.0", "wheel==0.46.2"]
         elif any("setuptools" in item for item in build_requirements) and not any(
             item.startswith("wheel") for item in build_requirements
         ):
-            build_requirements.append("wheel==0.45.1")
+            build_requirements.append("wheel==0.46.2")
         raw.extend(build_requirements)
     if not any(
         Requirement(value).name.lower() == "pytest"
@@ -85,7 +85,7 @@ def dependency_plan(manifests: dict[str, str]) -> dict:
     ):
         # The trusted controller invokes pytest even when the repository has no
         # dependency manifest. Install a fixed wheel into the prepared image.
-        raw.append("pytest==8.4.2")
+        raw.append("pytest==9.0.3")
     if len(raw) > 32:
         raise ValueError(
             "At most 32 direct dependencies are supported per environment."

@@ -1,3 +1,4 @@
+import asyncio
 import hashlib
 import json
 import time
@@ -5,9 +6,10 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 from fastapi.testclient import TestClient
+from starlette.requests import Request
 from test_repository import project
 
-from issue2proof.access import validate_configuration
+from issue2proof.access import COOKIE, access_role, guard, login, validate_configuration
 from issue2proof.app import app, save_report
 from issue2proof.environments import dependency_plan
 from issue2proof.jobs import (
@@ -119,7 +121,7 @@ def test_lifetime_budget_protects_reserved_credit(isolated, monkeypatch):
     try:
         reservation = context.reserve("model", role="engineering")
         assert budget_status()["remaining_spendable_usd"] == 0
-        with pytest.raises(BudgetExceeded, match="lifetime"):
+        with pytest.raises(BudgetExceeded, match="exhausted"):
             context.reserve("model", role="fast")
         context.reconcile(reservation, 0.005)
         assert budget_status()["remaining_spendable_usd"] == 0.025
@@ -130,6 +132,24 @@ def test_lifetime_budget_protects_reserved_credit(isolated, monkeypatch):
         }
     finally:
         context.finish("completed")
+
+
+def test_actual_usage_closes_the_credit_kill_switch(isolated, monkeypatch):
+    monkeypatch.setenv("ISSUE2PROOF_TOTAL_BUDGET_USD", "0.04")
+    monkeypatch.setenv("ISSUE2PROOF_PROTECTED_RESERVE_USD", "0")
+    monkeypatch.setenv("ISSUE2PROOF_DAILY_BUDGET_USD", "0.04")
+    job = enqueue(isolated["id"], options())
+    claim("worker")
+    context = Context(job["id"], "worker")
+    try:
+        reservation = context.reserve("model", role="engineering")
+        with pytest.raises(BudgetExceeded, match="further paid actions"):
+            context.reconcile(reservation, 0.05)
+        assert budget_status()["remaining_spendable_usd"] == 0
+        with pytest.raises(BudgetExceeded, match="exhausted"):
+            context.reserve("model", role="fast")
+    finally:
+        context.finish("budget_exhausted")
 
 
 def test_private_authentication_and_cross_origin_guard(isolated, monkeypatch):
@@ -164,6 +184,39 @@ def test_private_authentication_and_cross_origin_guard(isolated, monkeypatch):
     monkeypatch.delenv("ISSUE2PROOF_ACCESS_TOKEN")
     with pytest.raises(RuntimeError):
         validate_configuration()
+
+
+def test_restricted_judge_token_cannot_administer_shared_evidence(isolated, monkeypatch):
+    admin = "admin-private-token-at-least-24-characters"
+    judge = "judge-restricted-token-at-least-24-characters"
+    monkeypatch.setenv("ISSUE2PROOF_PUBLIC", "1")
+    monkeypatch.setenv("ISSUE2PROOF_ACCESS_TOKEN", admin)
+    monkeypatch.setenv("ISSUE2PROOF_JUDGE_TOKEN", judge)
+    base = {
+        "type": "http",
+        "scheme": "https",
+        "server": ("testserver", 443),
+        "client": ("192.0.2.10", 1234),
+        "root_path": "",
+        "query_string": b"",
+    }
+    response = login(Request({**base, "method": "POST", "path": "/api/login", "headers": []}), judge)
+    cookie = response.headers["set-cookie"].split(";", 1)[0].split("=", 1)[1]
+    request = Request(
+        {
+            **base,
+            "method": "DELETE",
+            "path": f"/api/runs/{isolated['id']}",
+            "headers": [(b"cookie", f"{COOKIE}={cookie}".encode())],
+        }
+    )
+    assert access_role(request) == "judge"
+
+    async def unreachable(_request):
+        raise AssertionError("restricted judge request reached the endpoint")
+
+    denied = asyncio.run(guard(request, unreachable))
+    assert denied.status_code == 403
 
 
 def test_login_rate_limit(isolated, monkeypatch):

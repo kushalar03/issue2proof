@@ -36,10 +36,17 @@ runs:
       shell: bash
       env:
         ISSUE2PROOF_ACCESS_TOKEN: ${{ inputs.access-token }}
-      run: >-
-        python "$GITHUB_ACTION_PATH/scripts/pr_memory_gate.py"
-        --bundle "${{ inputs.memory-bundle }}"
-        --repository-key "${{ inputs.repository-key }}"
-        --url "${{ inputs.issue2proof-url }}"
-        ${{ inputs.audit == 'true' && '--audit' || '' }}
-        ${{ inputs.semantic == 'true' && '--semantic' || '' }}
+        I2P_MEMORY_BUNDLE: ${{ inputs.memory-bundle }}
+        I2P_REPOSITORY_KEY: ${{ inputs.repository-key }}
+        I2P_SERVICE_URL: ${{ inputs.issue2proof-url }}
+        I2P_AUDIT: ${{ inputs.audit }}
+        I2P_SEMANTIC: ${{ inputs.semantic }}
+      run: |
+        args=(
+          --bundle "$I2P_MEMORY_BUNDLE"
+          --repository-key "$I2P_REPOSITORY_KEY"
+          --url "$I2P_SERVICE_URL"
+        )
+        if [[ "$I2P_AUDIT" == "true" ]]; then args+=(--audit); fi
+        if [[ "$I2P_SEMANTIC" == "true" ]]; then args+=(--semantic); fi
+        python "$GITHUB_ACTION_PATH/scripts/pr_memory_gate.py" "${args[@]}"

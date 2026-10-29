@@ -11,12 +11,13 @@ from pathlib import Path
 from typing import Literal
 
 from fastapi import FastAPI, HTTPException, Query, Request
-from fastapi.responses import FileResponse, Response
+from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from .access import (
     COOKIE,
+    access_role,
     authorized,
     configured_token,
     guard,
@@ -27,7 +28,7 @@ from .draft import generate_draft
 from .engine import run_demo
 from .execution import verify_repository
 from .fixtures import CASES
-from .jobs import Worker
+from .jobs import BudgetExceeded, Worker
 from .provider import DEFAULT_MODEL
 from .repair import run_repair
 from .repository import MAX_ARCHIVE, inspect_archive
@@ -51,6 +52,17 @@ app = FastAPI(title="Issue2Proof", version="2.0.0", lifespan=lifespan)
 app.middleware("http")(guard)
 STATIC = Path(__file__).parent / "static"
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
+
+
+@app.exception_handler(BudgetExceeded)
+async def credit_allowance_exhausted(_request: Request, error: BudgetExceeded):
+    return JSONResponse(
+        status_code=402,
+        content={
+            "detail": str(error)
+            or "The configured credit allowance is exhausted; paid actions are disabled."
+        },
+    )
 
 
 @contextmanager
@@ -95,6 +107,7 @@ def health(request: Request):
         if token
         else None,
         "authenticated": authorized(request),
+        "access_role": access_role(request),
         "model_configured": bool(os.environ.get("NEBIUS_API_KEY")),
         "remote_sandbox_integrated": True,
         "remote_configuration_complete": all(

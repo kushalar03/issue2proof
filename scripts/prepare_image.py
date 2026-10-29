@@ -25,7 +25,7 @@ client = ContreeSync(
 base = client.images.use("python:3.12-slim", strict=True)
 execution = base.run(
     "python",
-    args=["-m", "pip", "install", "--no-cache-dir", "pytest==8.4.2"],
+    args=["-m", "pip", "install", "--no-cache-dir", "pytest==9.0.3"],
     env={},
     preserve_env=False,
     timeout=120,

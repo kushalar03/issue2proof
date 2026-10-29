@@ -113,10 +113,12 @@ queries rather than production pull requests; the method and every result are in
 | Coding challenger | `moonshotai/Kimi-K2.7-Code` | Produce bounded edit spans after Nemotron establishes the regression; fall back when an engineering response is incomplete |
 
 The application enforces per-job, daily and lifetime reservation limits. Defaults
-are $25 total credit, $20 spendable and a protected $5 reserve. Lexical recall and
+are a $25 total and daily spendable allowance with no automatic overage reserve. Lexical recall and
 recorded evidence are free. One embedding request batches the query and all
 uncached capsules. Reservations are estimates and should be paired with provider
-billing limits.
+billing limits. Once the ledger reaches $25, new paid actions stop with a credit
+allowance exhausted result. Free hosts can erase a local SQLite ledger during a
+redeployment, so the Nebius account must also have a $25 provider-side limit.
 
 ## Run locally
 
@@ -141,6 +143,13 @@ UUID before low-level execution. `NEBIUS_SANDBOX_IMAGE` may pin a UUID directly.
 
 Open <http://127.0.0.1:8000> and sign in with the generated application token.
 Never use the Nebius API key as the application login.
+
+Public deployments should keep `ISSUE2PROOF_ACCESS_TOKEN` private for the
+administrator and give judges `ISSUE2PROOF_JUDGE_TOKEN`. Judge sessions can run
+new investigations but cannot enumerate all stored runs or jobs, delete evidence,
+import or export capsule bundles, supersede memory, or mutate background jobs.
+`ISSUE2PROOF_CAPSULE_SIGNING_KEY` authenticates exported Memory Capsule bundles;
+when omitted, the private administrator token supplies the signing key.
 
 ## Execution boundary
 
@@ -191,7 +200,9 @@ validates and recalls an integrity-checked portable capsule bundle without provi
 spend, writes relevant behavioral claims into the check summary, and can call a
 private Issue2Proof service for full sandbox replay. `scripts/import_history.py`
 converts only checks-passed, hash-valid historical reports into capsules. Bundle
-export and import preserve per-capsule and manifest SHA-256 integrity.
+export and import preserve per-capsule and manifest SHA-256 integrity. Protected
+server imports also require an HMAC signature from that deployment, preventing a
+self-hashed fabricated capsule from becoming active memory.
 
 Historical Werkzeug and Requests cases preserve upstream provenance and licenses.
 They are demonstration cases, not held-out benchmarks. Live evidence includes:
@@ -228,9 +239,9 @@ node --check issue2proof/static/app.js
 NEBIUS_PROJECT_ID=... .venv/bin/python -m issue2proof.check_sandbox
 ```
 
-The automated suite has 134 tests after the pull request gate and portable-memory
-additions. External calls are mocked in unit tests; the listed live artifacts
-record real Nebius calls.
+The automated suite has 148 collected tests after the security, pull request gate
+and portable-memory additions. External calls are mocked in unit tests; the listed
+live artifacts record real Nebius calls.
 
 ## API highlights
 

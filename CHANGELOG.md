@@ -11,7 +11,7 @@ Issue2Proof is now an executable repository-memory system for AI-built software.
   adjudication.
 - Fresh-sandbox memory replay with preserved, violated and uncertain outcomes.
 - Public GitHub repository import with fixed-origin bounded downloads.
-- Lifetime $25 budget accounting with a protected $5 reserve and per-role usage.
+- Lifetime $25 budget accounting with a hard application stop and per-role usage.
 - Official quickstart image-tag resolution to immutable sandbox UUIDs.
 - Live browser, sandbox, model, embedding and full conflict-audit evidence.
 - MCP recall and audit tools that complete recall → edit → sandbox replay inside
@@ -33,6 +33,12 @@ Issue2Proof is now an executable repository-memory system for AI-built software.
   161-second multi-page submission video with synchronized pointer and captions.
 
 ## Retained and strengthened
+
+- Added restricted judge credentials, deployment-authenticated capsule imports,
+  credential-aware MCP archiving, redirect-safe HTTPS integrations and shell-safe
+  GitHub Action inputs.
+- Updated vulnerable TLS, test and packaging dependencies; the locked environment
+  now reports no known advisories in `pip-audit`.
 
 - Reproduce-before-repair, frozen tests and withheld independent checks.
 - Wheel-only dependency preparation and offline unprivileged execution.

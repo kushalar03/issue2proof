@@ -189,3 +189,16 @@ def test_portable_bundle_api(report):
     bundle = export_memories(capsule["repository_key"])
     assert bundle["capsule_count"] == 1
     assert import_memories(bundle)["validated"] == 1
+
+
+def test_public_import_requires_server_authenticated_bundle(report, tmp_path, monkeypatch):
+    monkeypatch.setenv("ISSUE2PROOF_ACCESS_TOKEN", "private-signing-token-at-least-24-characters")
+    capsule = save_capsule(capsule_from_report(report))
+    bundle = export_capsule_bundle(capsule["repository_key"])
+    assert bundle["authentication"]["algorithm"] == "hmac-sha256"
+    monkeypatch.setenv("ISSUE2PROOF_DB", str(tmp_path / "signed-import.sqlite3"))
+    assert import_capsule_bundle(bundle)["validated"] == 1
+    forged = copy.deepcopy(bundle)
+    forged["entries"][0]["capsule"]["claim"] = "Fabricated evidence"
+    with pytest.raises(ValueError, match="authentication"):
+        import_capsule_bundle(forged)

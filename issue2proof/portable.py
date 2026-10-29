@@ -1,6 +1,7 @@
 """Portable, integrity-checked Memory Capsule bundles."""
 
 import hashlib
+import hmac
 import json
 import math
 import re
@@ -22,7 +23,7 @@ def capsule_digest(capsule: dict) -> str:
     return hashlib.sha256(_canonical(capsule)).hexdigest()
 
 
-def export_bundle(capsules: list[dict]) -> dict:
+def export_bundle(capsules: list[dict], *, signing_key: str | None = None) -> dict:
     """Package capsules with hashes that survive storage and agent boundaries."""
     if not isinstance(capsules, list) or len(capsules) > MAX_CAPSULES:
         raise ValueError(f"A bundle can contain at most {MAX_CAPSULES} capsules.")
@@ -39,17 +40,50 @@ def export_bundle(capsules: list[dict]) -> dict:
             _canonical([entry["sha256"] for entry in entries])
         ).hexdigest(),
     }
+    if signing_key:
+        bundle["authentication"] = {
+            "algorithm": "hmac-sha256",
+            "issuer": hashlib.sha256(signing_key.encode()).hexdigest()[:16],
+            "signature": hmac.new(
+                signing_key.encode(), _canonical(bundle), hashlib.sha256
+            ).hexdigest(),
+        }
     if len(_canonical(bundle)) > MAX_BYTES:
         raise ValueError("Memory bundle exceeds the 5 MB limit.")
     return bundle
 
 
-def validate_bundle(bundle: dict) -> list[dict]:
+def validate_bundle(
+    bundle: dict, *, signing_key: str | None = None, require_auth: bool = False
+) -> list[dict]:
     """Validate the envelope, manifest, capsule schema and frozen regressions."""
     if not isinstance(bundle, dict) or bundle.get("schema") != SCHEMA:
         raise ValueError(f"Expected portable bundle schema {SCHEMA}.")
     if len(_canonical(bundle)) > MAX_BYTES:
         raise ValueError("Memory bundle exceeds the 5 MB limit.")
+    authentication = bundle.get("authentication")
+    if require_auth and not signing_key:
+        raise ValueError("Authenticated Memory Capsule import is not configured.")
+    if signing_key:
+        if not isinstance(authentication, dict) or set(authentication) != {
+            "algorithm",
+            "issuer",
+            "signature",
+        }:
+            raise ValueError("Memory bundle is missing server authentication.")
+        unsigned = {key: value for key, value in bundle.items() if key != "authentication"}
+        expected = hmac.new(
+            signing_key.encode(), _canonical(unsigned), hashlib.sha256
+        ).hexdigest()
+        if (
+            authentication.get("algorithm") != "hmac-sha256"
+            or authentication.get("issuer")
+            != hashlib.sha256(signing_key.encode()).hexdigest()[:16]
+            or not hmac.compare_digest(str(authentication.get("signature")), expected)
+        ):
+            raise ValueError("Memory bundle server authentication is invalid.")
+    elif require_auth:
+        raise ValueError("Memory bundle is not authenticated by this server.")
     entries = bundle.get("entries")
     if not isinstance(entries, list) or len(entries) > MAX_CAPSULES:
         raise ValueError(f"A bundle can contain at most {MAX_CAPSULES} capsules.")

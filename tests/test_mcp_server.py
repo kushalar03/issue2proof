@@ -1,6 +1,8 @@
 import importlib.util
 from pathlib import Path
 
+import pytest
+
 MODULE_PATH = Path(__file__).parents[1] / "scripts" / "mcp_server.py"
 SPEC = importlib.util.spec_from_file_location("issue2proof_mcp_server", MODULE_PATH)
 assert SPEC and SPEC.loader
@@ -63,3 +65,20 @@ def test_mcp_calls_repository_audit_tool():
     assert seen["repository_path"] == "."
     assert called["result"]["structuredContent"]["verdict"] == "memory_preserved"
     assert not called["result"].get("isError", False)
+
+
+def test_mcp_archive_refuses_credentials(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src/app.py").write_text("print('safe')\n")
+    (tmp_path / "runtime-config.json").write_text('{"private_key":"secret"}')
+    with pytest.raises(RuntimeError, match="credential marker"):
+        MCP_SERVER.repository_archive(str(tmp_path))
+
+
+def test_mcp_service_url_requires_https_off_localhost(monkeypatch):
+    monkeypatch.setenv("ISSUE2PROOF_URL", "http://example.com")
+    with pytest.raises(RuntimeError, match="HTTPS"):
+        MCP_SERVER.service_url()
+    monkeypatch.setenv("ISSUE2PROOF_URL", "http://127.0.0.1:8000")
+    assert MCP_SERVER.service_url() == "http://127.0.0.1:8000"

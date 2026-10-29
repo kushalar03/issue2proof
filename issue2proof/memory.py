@@ -3,6 +3,7 @@
 import hashlib
 import json
 import math
+import os
 import re
 import sqlite3
 import uuid
@@ -237,11 +238,19 @@ def list_capsules(key: str | None = None) -> list[dict]:
 
 
 def export_capsule_bundle(key: str | None = None) -> dict:
-    return export_bundle(list_capsules(key))
+    signing_key = os.environ.get("ISSUE2PROOF_CAPSULE_SIGNING_KEY") or os.environ.get(
+        "ISSUE2PROOF_ACCESS_TOKEN"
+    )
+    return export_bundle(list_capsules(key), signing_key=signing_key)
 
 
 def import_capsule_bundle(bundle: dict) -> dict:
-    capsules = validate_bundle(bundle)
+    signing_key = os.environ.get("ISSUE2PROOF_CAPSULE_SIGNING_KEY") or os.environ.get(
+        "ISSUE2PROOF_ACCESS_TOKEN"
+    )
+    capsules = validate_bundle(
+        bundle, signing_key=signing_key, require_auth=bool(signing_key)
+    )
     imported = []
     with database() as db:
         _tables(db)

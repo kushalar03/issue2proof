@@ -22,16 +22,23 @@ while that container lives, but a restart or redeployment can erase investigatio
 Memory Capsules, job history, and application budget usage. Bundled reviewed
 evidence remains available because it is part of the image.
 
-## 2. Enter the two private values
+## 2. Enter the private values
 
 Render prompts for variables marked `sync: false`:
 
-- `ISSUE2PROOF_ACCESS_TOKEN`: generate a random value of at least 32 characters;
+- `ISSUE2PROOF_ACCESS_TOKEN`: generate a random administrator value of at least 32 characters and keep it private;
+- `ISSUE2PROOF_JUDGE_TOKEN`: generate a different random value of at least 32 characters and give only this restricted value to judges;
+- `ISSUE2PROOF_CAPSULE_SIGNING_KEY`: generate a third random value of at least 32 characters for authenticated Memory Capsule bundles;
 - `NEBIUS_API_KEY`: enter the private Nebius API key.
 
-Never place either value in GitHub, Vercel, a recording, or a public Devpost
+Never place any private value in GitHub, Vercel, a recording, or a public Devpost
 field. The Nebius project ID and bounded budget values are already declared in the
 Blueprint.
+
+Set a matching **$25 hard spending limit in the Nebius account**. Render Free uses
+ephemeral storage, so a restart or redeployment can erase the local lifetime
+ledger. The provider limit is the authoritative protection against charges after
+the allocation is consumed.
 
 ## 3. Validate the deployment
 
@@ -41,12 +48,12 @@ Render supplies a URL similar to:
 https://issue2proof-live.onrender.com
 ```
 
-Open that URL, sign in with `ISSUE2PROOF_ACCESS_TOKEN`, and verify:
+Open that URL, sign in with `ISSUE2PROOF_JUDGE_TOKEN`, and verify:
 
 1. `/api/health` reports that authentication is required and the remote provider
    configuration is complete;
 2. saved Werkzeug evidence opens without spending provider credit;
-3. the Budget panel shows $1.00 daily, $2.00 lifetime, and $1.00 protected;
+3. the Budget panel shows a $25.00 daily and lifetime allowance with no overage reserve;
 4. one approved small-repository investigation reaches a terminal result;
 5. the bundled reviewed evidence remains available after a restart.
 
@@ -57,9 +64,9 @@ behavior description:
 > while valid non-expired signatures and ordinary serialization round trips must
 > continue to work.
 
-Before starting that investigation, change **Scheduling allowance** from the UI
-default of `$2.00` to `$0.75`. The free deployment's spendable application budget
-is `$1.00`, so the default allowance would be rejected by the budget guard.
+For conservative testing, change **Scheduling allowance** from the UI default of
+`$2.00` to `$0.75`. The application stops new paid actions when its retained
+ledger reaches $25 and returns HTTP 402 for synchronous paid requests.
 
 ## 4. Submit the correct URLs
 

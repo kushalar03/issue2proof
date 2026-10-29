@@ -11,6 +11,10 @@ services:
         value: "1"
       - key: ISSUE2PROOF_ACCESS_TOKEN
         sync: false
+      - key: ISSUE2PROOF_JUDGE_TOKEN
+        sync: false
+      - key: ISSUE2PROOF_CAPSULE_SIGNING_KEY
+        sync: false
       - key: NEBIUS_API_KEY
         sync: false
       - key: NEBIUS_PROJECT_ID
@@ -18,10 +22,10 @@ services:
       - key: NEBIUS_SANDBOX_IMAGE
         value: python:3.12-slim
       - key: ISSUE2PROOF_DAILY_BUDGET_USD
-        value: "1.00"
+        value: "25.00"
       - key: ISSUE2PROOF_TOTAL_BUDGET_USD
-        value: "2.00"
+        value: "25.00"
       - key: ISSUE2PROOF_PROTECTED_RESERVE_USD
-        value: "1.00"
+        value: "0.00"
       - key: ISSUE2PROOF_RETENTION_DAYS
         value: "1"

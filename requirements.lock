@@ -4,7 +4,7 @@ annotated-types==0.8.0
 anyio==4.15.1
 attrs==26.1.0
 cattrs==26.2.1
-certifi==2026.7.22
+certifi==2026.10.23
 click==8.5.0
 contree-client==0.4.1
 contree-sdk==0.3.6
@@ -20,12 +20,12 @@ pluggy==1.6.0
 pydantic==2.14.1
 pydantic_core==2.50.1
 Pygments==2.21.0
-pytest==8.4.2
+pytest==9.0.3
 ruff==0.17.0
-setuptools==75.8.0
+setuptools==84.1.0
 starlette==1.8.0
 StrEnum==0.4.15
 typing_extensions==4.16.0
 typing-inspection==0.4.4
 uvicorn==0.54.0
-wheel==0.45.1
+wheel==0.46.2

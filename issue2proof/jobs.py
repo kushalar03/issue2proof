@@ -103,7 +103,7 @@ def budget_status():
     """Return the application reservation ledger without exposing credentials."""
     total = max(0.0, float(os.environ.get("ISSUE2PROOF_TOTAL_BUDGET_USD", "25")))
     protected = max(
-        0.0, float(os.environ.get("ISSUE2PROOF_PROTECTED_RESERVE_USD", "5"))
+        0.0, float(os.environ.get("ISSUE2PROOF_PROTECTED_RESERVE_USD", "0"))
     )
     spendable = max(0.0, total - protected)
     today = (
@@ -150,7 +150,7 @@ def reserve_system(kind: str, amount: float | None = None) -> int:
             "SELECT COALESCE(SUM(amount),0) FROM reservations WHERE created>=?",
             (today,),
         ).fetchone()[0]
-        if daily + amount > float(os.environ.get("ISSUE2PROOF_DAILY_BUDGET_USD", "10")):
+        if daily + amount > float(os.environ.get("ISSUE2PROOF_DAILY_BUDGET_USD", "25")):
             raise BudgetExceeded("Server daily estimated-cost allowance exhausted.")
         lifetime = db.execute(
             "SELECT COALESCE(SUM(amount),0) FROM reservations"
@@ -158,7 +158,7 @@ def reserve_system(kind: str, amount: float | None = None) -> int:
         spendable = max(
             0.0,
             float(os.environ.get("ISSUE2PROOF_TOTAL_BUDGET_USD", "25"))
-            - float(os.environ.get("ISSUE2PROOF_PROTECTED_RESERVE_USD", "5")),
+            - float(os.environ.get("ISSUE2PROOF_PROTECTED_RESERVE_USD", "0")),
         )
         if lifetime + amount > spendable + 1e-9:
             raise BudgetExceeded(
@@ -174,10 +174,37 @@ def reserve_system(kind: str, amount: float | None = None) -> int:
 def reconcile_system(reservation_id: int, actual_amount: float | None):
     if not isinstance(actual_amount, (int, float)):
         return
+    exhausted = False
     with database() as db:
+        db.execute("BEGIN IMMEDIATE")
+        row = db.execute(
+            "SELECT amount,created FROM reservations WHERE id=? AND job_id IS NULL",
+            (reservation_id,),
+        ).fetchone()
+        if row is None:
+            return
+        actual = max(0.0, float(actual_amount))
+        difference = actual - row["amount"]
         db.execute(
             "UPDATE reservations SET amount=? WHERE id=? AND job_id IS NULL",
-            (max(0.0, float(actual_amount)), reservation_id),
+            (actual, reservation_id),
+        )
+        total = max(0.0, float(os.environ.get("ISSUE2PROOF_TOTAL_BUDGET_USD", "25")))
+        protected = max(0.0, float(os.environ.get("ISSUE2PROOF_PROTECTED_RESERVE_USD", "0")))
+        lifetime = db.execute(
+            "SELECT COALESCE(SUM(amount),0) FROM reservations"
+        ).fetchone()[0]
+        today = datetime.now(UTC).replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
+        daily = db.execute(
+            "SELECT COALESCE(SUM(amount),0) FROM reservations WHERE created>=?", (today,)
+        ).fetchone()[0]
+        exhausted = difference > 0 and (
+            lifetime > max(0.0, total - protected) + 1e-9
+            or daily > float(os.environ.get("ISSUE2PROOF_DAILY_BUDGET_USD", "25")) + 1e-9
+        )
+    if exhausted:
+        raise BudgetExceeded(
+            "Provider usage reached the configured credit allowance; further paid actions are disabled."
         )
 
 
@@ -337,7 +364,7 @@ class Context:
                 (today,),
             ).fetchone()[0]
             if daily + amount > float(
-                os.environ.get("ISSUE2PROOF_DAILY_BUDGET_USD", "10")
+                os.environ.get("ISSUE2PROOF_DAILY_BUDGET_USD", "25")
             ):
                 raise BudgetExceeded("Server daily estimated-cost allowance exhausted.")
             lifetime = db.execute(
@@ -348,7 +375,7 @@ class Context:
             )
             protected = max(
                 0.0,
-                float(os.environ.get("ISSUE2PROOF_PROTECTED_RESERVE_USD", "5")),
+                float(os.environ.get("ISSUE2PROOF_PROTECTED_RESERVE_USD", "0")),
             )
             if lifetime + amount > max(0.0, total - protected) + 1e-9:
                 raise BudgetExceeded(
@@ -369,6 +396,7 @@ class Context:
         if reservation_id is None or not isinstance(actual_amount, (int, float)):
             return
         actual = max(0.0, float(actual_amount))
+        exhausted_reason = None
         with database() as db:
             db.execute("BEGIN IMMEDIATE")
             row = db.execute(
@@ -384,8 +412,9 @@ class Context:
             if job is None:
                 return
             options = json.loads(job["options"])
-            if job["reserved_usd"] + difference > options["budget_usd"] + 1e-9:
-                raise BudgetExceeded("Observed usage exceeded the job allowance.")
+            job_exhausted = (
+                job["reserved_usd"] + difference > options["budget_usd"] + 1e-9
+            )
             db.execute(
                 "UPDATE reservations SET amount=? WHERE id=?", (actual, reservation_id)
             )
@@ -393,6 +422,35 @@ class Context:
                 "UPDATE jobs SET reserved_usd=MAX(0,reserved_usd+?) WHERE id=?",
                 (difference, self.id),
             )
+            total = max(
+                0.0, float(os.environ.get("ISSUE2PROOF_TOTAL_BUDGET_USD", "25"))
+            )
+            protected = max(
+                0.0, float(os.environ.get("ISSUE2PROOF_PROTECTED_RESERVE_USD", "0"))
+            )
+            lifetime = db.execute(
+                "SELECT COALESCE(SUM(amount),0) FROM reservations"
+            ).fetchone()[0]
+            today = (
+                datetime.now(UTC)
+                .replace(hour=0, minute=0, second=0, microsecond=0)
+                .timestamp()
+            )
+            daily = db.execute(
+                "SELECT COALESCE(SUM(amount),0) FROM reservations WHERE created>=?",
+                (today,),
+            ).fetchone()[0]
+            global_exhausted = difference > 0 and (
+                lifetime > max(0.0, total - protected) + 1e-9
+                or daily
+                > float(os.environ.get("ISSUE2PROOF_DAILY_BUDGET_USD", "25")) + 1e-9
+            )
+            if global_exhausted:
+                exhausted_reason = "Provider usage reached the configured credit allowance; further paid actions are disabled."
+            elif job_exhausted:
+                exhausted_reason = "Observed usage exceeded the job allowance."
+        if exhausted_reason:
+            raise BudgetExceeded(exhausted_reason)
 
     def operation(self, operation_id):
         with database() as db:

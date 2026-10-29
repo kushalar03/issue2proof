@@ -23,16 +23,30 @@ misleading JUnit within its own process. Test counts, assertion-failure gates an
 skip limits strengthen ordinary evidence but do not create an adversarial proof.
 Independent tests require a suitable human-authored oracle.
 
-Public mode requires a strong application token. Sessions are signed, expire in
+Public mode requires a strong administrator token. Sessions are signed, expire in
 12 hours and use Secure/HttpOnly/SameSite cookies. CSRF-style cross-origin writes
-are rejected. Bearer authentication supports API clients. This is a private
-single-credential instance, not a multi-tenant authorization system.
+are rejected. Bearer authentication supports API clients. A separate restricted
+judge token can run investigations without bulk listing, deletion, capsule
+import/export, supersession, or job-mutation privileges. This remains a private
+instance rather than a general multi-tenant authorization system.
+
+Portable bundles use SHA-256 for content integrity. Protected deployments also
+sign exports with HMAC-SHA256 and reject unsigned or foreign imports. Operators
+should configure `ISSUE2PROOF_CAPSULE_SIGNING_KEY`; the private administrator token
+is the fallback signing key.
+
+The MCP archiver rejects symlinks, hidden files, common credential filenames and
+private-key markers. Authenticated integrations require HTTPS except on localhost
+and do not follow redirects.
 
 The data lifecycle covers local SQLite reports/jobs, not provider storage or
 operator backups. Provider images/blobs follow account retention. Dependency
 images contain dependencies only; repository source is confined to disposable
 operations. Job records preserve reservation usage even when external work fails.
-Dollar reservations are not authoritative provider billing caps.
+Dollar reservations stop new paid actions when the daily or lifetime allowance is
+exhausted and preserve higher reconciled usage in the ledger. They are not an
+authoritative provider billing cap; configure the same hard limit with the
+provider.
 
 Production operators own TLS/domain configuration, backups, key rotation,
 provider billing limits and access-token distribution. No sandbox escape audit

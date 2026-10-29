@@ -5,7 +5,31 @@ import json
 import os
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
+
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise urllib.error.HTTPError(
+            req.full_url, code, "Redirects are disabled for authenticated requests.", headers, fp
+        )
+
+
+def validated_url(value):
+    value = value.rstrip("/")
+    parsed = urllib.parse.urlsplit(value)
+    local = parsed.hostname in {"127.0.0.1", "localhost", "::1"}
+    if (
+        parsed.scheme not in ({"http", "https"} if local else {"https"})
+        or not parsed.hostname
+        or parsed.username is not None
+        or parsed.password is not None
+        or parsed.query
+        or parsed.fragment
+    ):
+        raise ValueError("--url must use HTTPS, or HTTP on localhost.")
+    return value
 
 
 def main():
@@ -15,6 +39,10 @@ def main():
     parser.add_argument("--repository", help="Stable owner/repository memory key")
     parser.add_argument("--semantic", action="store_true")
     args = parser.parse_args()
+    try:
+        base_url = validated_url(args.url)
+    except ValueError as error:
+        parser.error(str(error))
     token = os.environ.get("ISSUE2PROOF_ACCESS_TOKEN")
     if not token:
         parser.error("Set ISSUE2PROOF_ACCESS_TOKEN in the process environment.")
@@ -26,7 +54,7 @@ def main():
         "authorize_nebius": args.semantic,
     }
     request = urllib.request.Request(
-        args.url.rstrip("/") + "/api/integrations/context",
+        base_url + "/api/integrations/context",
         data=json.dumps(payload).encode(),
         headers={
             "Authorization": "Bearer " + token,
@@ -35,7 +63,7 @@ def main():
         method="POST",
     )
     try:
-        with urllib.request.urlopen(request, timeout=90) as response:  # noqa: S310 - operator-provided Issue2Proof URL
+        with urllib.request.build_opener(NoRedirect).open(request, timeout=90) as response:
             packet = json.load(response)
     except urllib.error.HTTPError as error:
         message = error.read().decode(errors="replace")[:1000]

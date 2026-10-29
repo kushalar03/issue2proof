@@ -94,8 +94,33 @@ AUDIT_TOOL = {
 TOOLS = [RECALL_TOOL, AUDIT_TOOL]
 
 
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise urllib.error.HTTPError(
+            req.full_url, code, "Redirects are disabled for authenticated requests.", headers, fp
+        )
+
+
+def service_url() -> str:
+    value = os.environ.get("ISSUE2PROOF_URL", "http://127.0.0.1:8000").rstrip("/")
+    parsed = urllib.parse.urlsplit(value)
+    local = parsed.hostname in {"127.0.0.1", "localhost", "::1"}
+    if (
+        parsed.scheme not in ({"http", "https"} if local else {"https"})
+        or not parsed.hostname
+        or parsed.username is not None
+        or parsed.password is not None
+        or parsed.query
+        or parsed.fragment
+    ):
+        raise RuntimeError(
+            "ISSUE2PROOF_URL must be an HTTPS service URL, or HTTP on localhost."
+        )
+    return value
+
+
 def request_api(path, *, method="GET", body=None, raw=None, timeout=30):
-    base_url = os.environ.get("ISSUE2PROOF_URL", "http://127.0.0.1:8000").rstrip("/")
+    base_url = service_url()
     token = os.environ.get("ISSUE2PROOF_ACCESS_TOKEN", "")
     data = raw if raw is not None else (json.dumps(body).encode() if body is not None else None)
     headers = {**({"Authorization": "Bearer " + token} if token else {})}
@@ -107,7 +132,7 @@ def request_api(path, *, method="GET", body=None, raw=None, timeout=30):
         base_url + path, data=data, headers=headers, method=method
     )
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
+        with urllib.request.build_opener(NoRedirect).open(request, timeout=timeout) as response:
             return json.load(response) if response.status != 204 else None
     except urllib.error.HTTPError as error:
         detail = error.read().decode(errors="replace")
@@ -133,12 +158,26 @@ def repository_archive(value):
     if not repository.is_dir() or not (repository == root or root in repository.parents):
         raise RuntimeError("repository_path must be a directory at or below the MCP working directory.")
     excluded_parts = {".git", ".venv", "node_modules", "__pycache__", ".pytest_cache"}
-    excluded_names = {".env", "id_rsa", "id_ed25519"}
+    excluded_names = {
+        ".env",
+        "id_rsa",
+        "id_ed25519",
+        "credentials.json",
+        "service-account.json",
+        "application_default_credentials.json",
+        "secrets.json",
+        "secrets.yaml",
+        "secrets.yml",
+    }
     files = []
     total = 0
     for path in sorted(repository.rglob("*")):
         relative = path.relative_to(repository)
-        if excluded_parts.intersection(relative.parts) or path.is_dir():
+        if (
+            excluded_parts.intersection(relative.parts)
+            or any(part.startswith(".") for part in relative.parts)
+            or path.is_dir()
+        ):
             continue
         if path.is_symlink():
             raise RuntimeError(f"Refusing to archive symbolic link: {relative}")
@@ -147,6 +186,19 @@ def repository_archive(value):
         size = path.stat().st_size
         if size > 2_000_000:
             continue
+        sample = path.read_bytes()
+        lowered = sample.lower()
+        secret_markers = (
+            b"-----begin private key-----",
+            b"-----begin rsa private key-----",
+            b"-----begin openssh private key-----",
+            b'"private_key":',
+            b'"client_secret":',
+        )
+        if any(marker in lowered for marker in secret_markers):
+            raise RuntimeError(
+                f"Refusing to archive a file containing a credential marker: {relative}"
+            )
         total += size
         files.append((path, relative))
         if len(files) > 1500 or total > 9_000_000:
